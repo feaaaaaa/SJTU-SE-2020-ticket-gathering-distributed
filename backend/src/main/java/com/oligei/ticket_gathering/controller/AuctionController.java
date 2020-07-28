@@ -20,9 +20,10 @@ public class AuctionController {
 
     @RequestMapping("/add")
     public boolean addAuction(@RequestParam("actitemid")Integer actitemid,@RequestParam("ddl")String ddl,
-                              @RequestParam("showtime")String showtime,@RequestParam("price")Integer price,@RequestParam("amount")Integer amount)
+                              @RequestParam("showtime")String showtime,@RequestParam("initprice")Integer initprice,
+                              @RequestParam("orderprice")Integer orderprice, @RequestParam("amount")Integer amount)
     {
-        return auctionService.save(actitemid,ddl,showtime,price,amount);
+        return auctionService.save(actitemid,ddl,showtime,initprice,orderprice,amount);
     }
 
 

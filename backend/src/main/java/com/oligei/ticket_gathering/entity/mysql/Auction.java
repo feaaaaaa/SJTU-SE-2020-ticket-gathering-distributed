@@ -1,5 +1,6 @@
 package com.oligei.ticket_gathering.entity.mysql;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.GenericGenerator;
 import org.springframework.data.mongodb.core.mapping.Field;
 
@@ -14,7 +15,8 @@ public class Auction {
     private Integer actitemid;
     private Integer userid;
     private Date ddl;
-    private Integer price;
+    private Integer initprice;
+    private Integer orderprice;
     private Integer isover;
     private Date showtime;
     private Date ordertime;
@@ -39,9 +41,13 @@ public class Auction {
     public Date getDdl(){return ddl;}
     public void setDdl(Date ddl){this.ddl = ddl;}
 
-    @Column(name = "price")
-    public Integer getPrice(){return price;}
-    public void setPrice(Integer price){this.price = price;}
+    @Column(name = "initprice")
+    public Integer getInitprice(){return initprice;}
+    public void setInitprice(Integer initprice){this.initprice = initprice;}
+
+    @Column(name = "orderprice")
+    public Integer getOrderprice(){return orderprice;}
+    public void setOrderprice(Integer orderprice){this.orderprice = orderprice;}
 
     @Column(name = "isover")
     public Integer getIsover(){return isover;}

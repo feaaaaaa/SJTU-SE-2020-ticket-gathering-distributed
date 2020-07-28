@@ -37,13 +37,20 @@ public class ActivityServiceImpl implements ActivityService {
 //    @Autowired
     private Cache<List<ActivitySortpage>> cache=new Cache<>();
 
+    private Cache<ActivitySortpage> oneCache=new Cache<>();
+
+    private Cache<List<Activity>> activityCache=new Cache<>();
+
+    private  int searchResultMax=50;
+
+
     @Override
     public List<ActivitySortpage> search(String value) {
         if(value==null || value.equals("")|| value.equals("null")){
-            List<ActivitySortpage> result=cache.getValue("searchNull");
-            if(result!=null){
+            List<ActivitySortpage> cacheResult=cache.getValue("searchNull");
+            if(cacheResult!=null){
                 System.out.println("search null get from cache");
-                return result;
+                return cacheResult;
             }
             List<ActivitySortpage> activities=new LinkedList<>();
             for(int i=2;i<=50;++i){
@@ -57,14 +64,25 @@ public class ActivityServiceImpl implements ActivityService {
         List<Word> words= WordSegmenter.seg(value);
         System.out.println("words:"+words+words.size());
         int n=words.size();
+        if(n==1){
+            String cacheName="search"+value;
+            List<ActivitySortpage> cacheResult=cache.getValue(cacheName);
+            if(cacheResult!=null) {
+                System.out.println(cacheName+" get from cache");
+                return cacheResult;
+            }
+        }
+
         List<List<Activity>> activityList=new LinkedList<>();
         Set<Integer> idSet=new LinkedHashSet<>();
         for(int i=0;i<n;++i){
             String word=words.get(i).getText();
+//            String cacheName="search"+word;
+//            List<Activity> result=activityCache.getValue(cacheName);
+//
             word="%"+word+"%";
-            List<Activity> tmp=activityDao.findAllByTitleOrVenueOrActor(word,word,word);
-            System.out.println("tmp:"+tmp);
-            activityList.add(tmp);
+            List<Activity>  result=activityDao.findAllByTitleOrVenueOrActor(word,word,word);
+            activityList.add(result);
             for(int j=0;j<activityList.get(i).size();++j)
                 idSet.add(activityList.get(i).get(j).getActivityId());
         }
@@ -93,7 +111,7 @@ public class ActivityServiceImpl implements ActivityService {
 //        if(n>10)basic=n-5;
         int basic=Math.max(0,n-3);
         int resultCount=0;
-        for(int i=idSet.size();i>basic&&resultCount<=20;--i){
+        for(int i=idSet.size();i>basic&&resultCount<=searchResultMax;--i){
             for(int j=0;j<idSet.size();++j){
                 if(cntArray[j]==i) {
                         ActivitySortpage activitySortpage = findActivityAndActitem(idArray[j]);
@@ -102,22 +120,36 @@ public class ActivityServiceImpl implements ActivityService {
                 }
             }
         }
+
+        if(n==1){
+            String cacheName="search"+value;
+            cache.addOrUpdateCache(cacheName,activities);
+            System.out.println(cacheName+" add into cache");
+        }
+
         return activities;
     }
 
     @Override
     public ActivitySortpage findActivityAndActitem(Integer id) {
 
+        String cacheName="ActivitySortpage"+id.toString();
+        ActivitySortpage cacheResult=oneCache.getValue(cacheName);
+        if(cacheResult!=null){
+            System.out.println(cacheName+"get from cache");
+            return cacheResult;
+        }
+
         Activity activity;
-        try{
+        try {
             activity = activityDao.findOneById(id);
-        }catch (javax.persistence.EntityNotFoundException e){
+        } catch (javax.persistence.EntityNotFoundException e) {
             return null;
         }
         if(activity==null) return null;
         List<Actitem> actitems=actitemDao.findAllByActivityId(id);
 
-        return  new ActivitySortpage (
+        cacheResult= new ActivitySortpage (
                 activity.getActivityId(),
                 activity.getTitle(),
                 activity.getActor(),
@@ -126,6 +158,9 @@ public class ActivityServiceImpl implements ActivityService {
                 activity.getActivityIcon(),
                 actitems
         );
+        oneCache.addOrUpdateCache(cacheName,cacheResult);
+        System.out.println(cacheName+" add into cache");
+        return cacheResult;
     }
 
     @Override

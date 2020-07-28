@@ -13,4 +13,7 @@ public interface ActitemDao {
     ActitemMongoDB insertActitemInMongo(int actitemId,List<JSONObject> price);
     Actitem add(int activityId,String website);
     Boolean deleteActitem(Integer actitemId);
+
+    /**amount为正时为增加，amount为负时减少*/
+    boolean modifyRepository(int actitemId, int price, int amount, String showtime);
 }

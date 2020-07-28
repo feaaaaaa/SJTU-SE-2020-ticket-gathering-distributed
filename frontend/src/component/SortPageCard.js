@@ -108,6 +108,12 @@ export class SortPageCard extends React.Component{
                                      <li key={index} style={{clear:"both"}}>
                                          {/*<Avatar icon={<UserOutlined />} />*/}
                                          <a href="/detail" onClick={()=>this.handleDetail(actitem.actitemId,actitem.activityId)}>{actitem.website}</a>
+                                         {
+                                             this.props.usertype==="Admin" &&
+                                             <div style={{float: "right"}}>
+                                                 <Button href="/adminAuction" onClick={()=>this.handleDetail(actitem.actitemId,actitem.activityId)}>添加竞拍</Button>
+                                             </div>
+                                         }
                                          <ul>
                                              {actitem.price.map((day,index)=>(
                                                  <li key={index} style={{clear:"both"}}>

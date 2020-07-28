@@ -21,6 +21,13 @@
     height: 35px;
 }
 
+#auctionButton{
+    margin: 0 20px 0 0;
+    border-radius: 25px;
+    height: 35px;
+    background-color: #fb385f;
+    border: 2px solid #fb9c29;
+}
 #searchInput{
     border-radius: 25px;
     width: 400px;

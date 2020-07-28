@@ -6,14 +6,15 @@ export const getAuctions = (token,callback) => {
     authRequest(url, data,token, callback);
 };
 
-export const addAuction = (actitemid,ddl,showtime,price,amount,token,callback) => {
-    const data={actitemid:actitemid,ddl:ddl,showtime:showtime,price:price,amount:amount};
+export const addAuction = (actitemid,ddl,showtime,initprice,orderprice,amount,token,callback) => {
+    const data={actitemid:actitemid,ddl:ddl,showtime:showtime,initprice:initprice,orderprice:orderprice,amount:amount};
     const url = `/Auction/add`;
+    console.log(data);
     authRequest(url, data,token, callback);
 };
 
 export const joinAuctions = (auctionid,userid,price,token,callback) => {
     const data={auctionid:auctionid,userid:userid,price:price};
     const url = `/Auction/join`;
-    postRequest(url, data,token, callback);
+    authRequest(url, data,token, callback);
 };

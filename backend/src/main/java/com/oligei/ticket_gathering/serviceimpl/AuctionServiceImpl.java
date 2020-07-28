@@ -35,28 +35,35 @@ public class AuctionServiceImpl implements AuctionService {
     private OrderService orderService;
 
     @Override
-    public Boolean save(Integer actitemid, String ddl,String showtime, Integer price, Integer amount) {
+    public Boolean save(Integer actitemid, String ddl,String showtime, Integer initprice,Integer orderprice, Integer amount) {
         Auction auction = new Auction();
 
         DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date Showtime = null,Ddl = null,initTime = new Date();
+        Date Showtime = null;
+        Date Ddl = null;
+        Date initTime = new Date();
+        String nowTime = null;
         try{
             Showtime=format1.parse(showtime);
             Ddl=format2.parse(ddl);
-            initTime=format2.parse(initTime.toString());
+            nowTime=format2.format(initTime);
+            initTime=format2.parse(nowTime);
         } catch (ParseException e){
             e.printStackTrace();
         }
         auction.setActitemid(actitemid);
         auction.setUserid(0);
         auction.setIsover(0);
-        auction.setPrice(price);
+        auction.setInitprice(initprice);
+        auction.setOrderprice(orderprice);
         auction.setDdl(Ddl);
         auction.setShowtime(Showtime);
         auction.setOrdertime(initTime);
         auction.setAmount(amount);
-        return auctionDao.save(auction);
+
+        auctionDao.save(auction);
+        return actitemDao.modifyRepository(actitemid,initprice,-amount,showtime);
     }
 
     @Override
@@ -79,7 +86,7 @@ public class AuctionServiceImpl implements AuctionService {
             }catch (Exception e){
                 e.printStackTrace();;
             }
-            AuctionListItem auctionListItem = new AuctionListItem(auction.getAuctionid(),d2,auction.getPrice(),d1,auction.getAmount(),
+            AuctionListItem auctionListItem = new AuctionListItem(auction.getAuctionid(),d2,auction.getOrderprice(),d1,auction.getAmount(),
                     activity.getTitle(),activity.getActor(),activity.getVenue(),auction.getUserid(),activity.getActivityIcon());
             auctionListItems.add(auctionListItem);
         }
@@ -87,7 +94,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    public Integer joinAuction(Integer auctionid, Integer userid, Integer price) {
+    public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) {
         Auction auction = auctionDao.findOneById(auctionid);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -104,12 +111,16 @@ public class AuctionServiceImpl implements AuctionService {
         {
             auction.setIsover(1);
             auctionDao.save(auction);
-            orderService.addOrder(auction.getUserid(),auction.getActitemid(),auction.getPrice(),
-                    auction.getAmount(),auction.getShowtime().toString(),auction.getOrdertime().toString());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if(auction.getInitprice().equals(auction.getOrderprice()))
+                actitemDao.modifyRepository(auction.getActitemid(),auction.getInitprice(),auction.getAmount(),sdf.format(auction.getShowtime()));
+            else
+                orderService.addOrder(auction.getUserid(),auction.getActitemid(),auction.getInitprice(),auction.getOrderprice(),
+                    auction.getAmount(),sdf.format(auction.getShowtime()),df.format(auction.getOrdertime()));
             return -1;
         }
         auction.setUserid(userid);
-        auction.setPrice(price);
+        auction.setOrderprice(orderprice);
         auction.setOrdertime(new Date());
         auctionDao.save(auction);
         return 1;
@@ -134,8 +145,12 @@ public class AuctionServiceImpl implements AuctionService {
             {
                 auction.setIsover(1);
                 auctionDao.save(auction);
-                orderService.addOrder(auction.getUserid(),auction.getActitemid(),auction.getPrice(),
-                        auction.getAmount(),auction.getShowtime().toString(),auction.getOrdertime().toString());
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+                if(auction.getInitprice().equals(auction.getOrderprice()))
+                    actitemDao.modifyRepository(auction.getActitemid(),auction.getInitprice(),auction.getAmount(),sdf.format(auction.getShowtime()));
+                else
+                    orderService.addOrder(auction.getUserid(),auction.getActitemid(),auction.getInitprice(),auction.getOrderprice(),
+                            auction.getAmount(),sdf.format(auction.getShowtime()),df.format(auction.getOrdertime()));
             }
         }
     }

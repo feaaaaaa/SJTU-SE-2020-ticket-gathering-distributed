@@ -29,7 +29,7 @@ export class DetailCard extends React.Component{
             prices:[],
             price:"",
             numbers:[],
-            number:"",
+            number:0,
             success:false,
             chosenNum:1,
             authentication:false,
@@ -158,7 +158,7 @@ export class DetailCard extends React.Component{
                 else this.setState({success:true});
             }
             console.log(parseInt(this.state.price));
-            addOrder(parseInt(localStorage.getItem("userId")),parseInt(localStorage.getItem("actitemid")),parseInt(this.state.price),
+            addOrder(parseInt(localStorage.getItem("userId")),parseInt(localStorage.getItem("actitemid")),parseInt(this.state.price),0,
                 parseInt(this.state.chosenNum),this.state.time,moment().format('YYYY-MM-DD HH:mm:ss'),localStorage.getItem("token"),callback);
         }
     }
@@ -172,11 +172,12 @@ export class DetailCard extends React.Component{
             <div>
                 <img id='Dimg' alt="example" src={this.state.info.activityicon} />
                 <p id="Dtitle">{this.state.info.title}</p>
-                <p id="Dinfo">地点：{this.state.info.venue}</p>
-                <p id="Dinfo">表演者：{this.state.info.actor}</p>
-                <p id="Dinfo">票源：{this.state.info.website}</p>
-                <p id="Dinfo">时间范围：{this.state.info.timescale}</p>
-                <p id="Dnote">时间选择：</p>
+                <p id="Dinfo">地点:{this.state.info.venue}</p>
+                <p id="Dinfo">表演者:{this.state.info.actor}</p>
+                <p id="Dinfo">票源:{this.state.info.website}</p>
+                <p id="Dinfo">时间范围:{this.state.info.timescale}</p>
+                <p id="Dinfo">剩余票数:{this.state.number}</p>
+                <p id="Dnote">时间选择:</p>
                 <div id="Radio">
                 <Radio.Group
                     options={this.state.times}

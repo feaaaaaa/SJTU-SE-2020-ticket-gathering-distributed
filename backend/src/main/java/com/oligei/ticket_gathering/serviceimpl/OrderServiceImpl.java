@@ -44,55 +44,27 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public boolean addOrder(int userId, int actitemId, int price, int amount, String showtime, String orderTime){
-        Actitem actitem=actitemDao.findOneById(actitemId);
-        List<JSONObject> prices=actitem.getPrice();
-
-        int i,j,num=0;
-        for (i=0;i<prices.size();i++){
-            if (Objects.equals(showtime, prices.get(i).getString("time"))){
-                break;
+    public boolean addOrder(int userId, int actitemId, int initPrice,int orderPrice, int amount, String showtime, String orderTime){
+        if(actitemDao.modifyRepository(actitemId,initPrice,-amount,showtime)){
+            DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+            DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date Showtime=null,OrderTime=null;
+            try{
+                Showtime=format1.parse(showtime);
+                OrderTime=format2.parse(orderTime);
+            } catch (ParseException e){
+                e.printStackTrace();
+            }
+            if(orderPrice==0){
+                return orderDao.addOrder(userId,actitemId,initPrice,amount,Showtime,OrderTime);
+            }
+            else{
+                return orderDao.addOrder(userId,actitemId,orderPrice,amount,Showtime,OrderTime);
             }
         }
-        JSONObject tmp=prices.get(i);
-        JSONArray tickets=tmp.getJSONArray("class");
-        for (j=0;j<tickets.size();j++){
-            JSONObject ticket=tickets.getJSONObject(j);
-//            System.out.println(ticket.getString("price"));
-            if(Objects.equals(price,Integer.parseInt(ticket.getString("price")))){
-                num=Integer.parseInt(ticket.getString("num"));
-                if(Objects.equals(0,num)){
-                    System.out.println("the num is zero");
-                    return false;
-                }
-                else{
-                    num=num-2;
-                    ticket.put("num",num);
-                    tickets.set(j,ticket);
-//                    System.out.println(j);
-                    break;
-                }
-            }
+        else {
+            System.out.println("modify Repository failed");
+            return false;
         }
-        tmp.put("class",tickets);
-        prices.set(i,tmp);
-
-//        System.out.println(prices);
-
-        actitemDao.deleteMongoDBByActitemId(actitemId);
-        actitemDao.insertActitemInMongo(actitemId,prices);
-
-        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date Showtime=null,OrderTime=null;
-        try{
-            Showtime=format1.parse(showtime);
-            OrderTime=format2.parse(orderTime);
-        } catch (ParseException e){
-            e.printStackTrace();
-        }
-
-        return orderDao.addOrder(userId,actitemId,price,amount,Showtime,OrderTime);
     }
-
 }

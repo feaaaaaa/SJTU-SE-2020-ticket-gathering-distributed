@@ -86,6 +86,10 @@ class ActitemDaoTest {
         assertEquals(mongoData.getPrice(),tmp);
     }
 
-
+    @Test
+    @Rollback
+    void modifyRepository(){
+        assertTrue(actitemDao.modifyRepository(8, 680, 5, "2020-02-22"));
+    }
 
 }

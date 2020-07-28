@@ -4400,9 +4400,9 @@ cypress-intellij-reporter@0.0.4:
   dependencies:
     mocha latest
 
-cypress@^4.10.0:
+cypress@^4.11.0:
   version "4.11.0"
-  resolved "https://registry.npm.taobao.org/cypress/download/cypress-4.11.0.tgz#054b0b85fd3aea793f186249ee1216126d5f0a7e"
+  resolved "https://registry.npm.taobao.org/cypress/download/cypress-4.11.0.tgz?cache=0&sync_timestamp=1595342518699&other_urls=https%3A%2F%2Fregistry.npm.taobao.org%2Fcypress%2Fdownload%2Fcypress-4.11.0.tgz#054b0b85fd3aea793f186249ee1216126d5f0a7e"
   integrity sha1-BUsLhf066nk/GGJJ7hIWEm1fCn4=
   dependencies:
     "@cypress/listr-verbose-renderer" "0.4.1"

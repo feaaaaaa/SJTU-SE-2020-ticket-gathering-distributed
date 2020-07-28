@@ -62,6 +62,7 @@ export class HeaderInfo extends React.Component {
                     <div id="menusortDiv">
                         <Button id="menuButton" href="/" type={"primary"}>首页</Button>
                         <Button id="sortButton" href="/sortPage" type={"primary"}>分类</Button>
+                        <Button id="auctionButton" href="/auction" type={"primary"}>竞价</Button>
                     </div>
                     <div id="searchDiv">
                         <Search

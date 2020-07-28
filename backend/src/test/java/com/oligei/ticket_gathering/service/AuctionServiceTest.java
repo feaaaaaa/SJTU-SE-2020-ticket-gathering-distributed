@@ -22,7 +22,7 @@ class AuctionServiceTest {
     @Test
     @Rollback
     void save() {
-        assertEquals(true,auctionService.save(1,"2020-10-1 12:12:12","2020-1-1",1000,5));
+        assertEquals(true,auctionService.save(7,"2020-10-1 12:12:12","2020-02-22",680,1000,5));
     }
 
     @Test
