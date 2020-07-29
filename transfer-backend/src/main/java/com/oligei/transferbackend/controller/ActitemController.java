@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/Actitem")
+@RequestMapping("/actitem")
 @CrossOrigin(origins = "*",maxAge = 3600)
 public class ActitemController {
 
