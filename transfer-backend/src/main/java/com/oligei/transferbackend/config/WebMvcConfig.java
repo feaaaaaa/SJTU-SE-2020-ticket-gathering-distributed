@@ -16,20 +16,20 @@ public class WebMvcConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         List<String> excludePath = new ArrayList<>();
-        excludePath.add("/User/Register");
-        excludePath.add("/User/Login");
-        excludePath.add("/User/ExistsByUsername");
-        excludePath.add("/Activity/search");
-        excludePath.add("/Activity/FindActivityByCategory");
+        excludePath.add("/user/Register");
+        excludePath.add("/user/Login");
+        excludePath.add("/user/ExistsByUsername");
+        excludePath.add("/activity/search");
+        excludePath.add("/activity/FindActivityByCategory");
         excludePath.add("/index.html");
-        excludePath.add("/Activity/FindActivityByCategoryHome");
+        excludePath.add("/activity/FindActivityByCategoryHome");
         excludePath.add("/hi");
         excludePath.add("/");
-        //excludePath.add("/Actitem/detail");
+        //excludePath.add("/actitem/detail");
         registry.addInterceptor(new AuthenInterceptor()).addPathPatterns("/**")
                                                         .excludePathPatterns(excludePath);
-        registry.addInterceptor(new AuthorInterceptor()).addPathPatterns("/Activity/add")
-                                                        .addPathPatterns("/Activity/delete");
+        registry.addInterceptor(new AuthorInterceptor()).addPathPatterns("/activity/add")
+                                                        .addPathPatterns("/activity/delete");
     }
 
     @Override
