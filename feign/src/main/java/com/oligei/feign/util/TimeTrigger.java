@@ -1,7 +1,7 @@
-package com.oligei.ticket_gathering.util;
+package com.oligei.feign.util;
 
-import com.oligei.ticket_gathering.dao.AuctionDao;
-import com.oligei.ticket_gathering.service.AuctionService;
+import com.oligei.feign.dao.AuctionDao;
+import com.oligei.feign.service.AuctionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;

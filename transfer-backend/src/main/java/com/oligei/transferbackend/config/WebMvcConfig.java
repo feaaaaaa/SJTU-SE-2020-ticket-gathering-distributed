@@ -1,7 +1,7 @@
-package com.oligei.ticket_gathering.config;
+package com.oligei.transferbackend.config;
 
-import com.oligei.ticket_gathering.interceptor.AuthenInterceptor;
-import com.oligei.ticket_gathering.interceptor.AuthorInterceptor;
+import com.oligei.transferbackend.interceptor.AuthenInterceptor;
+import com.oligei.transferbackend.interceptor.AuthorInterceptor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

@@ -1,4 +1,4 @@
-package com.oligei.ticket_gathering.config;
+package com.oligei.transferbackend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

@@ -1,7 +1,7 @@
-package com.oligei.ticket_gathering.interceptor;
+package com.oligei.transferbackend.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
-import com.oligei.ticket_gathering.util.TokenUtil;
+import com.oligei.transferbackend.util.TokenUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -9,18 +9,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 @Component
-public class AuthenInterceptor implements HandlerInterceptor {
+public class AuthorInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler) throws Exception{
-        System.out.println(request.getRequestURL());
         String token = request.getHeader("token");
-        System.out.println(token);
-        if(token!=null&&!token.equals("null")){
-            boolean result = TokenUtil.authenverify(token);
-            System.out.println(result);
+        if(!token.equals("null")){
+            boolean result = TokenUtil.adminverify(token);
             if (result) {
-                System.out.println("authentication passed");
+                System.out.println("authorization passed");
                 return true;
             }
         }
@@ -28,9 +25,9 @@ public class AuthenInterceptor implements HandlerInterceptor {
         response.setContentType("application/json; charset=utf-8");
         try{
             JSONObject json = new JSONObject();
-            json.put("message","authentication failure");
+            json.put("message","authorization failure");
             response.getWriter().append(json.toJSONString());
-            System.out.println("authentication failure");
+            System.out.println("authorization failure");
         }catch (Exception e) {
             e.printStackTrace();
             response.sendError(500);
