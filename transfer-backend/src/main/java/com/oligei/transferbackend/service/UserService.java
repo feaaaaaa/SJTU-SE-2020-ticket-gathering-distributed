@@ -18,19 +18,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 @FeignClient(value = "ticketGathering")
-@RequestMapping("/User")
 public interface UserService {
 
-    @RequestMapping("/Login")
+    @RequestMapping(value = "/User/Login",method = RequestMethod.GET)
     public Map<String,Object> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
                                     HttpServletResponse response);
 
-    @RequestMapping("/Register")
+    @RequestMapping(value = "/User/Register",method = RequestMethod.POST)
     public boolean register(@RequestBody User user);
 
-    @RequestMapping("/ExistsByUsername")
+    @RequestMapping(value = "/User/ExistsByUsername",method = RequestMethod.GET)
     public boolean existsByUsername(@RequestParam(name = "username") String username);
 
-    @RequestMapping("/FindByUserId")
+    @RequestMapping(value = "/User/FindByUserId",method = RequestMethod.GET)
     public User findUserByUserId(Integer userId);
 }
