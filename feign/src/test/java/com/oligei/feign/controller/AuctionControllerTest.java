@@ -1,9 +1,9 @@
-package com.oligei.ticket_gathering.controller;
+package com.oligei.feign.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.oligei.ticket_gathering.entity.mysql.Auction;
-import com.oligei.ticket_gathering.service.AuctionService;
+import com.oligei.feign.entity.Auction;
+import com.oligei.feign.service.AuctionService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

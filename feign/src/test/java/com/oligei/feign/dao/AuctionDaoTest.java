@@ -1,6 +1,6 @@
-package com.oligei.ticket_gathering.dao;
+package com.oligei.feign.dao;
 
-import com.oligei.ticket_gathering.entity.mysql.Auction;
+import com.oligei.feign.entity.Auction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

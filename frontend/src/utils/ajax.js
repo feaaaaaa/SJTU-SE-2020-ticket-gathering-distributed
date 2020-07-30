@@ -2,10 +2,10 @@ import fetch,{Response}from 'node-fetch';
 /**用于服务器跨域
  * url:'http://54.83.132.136:8080'
  * 用于跑本地
- * url:'http://localhost:8080'
+ * url:'http://localhost:1112'
  * */
 
-const baseUrl='http://localhost:8080';
+const baseUrl='http://localhost:1112';
 
 let postRequest = async (apiUrl, data, callback) => {
     const url = baseUrl + apiUrl;
