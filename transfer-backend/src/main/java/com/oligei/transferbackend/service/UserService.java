@@ -22,7 +22,7 @@ public interface UserService {
 
     @RequestMapping(value = "/User/Login",method = RequestMethod.GET)
     public Map<String,Object> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
-                                    HttpServletResponse response);
+                      HttpServletResponse response);
 
     @RequestMapping(value = "/User/Register",method = RequestMethod.POST)
     public boolean register(@RequestBody User user);
