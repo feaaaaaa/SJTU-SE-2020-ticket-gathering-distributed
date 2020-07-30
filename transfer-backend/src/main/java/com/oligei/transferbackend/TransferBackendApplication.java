@@ -13,7 +13,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 @SpringBootApplication
 public class TransferBackendApplication {
 
-
     public static void main(String[] args) {
         SpringApplication.run(TransferBackendApplication.class, args);
     }

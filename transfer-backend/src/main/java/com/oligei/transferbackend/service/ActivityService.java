@@ -13,27 +13,26 @@ import java.util.LinkedList;
 import java.util.List;
 
 @FeignClient(value = "ticketGathering")
-@RequestMapping("/Activity")
 public interface ActivityService {
 
-    @RequestMapping("/search")
+    @RequestMapping(value = "/Activity/search",method = RequestMethod.GET)
     public List<ActivitySortpage> search(@RequestParam(name = "search") String value);
 
-    @RequestMapping("/add")
+    @RequestMapping(value = "/Activity/add",method = RequestMethod.POST)
     public Boolean add(@RequestParam(name = "activity") String activity);
 
-    @RequestMapping("/delete")
+    @RequestMapping(value = "/Activity/delete",method = RequestMethod.POST)
     public Boolean delete(@RequestParam(name = "activityId") String activityid);
 
-    @RequestMapping("/RecommendOnContent")
+    @RequestMapping(value = "/Activity/RecommendOnContent",method = RequestMethod.GET)
     public List<ActivitySortpage> recommendOnContent(@RequestParam(name = "userId") Integer userId,
                                                      @RequestParam(name = "activityId") Integer activityId);
 
-    @RequestMapping("/FindActivityByCategory")
+    @RequestMapping(value = "/Activity/FindActivityByCategory",method = RequestMethod.GET)
     public List<ActivitySortpage> selectSearch(@RequestParam(name = "type")String type,
                                                          @RequestParam(name = "name")String name,
                                                          @RequestParam(name = "city")String city);
 
-    @RequestMapping("/FindActivityByCategoryHome")
+    @RequestMapping(value = "/Activity/FindActivityByCategoryHome",method = RequestMethod.GET)
     public List<ActivitySortpage> findActivityByCategoryHome();
 }
