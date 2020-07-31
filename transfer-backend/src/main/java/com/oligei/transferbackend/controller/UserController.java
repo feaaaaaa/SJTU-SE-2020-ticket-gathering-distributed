@@ -234,7 +234,7 @@ public class UserController {
     }
 
     @RequestMapping("/FindByUserId")
-    public User findUserByUserId(Integer userId){
+    public User findUserByUserId(@RequestParam(name = "userId")Integer userId){
         return userService.findUserByUserId(userId);
     }
 }

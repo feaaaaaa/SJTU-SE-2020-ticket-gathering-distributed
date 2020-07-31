@@ -25,31 +25,33 @@ export class AuctionView extends React.Component{
             login:false,
             username:null,
             ifauthen:false,
-            ifauthor:false
+            ifauthor:false,
+            isSearch:false
         }
     }
 
     toggleSearch=(value)=>{
-        console.log("搜索内容："+value+"!!!");
-        if (value !== this.state.search) {
-            localStorage.setItem("search", value);
-            this.setState({search: value});
-            search(value, (res) => {
-                console.log(value);
-                console.log("??res:" + JSON.stringify(res));
-                if (res != null)
-                    this.setState({activity: res})
-            });
-        }
+        this.setState({isSearch:true,search:value});
+        // console.log("搜索内容："+value+"!!!");
+        // if (value !== this.state.search) {
+        //     localStorage.setItem("search", value);
+        //     this.setState({search: value});
+        //     search(value, (res) => {
+        //         console.log(value);
+        //         console.log("??res:" + JSON.stringify(res));
+        //         if (res != null)
+        //             this.setState({activity: res})
+        //     });
+        // }
     }
 
     componentDidMount() {
-        let username=localStorage.getItem("username");
-        if(username!=null){
-            this.setState({username:username,login:true});
-        }
-        const value = localStorage.getItem("search");
-        this.setState({search: value});
+        // let username=localStorage.getItem("username");
+        // if(username!=null){
+        //     this.setState({username:username,login:true});
+        // }
+        // const value = localStorage.getItem("search");
+        // this.setState({search: value});
         // const callback = data =>{
         //     console.log("rendering");
         //     console.log("数据："+data);
@@ -75,6 +77,15 @@ export class AuctionView extends React.Component{
     }
 
     render() {
+        if(this.state.isSearch){
+            console.log("jumping...");
+            return <Redirect to={{
+                pathname: "/sortPage",
+                state:{
+                    search:this.state.search
+                }
+            }}/>;
+        }
         return(
             <div >
                 <HeaderInfo search={value => this.toggleSearch(value)}/>
