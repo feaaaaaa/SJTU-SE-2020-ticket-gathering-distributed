@@ -1,0 +1,133 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test loginform test initialized state 1`] = `
+<div>
+  <ForwardRef(InternalForm)
+    id="login_form"
+    initialValues={
+      Object {
+        "remember": true,
+      }
+    }
+    labelCol={
+      Object {
+        "span": 8,
+      }
+    }
+    name="basic"
+    onFinish={[Function]}
+    onFinishFailed={[Function]}
+    wrapperCol={
+      Object {
+        "span": 16,
+      }
+    }
+  >
+    <FormItem
+      name="username"
+      rules={
+        Array [
+          Object {
+            "message": "Please input your username!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Input
+        placeholder="Username"
+        prefix={
+          <ForwardRef(UserOutlined)
+            className="site-form-item-icon"
+          />
+        }
+        size="large"
+        style={
+          Object {
+            "borderRadius": 10,
+            "fontFamily": "BookMan Old Style",
+            "width": 400,
+          }
+        }
+        type="text"
+      />
+    </FormItem>
+    <FormItem
+      name="password"
+      rules={
+        Array [
+          Object {
+            "message": "Please input your password!",
+            "required": true,
+          },
+        ]
+      }
+    >
+      <Input
+        placeholder="Password"
+        prefix={
+          <ForwardRef(LockOutlined)
+            className="site-form-item-icon"
+          />
+        }
+        size="large"
+        style={
+          Object {
+            "borderRadius": 10,
+            "fontFamily": "BookMan Old Style",
+            "width": 400,
+          }
+        }
+        type="password"
+      />
+    </FormItem>
+    <FormItem>
+      <Button
+        block={false}
+        ghost={false}
+        htmlType="submit"
+        id="loginBtn"
+        loading={false}
+        size="large"
+        type="primary"
+      >
+        登 录
+      </Button>
+      <p>
+         
+      </p>
+      <Link
+        to={
+          Object {
+            "pathname": "/register",
+          }
+        }
+      >
+        <Button
+          block={false}
+          ghost={false}
+          htmlType="button"
+          id="regBtn"
+          loading={false}
+          size="large"
+        >
+          注册
+        </Button>
+      </Link>
+    </FormItem>
+  </ForwardRef(InternalForm)>
+  <div
+    id="buttonDiv"
+  />
+</div>
+`;
+
+exports[`test loginform test login function 1`] = `
+<Redirect
+  to={
+    Object {
+      "pathname": "/",
+    }
+  }
+/>
+`;

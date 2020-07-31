@@ -1,0 +1,111 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test loginform test initialized state 1`] = `
+<Header
+  className="site-layout-background"
+  style={
+    Object {
+      "padding": 0,
+    }
+  }
+>
+  <div
+    id="header-content"
+  >
+    <div
+      id="oligei"
+    >
+      <img
+        height="80px"
+        src={null}
+        width="200px"
+      />
+    </div>
+    <div
+      id="menusortDiv"
+    >
+      <Button
+        block={false}
+        ghost={false}
+        href="/"
+        htmlType="button"
+        id="menuButton"
+        loading={false}
+        type="primary"
+      >
+        首页
+      </Button>
+      <Button
+        block={false}
+        ghost={false}
+        href="/sortPage"
+        htmlType="button"
+        id="sortButton"
+        loading={false}
+        type="primary"
+      >
+        分类
+      </Button>
+    </div>
+    <div
+      id="searchDiv"
+    >
+      <Search
+        enterButton="搜索"
+        id="searchInput"
+        onSearch={[Function]}
+        placeholder="搜索明星、演出、体育赛事"
+        size="large"
+      />
+    </div>
+    <Avatar
+      icon={<ForwardRef(UserOutlined) />}
+      id="profileOperate"
+      shape="circle"
+      size="default"
+    />
+    <Dropdown
+      mouseEnterDelay={0.15}
+      mouseLeaveDelay={0.1}
+      overlay={
+        <Menu>
+          <MenuItem>
+            <a
+              href="/login"
+            >
+              个人信息
+            </a>
+          </MenuItem>
+          <MenuItem>
+            <a
+              href="/login"
+            >
+              订单管理
+            </a>
+          </MenuItem>
+          <MenuItem
+            onClick={[Function]}
+          >
+            <p
+              className="menuItem"
+            >
+              登出
+            </p>
+          </MenuItem>
+        </Menu>
+      }
+    >
+      <Button
+        block={false}
+        ghost={false}
+        href="/login"
+        htmlType="button"
+        id="profileOperate"
+        loading={false}
+      >
+        登录
+      </Button>
+    </Dropdown>
+  </div>
+</Header>
+`;

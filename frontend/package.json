@@ -1,0 +1,74 @@
+{
+  "name": "ticket_gathering",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "latest",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "animate.css": "^4.1.0",
+    "animated": "^0.2.2",
+    "antd": "^4.4.1",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.1.0",
+    "babel-preset-env": "^1.7.0",
+    "enzyme": "^3.11.0",
+    "enzyme-to-json": "^3.5.0",
+    "history": "^5.0.0",
+    "moment": "^2.27.0",
+    "node-fetch": "^2.6.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router-dom": "^5.1.2",
+    "react-scripts": "3.4.1",
+    "velocity-react": "^1.4.3"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "eject": "react-scripts eject",
+    "cypress:open": "cypress open"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "cypress": "^4.11.0",
+    "cypress-intellij-reporter": "0.0.4",
+    "enzyme-adapter-react-16": "^1.15.2"
+  },
+  "jest": {
+    "setupFiles": [
+      "./_tests_/jestsetup.js"
+    ],
+    "snapshotSerializers": [
+      "enzyme-to-json/serializer"
+    ],
+    "moduleNameMapper": {
+      "^.+\\.(css|scss)$": "identity-obj-proxy",
+      "[./a-zA-Z0-9$_-]+\\.png$": "identity-obj-proxy"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "jsx",
+      "json"
+    ]
+  }
+}

@@ -1,0 +1,40 @@
+#recommendList{
+    padding-right: 30px;
+    float: right;
+    padding-top: 60px;
+}
+
+.recommendCard{
+    width: 270px;
+    height: 200px;
+}
+
+.img{
+    width: 100px;
+    height: 160px;
+    float: left;
+}
+
+.box {
+    padding-top: 15px;
+    font-size: 12px;
+    font-family: "HeiTi";
+    font-weight: bold;
+    /*padding-left: 10px;*/
+}
+
+.venue{
+    font-size: 12px;
+    padding-left: 110px;
+}
+
+.pricestr{
+    font-size: 16px;
+    color: #fb385f;
+    padding-left: 115px;
+}
+
+#recommendp{
+    font-size: 16px;
+    color: #fb9c29;
+}

@@ -1,0 +1,101 @@
+CREATE (展览休闲:category {name:'展览休闲'})
+CREATE (话剧歌剧:category {name:'话剧歌剧'})
+CREATE (演唱会:category {name:'演唱会'})
+CREATE (音乐会:category {name:'音乐会'})
+CREATE (曲苑杂坛:category {name:'曲苑杂坛'})
+CREATE (体育:category {name:'体育'})
+CREATE (舞蹈芭蕾:category {name:'舞蹈芭蕾'})
+CREATE (儿童亲子:category {name:'儿童亲子'})
+
+CREATE (展会:subcategory {name:'展会'})
+CREATE (特色体验:subcategory {name:'特色体验'})
+CREATE (其他展览休闲:subcategory {name:'其他展览休闲'})
+CREATE (话剧:subcategory {name:'话剧'})
+CREATE (音乐剧:subcategory {name:'音乐剧'})
+CREATE (其他话剧歌剧:subcategory {name:'其他话剧歌剧'})
+CREATE (摇滚:subcategory {name:'摇滚'})
+CREATE (流行:subcategory {name:'流行'})
+CREATE (音乐节:subcategory {name:'音乐节'})
+CREATE (其他演唱会:subcategory {name:'其他演唱会'})
+CREATE (室内乐及古乐:subcategory {name:'室内乐及古乐'})
+CREATE (独奏:subcategory {name:'独奏'})
+CREATE (管弦乐:subcategory {name:'管弦乐'})
+CREATE (其他音乐会:subcategory {name:'其他音乐会'})
+CREATE (戏曲:subcategory {name:'戏曲'})
+CREATE (相声:subcategory {name:'相声'})
+CREATE (魔术:subcategory {name:'魔术'})
+CREATE (其他曲苑杂坛:subcategory {name:'其他曲苑杂坛'})
+CREATE (球类运动:subcategory {name:'球类运动'})
+CREATE (田径:subcategory {name:'田径'})
+CREATE (篮球:subcategory {name:'篮球'})
+CREATE (足球:subcategory {name:'足球'})
+CREATE (其他体育:subcategory {name:'其他体育'})
+CREATE (舞蹈:subcategory {name:'舞蹈'})
+CREATE (其他舞蹈芭蕾:subcategory {name:'其他舞蹈芭蕾'})
+CREATE (其他儿童亲子:subcategory {name:'其他儿童亲子'})
+
+CREATE (北京:city {name:'北京'})
+CREATE (成都:city {name:'成都'})
+CREATE (重庆:city {name:'重庆'})
+CREATE (长春:city {name:'长春'})
+CREATE (长沙:city {name:'长沙'})
+CREATE (东莞:city {name:'东莞'})
+CREATE (佛山:city {name:'佛山'})
+CREATE (福州:city {name:'福州'})
+CREATE (广州:city {name:'广州'})
+CREATE (贵阳:city {name:'贵阳'})
+CREATE (国际及港澳台:city {name:'国际及港澳台'})
+CREATE (哈尔滨:city {name:'哈尔滨'})
+CREATE (海口:city {name:'海口'})
+CREATE (杭州:city {name:'杭州'})
+CREATE (合肥:city {name:'合肥'})
+CREATE (呼和浩特:city {name:'呼和浩特'})
+CREATE (济南:city {name:'济南'})
+CREATE (昆明:city {name:'昆明'})
+CREATE (南昌:city {name:'南昌'})
+CREATE (南京:city {name:'南京'})
+CREATE (南宁:city {name:'南宁'})
+CREATE (宁波:city {name:'宁波'})
+CREATE (青岛:city {name:'青岛'})
+CREATE (厦门:city {name:'厦门'})
+CREATE (上海:city {name:'上海'})
+CREATE (深圳:city {name:'深圳'})
+CREATE (沈阳:city {name:'沈阳'})
+CREATE (石家庄:city {name:'石家庄'})
+CREATE (苏州:city {name:'苏州'})
+CREATE (太原:city {name:'太原'})
+CREATE (天津:city {name:'天津'})
+CREATE (无锡:city {name:'无锡'})
+CREATE (武汉:city {name:'武汉'})
+CREATE (西安:city {name:'西安'})
+CREATE (郑州:city {name:'郑州'})
+CREATE (中国香港:city {name:'中国香港'})
+CREATE (珠海:city {name:'珠海'})
+
+CREATE
+(展览休闲)-[:CONTAINS]->(展会),
+(展览休闲)-[:CONTAINS]->(特色体验),
+(展览休闲)-[:CONTAINS]->(其他展览休闲),
+(话剧歌剧)-[:CONTAINS]->(话剧),
+(话剧歌剧)-[:CONTAINS]->(音乐剧),
+(话剧歌剧)-[:CONTAINS]->(其他话剧歌剧),
+(演唱会)-[:CONTAINS]->(摇滚),
+(演唱会)-[:CONTAINS]->(流行),
+(演唱会)-[:CONTAINS]->(音乐节),
+(演唱会)-[:CONTAINS]->(其他演唱会),
+(音乐会)-[:CONTAINS]->(室内乐及古乐),
+(音乐会)-[:CONTAINS]->(独奏),
+(音乐会)-[:CONTAINS]->(管弦乐),
+(音乐会)-[:CONTAINS]->(其他音乐会),
+(曲苑杂坛)-[:CONTAINS]->(戏曲),
+(曲苑杂坛)-[:CONTAINS]->(相声),
+(曲苑杂坛)-[:CONTAINS]->(魔术),
+(曲苑杂坛)-[:CONTAINS]->(其他曲苑杂坛),
+(体育)-[:CONTAINS]->(球类运动),
+(体育)-[:CONTAINS]->(田径),
+(体育)-[:CONTAINS]->(篮球),
+(体育)-[:CONTAINS]->(足球),
+(体育)-[:CONTAINS]->(其他体育),
+(舞蹈芭蕾)-[:CONTAINS]->(舞蹈),
+(舞蹈芭蕾)-[:CONTAINS]->(其他舞蹈芭蕾),
+(儿童亲子)-[:CONTAINS]->(其他儿童亲子)

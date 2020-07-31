@@ -1,0 +1,41 @@
+#Detail {
+    width: 70%;
+    /*text-align: center;*/
+    padding-left: 20%;
+    float: left;
+    /*border-style: dashed;*/
+    /*border-width: 1px;*/
+
+    /*margin-left: auto;*/
+    /*margin-right: auto;*/
+}
+
+#Dimg{
+    height:500px;
+    width:400px;
+    float:left;
+}
+
+#Dnote{
+    font-size: 14px;
+    padding-left: 500px;
+    font-style: italic;
+    color: darkgray;
+}
+
+#Radio{
+    padding-left: 500px;
+    padding-bottom: 3px;
+}
+
+#Dtitle{
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 500px;
+    font-family: "HeiTi";
+}
+
+#Dinfo{
+    font-size: 16px;
+    padding-left: 500px;
+}

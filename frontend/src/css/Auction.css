@@ -1,0 +1,29 @@
+.A-image{
+    height:300px;
+    width:240px;
+    float:left;
+}
+
+#A-title{
+    font-size: 20px;
+    font-weight: bold;
+    padding-left: 300px;
+    font-family: "HeiTi";
+}
+
+#A-info{
+    font-size: 16px;
+    padding-left: 300px;
+}
+
+#A-button-align{
+    padding-left: 300px;
+}
+
+#A-price{
+    font-size: 20px;
+    color: #fb385f;
+    padding-left: 300px;
+    padding-top: 10px;
+    font-weight: bold;
+}

@@ -1,0 +1,13 @@
+LOAD CSV WITH HEADERS FROM "file:///activity.csv" AS line
+MERGE (:activity{activityId:line.activityId,category:line.category,subcategory:line.subcategory,city:line.city})
+
+LOAD CSV WITH HEADERS FROM "file:///activity.csv" AS line
+match (from:subcategory{name:line.subcategory}),(to:activity{activityId:line.activityId})
+merge (from)-[:INCLUDES]->(to)
+
+LOAD CSV WITH HEADERS FROM "file:///activity.csv" AS line
+MATCH (from:city{name:line.city}),(to:activity{activityId:line.activityId})
+MERGE (from)-[:LOCATED]->(to)
+
+create index on:user(userId)
+create index on:activity(activityId)

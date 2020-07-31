@@ -1,0 +1,14 @@
+.personIcon{
+    height:200px;
+}
+
+#regDiv{
+    width: 30%;
+    margin:auto;
+    padding-top: 100px;
+}
+
+#bg{
+    background-image: url("../resources/Login_background.jpg");
+    height: 1280px;
+}

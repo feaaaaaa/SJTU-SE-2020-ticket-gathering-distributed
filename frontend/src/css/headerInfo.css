@@ -1,0 +1,68 @@
+.ant-layout-header {
+    background: white !important;
+}
+
+.menuItem{
+    width:20px
+}
+
+#menuButton{
+    margin: 0 20px 20px 20px; /*up right down left*/
+    border-radius: 25px;
+    border: 2px solid #61dafb;
+    height:35px;
+}
+
+#sortButton{
+    margin: 0 20px 0 0;
+    background-color: #fb385f;
+    border-radius: 25px;
+    border: 2px solid #fb9c29;
+    height: 35px;
+}
+
+#auctionButton{
+    margin: 0 20px 0 0;
+    border-radius: 25px;
+    height: 35px;
+    background-color: #fb385f;
+    border: 2px solid #fb9c29;
+}
+#searchInput{
+    border-radius: 25px;
+    width: 400px;
+}
+
+#profileOperate{
+    margin: 15px 20px 0 20px;
+    float: right;
+}
+
+#searchDiv{
+    padding-top: 15px;
+    float: left;
+    height: 60px;
+    padding-left: 60px;
+}
+
+#menusortDiv{
+    float: left;
+    height: 60px;
+    padding-left: 180px;
+}
+
+#header-content{
+    padding-left: 150px;
+    padding-top: 10px;
+}
+
+#carouselDiv{
+    height: 300px;
+}
+
+#oligei{
+    padding-left: 30px;
+    float: left;
+    width: 80px;
+}
+

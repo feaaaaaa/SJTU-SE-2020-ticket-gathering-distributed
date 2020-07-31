@@ -1,0 +1,147 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test profile test componentDidMount function 1`] = `
+<div>
+  <HeaderInfo
+    logOut={[Function]}
+  />
+  <div
+    style={
+      Object {
+        "paddingTop": 50,
+      }
+    }
+  >
+    <div
+      id="profileDiv"
+    >
+      <Descriptions
+        bordered={true}
+        title="个人信息"
+      >
+        <DescriptionsItem
+          label="用户名"
+        >
+          oligei
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="性别"
+        >
+          Male
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="用户类型"
+        >
+          用户
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="电话号码"
+        >
+          123456
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="邮箱"
+          span={2}
+        >
+          oligei@gmail.com
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="账户余额"
+        >
+          $80.00
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="Config Info"
+        >
+          <img
+            alt="userIcon"
+            style={
+              Object {
+                "height": 100,
+              }
+            }
+          />
+        </DescriptionsItem>
+      </Descriptions>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`test profile test initialized state 1`] = `
+<p>
+  404
+</p>
+`;
+
+exports[`test register test componentDidMount function 1`] = `
+<div>
+  <HeaderInfo />
+  <div
+    style={
+      Object {
+        "paddingTop": 50,
+      }
+    }
+  >
+    <div
+      id="profileDiv"
+    >
+      <Descriptions
+        bordered={true}
+        title="个人信息"
+      >
+        <DescriptionsItem
+          label="用户名"
+        >
+          oligei
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="性别"
+        >
+          Male
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="用户类型"
+        >
+          用户
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="电话号码"
+        >
+          123456
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="邮箱"
+          span={2}
+        >
+          oligei@gmail.com
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="账户余额"
+        >
+          $80.00
+        </DescriptionsItem>
+        <DescriptionsItem
+          label="Config Info"
+        >
+          <img
+            alt="userIcon"
+            style={
+              Object {
+                "height": 100,
+              }
+            }
+          />
+        </DescriptionsItem>
+      </Descriptions>
+    </div>
+  </div>
+</div>
+`;
+
+exports[`test register test initialized state 1`] = `
+<p>
+  404
+</p>
+`;

@@ -1,0 +1,13 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test order test componentDidMount function 1`] = `
+<p>
+  404 error
+</p>
+`;
+
+exports[`test order test initialized state 1`] = `
+<p>
+  404 error
+</p>
+`;

@@ -1,0 +1,10 @@
+#orderDiv{
+    width: 80%;
+    margin: auto;
+    /*background-color: black;*/
+    padding-top: 80px;
+}
+
+#contentDiv{
+    padding-left: 40px;
+}

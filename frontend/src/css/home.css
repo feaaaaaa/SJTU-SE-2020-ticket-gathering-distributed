@@ -1,0 +1,75 @@
+.ant-carousel .slick-slide {
+    text-align: center;
+    /*height: 160px;*/
+    /*line-height: 160px;*/
+    background:white;
+    overflow: hidden;
+}
+
+.ant-carousel .slick-slide h3 {
+    color: #fff;
+}
+
+.all{
+    font-size: 12px;
+    color: gray;
+}
+
+.category{
+    /*width: 50%;*/
+    /*padding-left: 50px;*/
+    /*margin: auto;*/
+    /*padding-top: 10px;*/
+    /*border-radius: 25px;*/
+    /*border: 2px solid #fb9c29;*/
+}
+
+.navigateButton{
+    float:left;
+    text-align:center;
+}
+
+.icon{
+    width:100px;
+    height:120px;
+}
+
+#moreHerf{
+    font-size: 15px;
+    float: right;
+}
+
+#carousel{
+    padding-top: 10px;
+    padding-bottom: 50px;
+    width: 80%;
+    margin: auto;
+}
+
+.categoryDiv{
+    /*padding-top: 10px;*/
+    /*padding-bottom: 20px;*/
+    width: 80%;
+    margin: auto;
+}
+
+#carouselImg{
+    height: 300px;
+    width: 1250px;
+}
+
+#homeCategoryPageDiv{
+    /*padding-left: 60px;*/
+    /*width: 78%;*/
+    /*float: left;*/
+    width: 85%;
+    margin: auto;
+}
+
+#myElement {
+    /*-webkit-animation-duration: 2s;*/
+    /*-webkit-animation-delay: 2s;*/
+    /*-webkit-animation-iteration-count: infinite;*/
+}
+
+

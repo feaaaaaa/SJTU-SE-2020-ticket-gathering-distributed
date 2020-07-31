@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test profile test beforeUpload function 1`] = `
+<Upload
+  accept=""
+  action=""
+  beforeUpload={[Function]}
+  className=""
+  customRequest={[Function]}
+  data={Object {}}
+  disabled={false}
+  listType="text"
+  multiple={false}
+  showUploadList={false}
+  supportServerRender={true}
+  type="select"
+>
+  <Button
+    block={false}
+    ghost={false}
+    htmlType="button"
+    loading={false}
+  >
+    <ForwardRef(UploadOutlined) />
+     Click to Upload
+  </Button>
+</Upload>
+`;
+
+exports[`test profile test componentDidMount function 1`] = `
+<Upload
+  accept=""
+  action=""
+  beforeUpload={[Function]}
+  className=""
+  customRequest={[Function]}
+  data={Object {}}
+  disabled={false}
+  listType="text"
+  multiple={false}
+  showUploadList={false}
+  supportServerRender={true}
+  type="select"
+>
+  <Button
+    block={false}
+    ghost={false}
+    htmlType="button"
+    loading={false}
+  >
+    <ForwardRef(UploadOutlined) />
+     Click to Upload
+  </Button>
+</Upload>
+`;
