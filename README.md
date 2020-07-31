@@ -1,4 +1,7 @@
-# SJTU-SE-2020-ticket-gathering
+# SJTU-SE-2020-ticket-gathering-distributed
+## Spring Cloud: Eureka + Feign
+
+
 ## Database Design: Mysql+MongoDB+Neo4j
 ### Mysql+MongoDB
 
