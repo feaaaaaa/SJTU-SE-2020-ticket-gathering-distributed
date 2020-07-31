@@ -2,19 +2,19 @@ import {postRequest,fetchPost1,authRequest} from "../utils/ajax";
 
 export const checkUser = async (value, callback) => {
     const data = {username: value};
-    const url = '/User/ExistsByUsername';
+    const url = '/user/ExistsByUsername';
     await postRequest(url, data, callback);
 };
 
 
 export const login = async (value, callback) => {
     const data = {username: value.username, password: value.password};
-    const url = '/User/Login';
+    const url = '/user/Login';
     await postRequest(url, data, callback);
 };
 
 export const register = async (username, password, email, personicon, phone, gender, callback) => {
-    const url = '/User/Register';
+    const url = '/user/Register';
     const data = {
         'username': username,
         'password': password,
@@ -28,13 +28,13 @@ export const register = async (username, password, email, personicon, phone, gen
 };
 
 export const getPersonInfo= async (userId, token, callback) => {
-    const url = '/User/FindByUserId';
+    const url = '/user/FindByUserId';
     const data = {userId: userId};
     await authRequest(url, data, token, callback);
 };
 
 export const getRecommend= async(userId,activityId,token,callback)=>{
-    const url='/Activity/RecommendOnContent';
+    const url='/activity/RecommendOnContent';
     const data={userId:userId,activityId:activityId};
     await authRequest(url,data,token,callback);
 }

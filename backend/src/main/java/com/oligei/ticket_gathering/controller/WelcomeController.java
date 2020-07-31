@@ -7,12 +7,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class WelcomeController {
 
-//    @Value("${server.port}")
-//    String port;
+    @Value("${server.port}")
+    String port;
     @RequestMapping("/")
     public String index() {
-        return "Hello there";
-//        return "Hello there from"+ port;
+        return "Hello there from"+ port;
     }
 
 }
