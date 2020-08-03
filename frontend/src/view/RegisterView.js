@@ -155,6 +155,7 @@ export class RegisterView extends React.Component{
                     placeholder="Enter your username"
                     prefix={<UserOutlined className="site-form-item-icon" />}
                     onBlur={this.handleUsername}
+                    className="input"
                 >
                 </Input>
                 <div>
@@ -167,6 +168,7 @@ export class RegisterView extends React.Component{
                     placeholder="Enter your password"
                     prefix={<UserOutlined className="site-form-item-icon" />}
                     onBlur={this.handlePassword}
+                    className="input"
                 >
                 </Input.Password>
                 <p>请再次输入密码:</p>
@@ -174,6 +176,7 @@ export class RegisterView extends React.Component{
                     placeholder="Enter your password again"
                     prefix={<UserOutlined className="site-form-item-icon" />}
                     onBlur={this.checkPassword}
+                    className="input"
                 >
                 </Input.Password>
                 <div>
@@ -184,8 +187,8 @@ export class RegisterView extends React.Component{
                 <div>
                     <p>性别：</p>
                     <Radio.Group onChange={this.handleGender} value={this.state.gender}>
-                        <Radio value="Male">男</Radio>
-                        <Radio value="Female">女</Radio>
+                        <Radio value="Male" style={{color:"white"}}>男</Radio>
+                        <Radio value="Female" style={{color:"white"}}>女</Radio>
                     </Radio.Group>
                 </div>
                 <p>请输入手机号:</p>
@@ -193,13 +196,15 @@ export class RegisterView extends React.Component{
                     placeholder="Enter your phone number"
                     prefix={<UserOutlined className="site-form-item-icon" />}
                     onBlur={this.handlePhone}
+                    className="input"
                 >
                 </Input>
                 <p>请输入邮箱:</p>
                 <Input
-                    placeholder="Enter your address"
+                    placeholder="Enter your email"
                     prefix={<UserOutlined className="site-form-item-icon" />}
                     onBlur={this.handleEmail}
+                    className="input"
                 >
                 </Input>
                 <div>

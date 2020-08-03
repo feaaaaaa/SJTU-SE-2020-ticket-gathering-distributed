@@ -12,8 +12,8 @@ export class HomeCategory extends React.Component{
 
 
         return(
-            <div className="category" >
-                <PageHeader className="site-page-header animated infinite flipInX" title={this.props.name} subTitle={[this.props.icon]}
+            <div className="category wow bounceInRight"  data-wow-duration="1s" data-wow-offset="100">
+                <PageHeader className="site-page-header " title={this.props.name} subTitle={[this.props.icon]}
                             extra={<Link to="/sortPage" onClick={()=>localStorage.setItem("category",this.props.name)}>
                                 <p className="all">查看全部</p>
                             </Link>}/>
@@ -27,7 +27,7 @@ export class HomeCategory extends React.Component{
                         </div>
                     </Col>
                     <Col span={6} pull={18}>
-                        <div style={{backgroundColor:"white",height:460,}}>
+                        <div style={{backgroundColor:"white",height:460,}} >
                             <BigHomeCard info={this.props.info[8]}/>
                         </div>
                     </Col>
