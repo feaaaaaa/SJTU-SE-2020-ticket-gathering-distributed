@@ -3,7 +3,9 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
-
+import 'animate.css'
+import {WOW} from 'wowjs';
+new WOW({live: false}).init();
 ReactDOM.render(<App/>, document.getElementById('root'));
 // ReactDOM.render(
 //   <React.StrictMode>

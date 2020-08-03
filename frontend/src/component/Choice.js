@@ -141,7 +141,7 @@ export class Choice extends React.Component{
             console.log(key);
         }
         return(
-            <Collapse onChange={callback} bordered={false}
+            <Collapse onChange={callback} bordered={false} style={{paddingTop:40}}
                       expandIcon={({ isActive }) => <CaretRightOutlined rotate={isActive ? 90 : 0} />}>
                 <Panel key="1" header={"分类："+this.state.category} className="site-collapse-custom-panel" extra={genExtra1()}>
                     <div>

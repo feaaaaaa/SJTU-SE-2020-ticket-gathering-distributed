@@ -84,7 +84,7 @@ export class SortPageCard extends React.Component{
         }
         else
         return(
-             <div style={{paddingBottom:30}}>
+             <div style={{paddingBottom:30}} data-wow-duration=".5s" data-wow-offset="100" className="wow slideInRight">
                  {
                      this.props.usertype==="Admin" &&
                      <div style={{float: "right"}}>
