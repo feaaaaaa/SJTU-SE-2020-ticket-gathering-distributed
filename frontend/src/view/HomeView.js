@@ -1,5 +1,7 @@
 import React from 'react';
 import {HeaderInfo} from "../component/Header";
+import {Logo} from "../component/Logo";
+import {Mycarousel} from "../component/Mycarousel";
 import {FooterInfo} from "../component/Footer";
 import { Carousel,Divider,BackTop } from 'antd';
 import "../css/home.css"
@@ -17,9 +19,6 @@ export class HomeView extends React.Component{
         this.onSearch=this.onSearch.bind(this);
     }
 
-    onChange(a,b,c){
-        // console.log(a,b,c)
-    }
 
     onSearch(value){
         this.setState({isSearch:true,search:value});
@@ -38,16 +37,10 @@ export class HomeView extends React.Component{
         return(
             <div>
                 <HeaderInfo search={this.onSearch}/>
-                <Divider plain className="divider"> </Divider>
-                <div id="carousel" className="animated flip">
-                    <Carousel autoplay afterChange={this.onChange.bind(this)} className="animated pulse infinite slower">
-                        <div id="carouselDiv">
-                            <img src={require('../resources/carousel.png')} alt="carousel1" id="carouselImg"/>
-                        </div>
-                        <div>
-                            <img src={require('../resources/carousel2.jpg')} alt="carousel2" id="carouselImg"/>
-                        </div>
-                    </Carousel>
+                {/*<Divider plain className="divider"> </Divider>*/}
+                <Logo/>
+                <div id="carousel" >
+                    <Mycarousel/>
                 </div>
                 <Navigate/>
                 <div id="homeCategoryPageDiv">
