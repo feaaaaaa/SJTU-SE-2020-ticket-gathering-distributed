@@ -150,7 +150,7 @@ export class RegisterView extends React.Component{
         return(
             <div id="bg">
             <div id="regDiv">
-                <p>请输入用户名:</p>
+                <p className="regp">请输入用户名:</p>
                 <Input
                     placeholder="Enter your username"
                     prefix={<UserOutlined className="site-form-item-icon" />}
@@ -163,7 +163,7 @@ export class RegisterView extends React.Component{
                         <Alert message="该用户名已被注册过" type="error"/>
                     ):null}
                 </div>
-                <p>请输入密码:</p>
+                <p className="regp">请输入密码:</p>
                 <Input.Password
                     placeholder="Enter your password"
                     prefix={<UserOutlined className="site-form-item-icon" />}
@@ -171,7 +171,7 @@ export class RegisterView extends React.Component{
                     className="input"
                 >
                 </Input.Password>
-                <p>请再次输入密码:</p>
+                <p className="regp">请再次输入密码:</p>
                 <Input.Password
                     placeholder="Enter your password again"
                     prefix={<UserOutlined className="site-form-item-icon" />}
@@ -185,13 +185,13 @@ export class RegisterView extends React.Component{
                     ):null}
                 </div>
                 <div>
-                    <p>性别：</p>
+                    <p className="regp">性别：</p>
                     <Radio.Group onChange={this.handleGender} value={this.state.gender}>
                         <Radio value="Male" style={{color:"white"}}>男</Radio>
                         <Radio value="Female" style={{color:"white"}}>女</Radio>
                     </Radio.Group>
                 </div>
-                <p>请输入手机号:</p>
+                <p className="regp">请输入手机号:</p>
                 <Input
                     placeholder="Enter your phone number"
                     prefix={<UserOutlined className="site-form-item-icon" />}
@@ -199,7 +199,7 @@ export class RegisterView extends React.Component{
                     className="input"
                 >
                 </Input>
-                <p>请输入邮箱:</p>
+                <p className="regp">请输入邮箱:</p>
                 <Input
                     placeholder="Enter your email"
                     prefix={<UserOutlined className="site-form-item-icon" />}
@@ -212,7 +212,7 @@ export class RegisterView extends React.Component{
                         <Alert message="请输入正确的Email" type="error"/>
                     ):null}
                 </div>
-                <p>上传头像：</p>
+                <p className="regp">上传头像：</p>
                 <UploadImage onCommitImage={this.handleCommitImage}/>
                 <Button onClick={this.handleSubmit.bind(this)}>
                     提交
