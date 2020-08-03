@@ -6,7 +6,7 @@ import org.hibernate.annotations.Proxy;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TG_ACTIVITIES")
+@Table(name = "tg_activities")
 @Proxy(lazy = false)
 public class Activity {
     private Integer activityId;
@@ -32,29 +32,29 @@ public class Activity {
     }
 
     @Id
-    @Column(name = "ACTIVITYID")
+    @Column(name = "activityid")
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment",strategy = "increment")
     public Integer getActivityId(){return activityId;}
     public void setActivityId(Integer activityId){this.activityId = activityId;}
 
-    @Column(name = "TITLE")
+    @Column(name = "title")
     public String getTitle(){return title;}
     public void setTitle(String title){this.title = title;}
 
-    @Column(name = "ACTOR")
+    @Column(name = "actor")
     public String getActor(){return actor;}
     public void setActor(String actor){this.actor = actor;}
 
-    @Column(name = "TIMESCALE")
+    @Column(name = "timescale")
     public String getTimescale(){return timescale;}
     public void setTimescale(String timescale){this.timescale = timescale;}
 
-    @Column(name = "VENUE")
+    @Column(name = "venue")
     public String getVenue(){return venue;}
     public void setVenue(String venue){this.venue=venue;}
 
-    @Column(name = "ACTIVITYICON")
+    @Column(name = "activityicon")
     public String getActivityIcon(){return activityIcon;}
     public void setActivityIcon(String activityIcon){this.activityIcon=activityIcon;}
 

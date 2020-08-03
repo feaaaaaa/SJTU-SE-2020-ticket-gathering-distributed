@@ -5,16 +5,39 @@ import { Carousel,Divider,BackTop } from 'antd';
 import "../css/home.css"
 import {HomeCategoryPage} from "../component/HomeCategoryPage";
 import {Navigate} from "../component/Navigate";
+import {Redirect} from "react-router-dom";
 
 export class HomeView extends React.Component{
+    constructor(props) {
+        super(props);
+        this.state={
+            isSearch:false,
+            search:null
+        };
+        this.onSearch=this.onSearch.bind(this);
+    }
+
     onChange(a,b,c){
         // console.log(a,b,c)
     }
 
+    onSearch(value){
+        this.setState({isSearch:true,search:value});
+    }
+
     render(){
+        if(this.state.isSearch){
+            console.log("jumping...");
+            return <Redirect to={{
+                pathname: "/sortPage",
+                state:{
+                    search:this.state.search
+                }
+            }}/>;
+        }
         return(
             <div>
-                <HeaderInfo/>
+                <HeaderInfo search={this.onSearch}/>
                 <Divider plain className="divider"> </Divider>
                 <div id="carousel" className="animated flip">
                     <Carousel autoplay afterChange={this.onChange.bind(this)} className="animated pulse infinite slower">

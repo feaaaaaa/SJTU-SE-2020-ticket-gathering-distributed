@@ -115,6 +115,11 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
+    public List<Integer> findAllIdByTitleOrVenueOrActor(String title, String venue, String actor) {
+        return activityRepository.findAllIdByTitleLikeOrVenueLikeOrActorLike(title, venue, actor);
+    }
+
+    @Override
     public ActivityNeo4j addActivityNeo4j(String activityId, String category, String subcategory, String city) {
         ActivityNeo4j activityNeo4j = new ActivityNeo4j(activityId,category,subcategory,city);
         activityNeo4jRepository.save(activityNeo4j);

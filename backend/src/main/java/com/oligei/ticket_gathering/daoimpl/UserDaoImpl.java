@@ -37,12 +37,13 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public User login(String username, String password) {
+//        User user=new User(1,"oligei","Male","123456","123456", "123456","123456","123456");
         User user = userRepository.checkUser(username);
         if (user != null && encoder.matches(password, user.getPassword())){
-            Integer userId = user.getUserId();
-            UserMongoDB user_mongodb = userMongoDBRepository.findByUserId(userId);
-            if (user_mongodb != null && user_mongodb.getPersonIcon() != null)
-                user.setPersonIcon(user_mongodb.getPersonIcon());
+//            Integer userId = user.getUserId();
+//            UserMongoDB user_mongodb = userMongoDBRepository.findByUserId(userId);
+//            if (user_mongodb != null && user_mongodb.getPersonIcon() != null)
+//                user.setPersonIcon(user_mongodb.getPersonIcon());
             return user;
         }
         return null;

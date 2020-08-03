@@ -8,3 +8,6 @@ merge (from)-[:INCLUDES]->(to)
 LOAD CSV WITH HEADERS FROM "file:///activity.csv" AS line
 MATCH (from:city{name:line.city}),(to:activity{activityId:line.activityId})
 MERGE (from)-[:LOCATED]->(to)
+
+create index on:user(userId)
+create index on:activity(activityId)

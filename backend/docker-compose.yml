@@ -1,0 +1,15 @@
+version: '2'
+services:
+  backend:
+    image: java:8
+    container_name: backend
+    environment:
+      - server.port=8080
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./:/app"
+      - "./logs:/logs"
+    restart: always
+    entrypoint: "java -Xmx1024m -Xms200m -Xmn100m -Xss5m -XX:PermSize=256m -XX:MaxPermSize=512m -XX:-UseGCOverheadLimit -XX:+UseParallelGC -XX:ParallelGCThreads=10 -XX:+UseCompressedOops -jar ./target/ticket_gathering-0.0.1-SNAPSHOT.jar"
+    network_mode: "bridge"

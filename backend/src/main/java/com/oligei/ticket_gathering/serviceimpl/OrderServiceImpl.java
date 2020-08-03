@@ -44,6 +44,11 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public List<OrderInfo> getUserOrder(int userId){
+        return orderDao.getUserOrder(userId);
+    }
+
+    @Override
     public boolean addOrder(int userId, int actitemId, int initPrice,int orderPrice, int amount, String showtime, String orderTime){
         if(actitemDao.modifyRepository(actitemId,initPrice,-amount,showtime)){
             DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");

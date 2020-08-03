@@ -32,12 +32,9 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/Login")
-    public Map<String,Object> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password){
-//                                    HttpServletResponse response) {
-
-//        return userService.hi(username);
-        System.out.println("username:"+username);
-        HttpServletResponse httpServletResponse=new HttpServletResponse() {
+    public Map<String,Object> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
+                                    HttpServletResponse response) {
+        HttpServletResponse httpServletResponse = new HttpServletResponse() {
             @Override
             public void addCookie(Cookie cookie) {
 
@@ -237,7 +234,7 @@ public class UserController {
     }
 
     @RequestMapping("/FindByUserId")
-    public User findUserByUserId(Integer userId){
+    public User findUserByUserId(@RequestParam(name = "userId")Integer userId){
         return userService.findUserByUserId(userId);
     }
 }

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.oligei.ticket_gathering.dto.ActivitySortpage;
 import com.oligei.ticket_gathering.entity.mysql.Activity;
-import com.oligei.ticket_gathering.entity.mysql.User;
 import com.oligei.ticket_gathering.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @RestController
 @RequestMapping("/Activity")
@@ -21,12 +21,25 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
+    private int cnt=0;
 
     @RequestMapping("/search")
     public List<ActivitySortpage> search(@RequestParam(name = "search") String value) {
         System.out.println("value:" + value);
         return activityService.search(value);
     }
+
+//    @RequestMapping("/search1")
+//    public List<ActivitySortpage> search1(@RequestParam(name = "search") String value) {
+//        System.out.println("value:" + value);
+//        return activityService.search1(value);
+//    }
+//
+//    @RequestMapping("/search2")
+//    public List<ActivitySortpage> search2(@RequestParam(name = "search") String value) {
+//        System.out.println("value:" + value);
+//        return activityService.search2(value);
+//    }
 
     @RequestMapping("/add")
     public Boolean add(@RequestParam(name = "activity") String activity) {
@@ -55,9 +68,26 @@ public class ActivityController {
     }
 
     @RequestMapping("/FindActivityByCategoryHome")
-//    @RequestBody CategoryQuery categoryQuery
     public List<ActivitySortpage> findActivityByCategoryHome(){
-        System.out.println();
         return activityService.findActivityByCategoryHome();
     }
+
+    @RequestMapping("/initActivity")
+    public Boolean initActivity(){
+        return activityService.initActivity();
+    }
+
+    @RequestMapping("/test")
+    public Boolean test() throws InterruptedException {
+        System.out.println("!"+cnt);
+        TimeUnit.SECONDS.sleep(1);
+        System.out.println(++cnt);
+        return true;
+    }
+
+    @RequestMapping("/clear")
+    public Boolean clear(@RequestParam(name = "name")String cacheName){
+        return activityService.clear(cacheName);
+    }
+
 }

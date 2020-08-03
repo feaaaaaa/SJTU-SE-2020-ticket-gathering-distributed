@@ -24,8 +24,6 @@ public class VisitedRelationshipDaoImpl implements VisitedRelationshipDao {
 
     @Override
     public VisitedRelationship saveVisitedHistory(Integer userId, Integer activityId) {
-        UserNeo4j userNeo4j = userNeo4jRepository.findOneByUserId(String.valueOf(userId));
-        ActivityNeo4j activityNeo4j = activityNeo4jRepository.findOneByActivityId(String.valueOf(activityId));
-        return visitedRelationshipRepository.save(new VisitedRelationship(userNeo4j,activityNeo4j));
+        return visitedRelationshipRepository.saveVisitedHistory(userId.toString(),activityId.toString());
     }
 }

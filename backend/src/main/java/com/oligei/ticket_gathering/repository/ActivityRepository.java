@@ -9,5 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ActivityRepository extends JpaRepository<Activity,Integer> {
-    List<Activity> findAllByTitleLikeOrVenueLikeOrActorLike(String title, String venue, String actor);;
+    List<Activity> findAllByTitleLikeOrVenueLikeOrActorLike(String title, String venue, String actor);
+
+    @Query("select a.activityId from Activity a where a.title like :title or a.actor like :actor or a.venue like :venue")
+    List<Integer> findAllIdByTitleLikeOrVenueLikeOrActorLike(String title, String venue, String actor);
 }

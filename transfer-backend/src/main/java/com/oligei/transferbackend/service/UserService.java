@@ -31,5 +31,5 @@ public interface UserService {
     public boolean existsByUsername(@RequestParam(name = "username") String username);
 
     @RequestMapping(value = "/User/FindByUserId",method = RequestMethod.GET)
-    public User findUserByUserId(Integer userId);
+    public User findUserByUserId(@RequestParam(name = "userId")Integer userId);
 }

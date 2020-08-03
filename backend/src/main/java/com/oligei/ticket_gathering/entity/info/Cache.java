@@ -28,5 +28,9 @@ public class Cache<T> {
     public void evictCache() {
         cache.clear();
     }
+
+    public int getSize(){
+        return cache.size();
+    }
 }
 

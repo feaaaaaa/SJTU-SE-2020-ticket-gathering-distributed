@@ -7,6 +7,7 @@ import {RecommendList} from "../component/RecommendList";
 import {HeaderInfo} from "../component/Header";
 import {FooterInfo} from "../component/Footer";
 import "../css/Detail.css";
+import {Redirect} from "react-router-dom";
 
 export class DetailView extends React.Component{
     constructor(props) {
@@ -14,8 +15,12 @@ export class DetailView extends React.Component{
         this.state = {
             notice:true,
             info:{},
-            // info:    {actors:"  ",	category:"话剧歌剧 ",	city:"上海 ",	title:"上海话剧艺术中心·后浪新潮演出季 原创话剧 《谎言背后》 ",	price:180.0 ,	price_str:"180-280 ",	time:"2020.07.07-07.12 ",	subcategory:"话剧 ",	venue:"上海话剧艺术中心-戏剧沙龙 ",	imgurl:"https://img.alicdn.com/bao/uploaded/https://img.alicdn.com/imgextra/i4/2251059038/O1CN018wyvEj2GdSDYJ4raf_!!2251059038.jpg"},
+            isSearch:false,
+            search:null,
+            logOut:false,
         }
+        this.onSearch=this.onSearch.bind(this);
+        this.logOut=this.logOut.bind(this);
     }
 
     componentDidMount() {
@@ -43,12 +48,33 @@ export class DetailView extends React.Component{
             return <PurchaseNotice/>;
         else
             return <WatchNotice/>;
+    };
+
+    onSearch(value){
+        this.setState({isSearch:true,search:value});
     }
+
+    logOut(){
+        this.setState({logOut:true});
+    }
+
     render() {
+        if(this.state.isSearch){
+            console.log("jumping...");
+            return <Redirect to={{
+                pathname: "/sortPage",
+                state:{
+                    search:this.state.search
+                }
+            }}/>;
+        }
+        if(this.state.logOut){
+            return <Redirect to={{pathname: "/"}}/>;
+        }
         const Noting = this.Noting;
         return(
             <div>
-                <HeaderInfo/>
+                <HeaderInfo logOut={this.logOut} search={this.onSearch}/>
                 <div id="Detail" style={{paddingTop:100,float:"left",marginLeft:-300}}>
                     <DetailCard info={this.state.info}/>
                     <Menu onClick={this.handleClick} mode="horizontal">

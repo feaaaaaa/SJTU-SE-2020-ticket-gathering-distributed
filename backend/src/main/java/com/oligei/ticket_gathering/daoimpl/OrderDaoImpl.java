@@ -1,6 +1,7 @@
 package com.oligei.ticket_gathering.daoimpl;
 
 import com.oligei.ticket_gathering.dao.OrderDao;
+import com.oligei.ticket_gathering.entity.info.OrderInfo;
 import com.oligei.ticket_gathering.entity.mysql.Order;
 import com.oligei.ticket_gathering.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,10 @@ public class OrderDaoImpl implements OrderDao {
         return orderRepository.getOrderByUserId(userId);
     }
 
+    @Override
+    public List<OrderInfo> getUserOrder(int userId){
+        return orderRepository.getUserOrder(userId);
+    }
     @Override
     public boolean addOrder(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime){
         Order saveOrder=new Order();

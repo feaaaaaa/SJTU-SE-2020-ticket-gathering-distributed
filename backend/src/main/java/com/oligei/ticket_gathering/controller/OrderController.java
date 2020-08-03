@@ -20,7 +20,8 @@ public class OrderController {
 
     @RequestMapping("/GetOrderInfoByUser")
     public List<OrderInfo> getOrderInfoByUser(@RequestParam("userId")int userId){
-        return orderService.getOrderInfoByUser(userId);
+//        return orderService.getOrderInfoByUser(userId);
+        return orderService.getUserOrder(userId);
     }
 
     @RequestMapping("/addOrder")

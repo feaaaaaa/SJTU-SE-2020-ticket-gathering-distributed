@@ -23,7 +23,7 @@ public class Auction {
     private Integer amount;
 
     @Id
-    @Column(name = "AUCTIONID")
+    @Column(name = "auctionid")
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment",strategy = "increment")
     public Integer getAuctionid(){return auctionid;}

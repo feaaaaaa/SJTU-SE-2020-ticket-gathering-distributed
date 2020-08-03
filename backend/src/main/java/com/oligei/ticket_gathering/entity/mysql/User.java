@@ -11,7 +11,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TG_USERS")
+@Table(name = "tg_users")
 public class User {
     private Integer userId;
     private String username;
@@ -39,33 +39,33 @@ public class User {
     }
 
     @Id
-    @Column(name = "USERID")
+    @Column(name = "userid")
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     public Integer getUserId() {return userId;}
     public void setUserId(Integer userId) {this.userId=userId;}
 
-    @Column(name = "USERNAME")
+    @Column(name = "username")
     public String getUsername() {return username;}
     public void setUsername(String username) {this.username=username;}
 
-    @Column(name = "GENDER")
+    @Column(name = "gender")
     public String getGender() {return gender;}
     public void setGender(String gender) {this.gender=gender;}
 
-    @Column(name = "EMAIL")
+    @Column(name = "email")
     public String getEmail() {return email;}
     public void setEmail(String email) {this.email=email;}
 
-    @Column(name = "PHONE")
+    @Column(name = "phone")
     public String getPhone() {return phone;}
     public void setPhone(String phone) {this.phone=phone;}
 
-    @Column(name = "PASSWORD")
+    @Column(name = "password")
     public String getPassword() {return password;}
     public void setPassword(String password) {this.password=password;}
 
-    @Column(name = "TYPE")
+    @Column(name = "type")
     public String getType() {return type;}
     public void setType(String type) {this.type=type;}
 

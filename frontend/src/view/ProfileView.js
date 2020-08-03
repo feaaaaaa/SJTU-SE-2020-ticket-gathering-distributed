@@ -11,13 +11,20 @@ export class ProfileView extends React.Component{
         this.state={
             userInfo:null,
             ifauthen:false,
-            logOut:false
-        };
+            logOut:false,
+            isSearch:false,
+            search:null
+        }
+        this.onSearch=this.onSearch.bind(this);
         this.logOut=this.logOut.bind(this);
     }
 
     logOut(){
         this.setState({logOut:true});
+    }
+
+    onSearch(value){
+        this.setState({isSearch:true,search:value});
     }
 
     async componentDidMount() {
@@ -32,6 +39,15 @@ export class ProfileView extends React.Component{
     }
 
     render() {
+        if(this.state.isSearch){
+            console.log("jumping...");
+            return <Redirect to={{
+                pathname: "/sortPage",
+                state:{
+                    search:this.state.search
+                }
+            }}/>;
+        }
         if(this.state.logOut){
             return <Redirect to={{pathname: "/"}}/>;
         }
@@ -48,7 +64,7 @@ export class ProfileView extends React.Component{
             else {
                 return (
                     <div>
-                        <HeaderInfo logOut={this.logOut}/>
+                        <HeaderInfo logOut={this.logOut} search={this.onSearch}/>
                         <div style={{paddingTop:50}}>
                             <div id="profileDiv">
                                 <Descriptions title="个人信息" bordered>

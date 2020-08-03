@@ -1,0 +1,30 @@
+version: '3'
+services:
+  api:                                  # 后端springboot容器
+    container_name: backend             # 容器名为'backend'
+    restart: always                     # 重启策略: 容器退出时总是重启容器
+    build:
+      context: ./                       # 指定设定上下文根目录，然后以该目录为准指定Dockerfile
+      dockerfile: ./docker/api-Dockerfile
+    working_dir: /app                   # 设置工作目录为容器内的app文件夹
+    environment:
+      TZ: Asia/Shanghai
+    volumes:                            # 挂载文件
+      - ./backend:/app                  # 将主机的backend文件夹(java代码)映射到容器内的app文件夹
+      - ./logs/:/app/log                # 映射容器产生的日志到主机的logs文件夹
+    ports:                              # 映射端口
+      - "8080:8080"
+    command: mvn clean spring-boot:run -Dspring-boot.run.profiles=dev '-Dmaven.test.skip=true' # 容器创建后执行命令运行springboot项目
+
+  web:                                  # 前端node容器(运行nginx中的Vue项目)
+    container_name: frontend            # 容器名为'frontend'
+    restart: always                     # 重启策略: 容器退出时总是重启容器
+    build:
+      context: ./                       # 指定设定上下文根目录，然后以该目录为准指定Dockerfile
+      dockerfile: docker/web/web-Dockerfile
+    environment:
+      TZ: Asia/Shanghai
+    ports:
+      - "3000:3000"                      # 映射端口
+    depends_on:                          # 依赖于backend容器，被依赖容器启动后此web容器才可启动
+      - api

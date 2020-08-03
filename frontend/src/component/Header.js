@@ -15,7 +15,6 @@ export class HeaderInfo extends React.Component {
             login:false,
             username:null,
             usertype:null,
-            ifsearch:false
         }
     }
 
@@ -30,12 +29,17 @@ export class HeaderInfo extends React.Component {
     }
 
     toggleSearch=(value)=>{
-        console.log("搜索内容："+value+"!!!");
-        localStorage.setItem("search",value);
-        this.setState({
-            ifsearch:true
-        })
-    }
+        // console.log("搜索内容："+value+"!!!");
+        // localStorage.setItem("search",value);
+        // this.setState({
+        //     ifsearch:true,
+        //     search:value
+        // });
+        // console.log(this.props.search);
+        if(this.props.search!=null){
+            this.props.search(value);
+        }
+    };
 
 
     logOut(){
@@ -49,10 +53,6 @@ export class HeaderInfo extends React.Component {
 
 
     render() {
-        if(this.state.ifsearch){
-            console.log("jumping...");
-            return <Redirect to={{pathname: "/sortPage"}}/>;
-        }
         return (
             <Header className="site-layout-background" style={{padding: 0}}>
                 <div id="header-content">

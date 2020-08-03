@@ -10,7 +10,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "TG_ACTITEMS")
+@Table(name = "tg_actitems")
 public class Actitem {
     private Integer actitemId;
     private Integer activityId;
@@ -27,17 +27,17 @@ public class Actitem {
     }
 
     @Id
-    @Column(name = "ACTITEMID")
+    @Column(name = "actitemid")
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     public Integer getActitemId(){return actitemId;}
     public void setActitemId(Integer actitemId){this.actitemId = actitemId;}
 
-    @Column(name = "ACTIVITYID")
+    @Column(name = "activityid")
     public Integer getActivityId(){return activityId;}
     public void setActivityId(Integer activityId){this.activityId = activityId;}
 
-    @Column(name = "WEBSITE")
+    @Column(name = "website")
     public String getWebsite(){return website;}
     public void setWebsite(String website){this.website = website;}
 

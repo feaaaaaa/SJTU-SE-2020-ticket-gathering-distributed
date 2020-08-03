@@ -39,6 +39,22 @@ public class OrderInfo {
         this.orderTime=sdf1.format(tmp);
     }
 
+    public OrderInfo( Integer orderId,Integer userId,Integer actitemId,Integer price,Integer amount,Date showtime,
+                      Date orderTime,String title,String venue,String activityIcon){
+        this.orderId=orderId;
+        this.userId=userId;
+        this.actitemId=actitemId;
+        this.price=price;
+        this.amount=amount;
+        SimpleDateFormat sdf1 =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" );
+        SimpleDateFormat sdf2 =new SimpleDateFormat("yyyy-MM-dd" );
+        this.showtime=sdf2.format(showtime);
+        this.orderTime=sdf1.format(orderTime);
+        this.title=title;
+        this.venue=venue;
+        this.activityIcon=activityIcon;
+    }
+
     public Integer getOrderId(){return orderId;}
 
     public Integer getUserId(){return userId;}

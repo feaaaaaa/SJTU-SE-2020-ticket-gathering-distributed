@@ -11,8 +11,10 @@ import { UserOutlined } from '@ant-design/icons';
 import {getAuctions} from "../service/AuctionService";
 import {SortPageCard} from "../component/SortPageCard";
 import {AuctionCard} from "../component/AuctionCard";
+import {HeaderInfo} from "../component/Header";
 const {Header} = Layout;
 const { Search } = Input;
+
 
 export class AuctionView extends React.Component{
     constructor(props) {
@@ -23,36 +25,33 @@ export class AuctionView extends React.Component{
             login:false,
             username:null,
             ifauthen:false,
-            ifauthor:false
+            ifauthor:false,
+            isSearch:false
         }
     }
 
     toggleSearch=(value)=>{
-        console.log("搜索内容："+value+"!!!");
-        if (value !== this.state.search) {
-            localStorage.setItem("search", value);
-            this.setState({search: value});
-            search(value, (res) => {
-                console.log(value);
-                console.log("??res:" + JSON.stringify(res));
-                if (res != null)
-                    this.setState({activity: res})
-            });
-        }
-    }
-
-    logOut(){
-        localStorage.clear();
-        this.setState({login:false,username:null});
+        this.setState({isSearch:true,search:value});
+        // console.log("搜索内容："+value+"!!!");
+        // if (value !== this.state.search) {
+        //     localStorage.setItem("search", value);
+        //     this.setState({search: value});
+        //     search(value, (res) => {
+        //         console.log(value);
+        //         console.log("??res:" + JSON.stringify(res));
+        //         if (res != null)
+        //             this.setState({activity: res})
+        //     });
+        // }
     }
 
     componentDidMount() {
-        let username=localStorage.getItem("username");
-        if(username!=null){
-            this.setState({username:username,login:true});
-        }
-        const value = localStorage.getItem("search");
-        this.setState({search: value});
+        // let username=localStorage.getItem("username");
+        // if(username!=null){
+        //     this.setState({username:username,login:true});
+        // }
+        // const value = localStorage.getItem("search");
+        // this.setState({search: value});
         // const callback = data =>{
         //     console.log("rendering");
         //     console.log("数据："+data);
@@ -78,49 +77,18 @@ export class AuctionView extends React.Component{
     }
 
     render() {
+        if(this.state.isSearch){
+            console.log("jumping...");
+            return <Redirect to={{
+                pathname: "/sortPage",
+                state:{
+                    search:this.state.search
+                }
+            }}/>;
+        }
         return(
             <div >
-                <Header className="site-layout-background" style={{padding: 0}}>
-                    <div id="header-content">
-                        <div id="oligei">
-                            <img src={require('../resources/oligei.png')} width="200px" height="80px"/>
-                        </div>
-                        <div id="menusortDiv">
-                            <Button id="menuButton" href="/" type={"primary"}>首页</Button>
-                            <Button id="sortButton" href="/sortPage" type={"primary"}>分类</Button>
-                        </div>
-                        <div id="searchDiv">
-                            <Search
-                                id="searchInput"
-                                placeholder="搜索明星、演出、体育赛事"
-                                onSearch={value => this.toggleSearch(value)}
-                                enterButton="搜索"
-                                size="large"
-                            />
-                        </div>
-                        <Avatar id="profileOperate" icon={<UserOutlined />} />
-                        <Dropdown
-                            overlay={(
-                                <Menu>
-                                    <Menu.Item>
-                                        <a href={this.state.login?"/profile":"/login"}>个人信息</a>
-                                    </Menu.Item>
-                                    <Menu.Item>
-                                        <a href={this.state.login?"/order":"/login"}>订单管理</a>
-                                    </Menu.Item>
-                                    <Menu.Item>
-                                        <p className="menuItem" onClick={this.logOut.bind(this)}>登出</p>
-                                    </Menu.Item>
-                                </Menu>
-                            )}>
-                            {!this.state.login?(
-                                <Button id="profileOperate" href="/login">登录</Button>
-                            ):(
-                                <Button id="profileOperate" href="/profile">{this.state.username}</Button>
-                            )}
-                        </Dropdown>
-                    </div>
-                </Header>
+                <HeaderInfo search={value => this.toggleSearch(value)}/>
                 <Divider plain className="divider"> </Divider>
                 <div id="sortPageDiv" style={{paddingBottom:100}}>
                     <List
