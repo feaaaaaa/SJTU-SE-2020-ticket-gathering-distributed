@@ -85,7 +85,7 @@
                     <baseImage>java</baseImage>
                     <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
                     <!-- dockerfile文件路径-->
-                    <dockerDirectory>src/main/docker</dockerDirectory>
+                    <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
                     <resources>
                         <resource>
                             <targetPath>/</targetPath>
