@@ -11,7 +11,7 @@
     <groupId>com.oligei</groupId>
     <artifactId>transferbackend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>transfer-backend</name>
+    <name>transferbackend</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
