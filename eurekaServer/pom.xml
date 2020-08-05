@@ -65,15 +65,6 @@
                 <groupId>com.spotify</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>1.0.0</version>
-                <executions>
-                    <execution>
-                        <id>build-image</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>build</goal>
-                        </goals>
-                    </execution>
-                </executions>
                 <configuration>
                     <!-- 镜像名称-->
                     <imageName>${project.artifactId}</imageName>
