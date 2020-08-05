@@ -65,7 +65,7 @@ export class ProfileView extends React.Component{
                 return (
                     <div>
                         <HeaderInfo logOut={this.logOut} search={this.onSearch}/>
-                        <div style={{paddingTop:50}}>
+                        <div style={{paddingTop:150}}>
                             <div id="profileDiv">
                                 <Descriptions title="个人信息" bordered>
                                     <Descriptions.Item label="用户名">{this.state.userInfo.username}</Descriptions.Item>

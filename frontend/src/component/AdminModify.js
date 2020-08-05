@@ -345,6 +345,7 @@ const Demo = () => {
     else
         return (
             <>
+                <h2 style={{width:"50%",margin:"auto"}}>ActivityId:{localStorage.getItem("modifyId")}</h2>
                 <Form
                     {...layout}
                     name="cnt"
@@ -417,7 +418,7 @@ const Demo = () => {
                         </Form.Item>
 
                         <div style={{paddingLeft:510}}>
-                        <Cascader options={options} onChange={onChange} placeholder="Please select category" />
+                            <Cascader options={options} onChange={onChange} placeholder="Please select category" />
                         </div>
 
                         {/*<Form.Item name="category" label="category" rules={[{required: true}]}>*/}
@@ -478,87 +479,20 @@ const Demo = () => {
             </>
         );
 };
-export class Admin extends React.Component{
+export class AdminModify extends React.Component{
     render() {
-         if (localStorage.getItem("usertype") === null) {
-             message.error("请先登录");
-             return <Redirect to={{pathname: "/login"}}/>;
-         } else if (localStorage.getItem("usertype") === "Admin")
+        // if (localStorage.getItem("usertype") === null) {
+        //     message.error("请先登录");
+        //     return <Redirect to={{pathname: "/login"}}/>;
+        // } else if (localStorage.getItem("usertype") === "Admin")
             return (
                 <div style={{paddingTop:150}}>
                     <Demo/>
                 </div>
-            );
-         else {
-             message.error("无权限");
-             return <Redirect to={{pathname: "/login"}}/>;
-         }
+                );
+        // else {
+        //     message.error("无权限");
+        //     return <Redirect to={{pathname: "/login"}}/>;
+        // }
     }
 }
-// export class Admin extends React.Component{
-//
-//     render() {
-//         return (
-//             <Form name="dynamic_form_item" {...formItemLayoutWithOutLabel} onFinish={onFinish}>
-//                 <Form.List name="names">
-//                     {(fields, { add, remove }) => {
-//                         return (
-//                             <div>
-//                                 {fields.map((field, index) => (
-//                                     <Form.Item
-//                                         {...(index === 0 ? formItemLayout : formItemLayoutWithOutLabel)}
-//                                         label={index === 0 ? 'Passengers' : ''}
-//                                         required={false}
-//                                         key={field.key}
-//                                     >
-//                                         <Form.Item
-//                                             {...field}
-//                                             validateTrigger={['onChange', 'onBlur']}
-//                                             rules={[
-//                                                 {
-//                                                     required: true,
-//                                                     whitespace: true,
-//                                                     message: "Please input passenger's name or delete this field.",
-//                                                 },
-//                                             ]}
-//                                             noStyle
-//                                         >
-//                                             <Input placeholder="passenger name" style={{ width: '60%' }} />
-//                                         </Form.Item>
-//                                         {fields.length > 1 ? (
-//                                             <MinusCircleOutlined
-//                                                 className="dynamic-delete-button"
-//                                                 style={{ margin: '0 8px' }}
-//                                                 onClick={() => {
-//                                                     remove(field.name);
-//                                                 }}
-//                                             />
-//                                         ) : null}
-//                                     </Form.Item>
-//                                 ))}
-//                                 <Form.Item>
-//                                     <Button
-//                                         type="dashed"
-//                                         onClick={() => {
-//                                             add();
-//                                         }}
-//                                         style={{ width: '60%' }}
-//                                     >
-//                                         <PlusOutlined /> Add field
-//                                     </Button>
-//                                 </Form.Item>
-//                             </div>
-//                         );
-//                     }}
-//                 </Form.List>
-//
-//                 <Form.Item>
-//                     <Button type="primary" htmlType="submit">
-//                         Submit
-//                     </Button>
-//                 </Form.Item>
-//             </Form>
-//         );
-//     }
-//
-// }
