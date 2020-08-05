@@ -9,7 +9,7 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.oligei</groupId>
-    <artifactId>transfer-backend</artifactId>
+    <artifactId>transferbackend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>transfer-backend</name>
     <description>Demo project for Spring Boot</description>
