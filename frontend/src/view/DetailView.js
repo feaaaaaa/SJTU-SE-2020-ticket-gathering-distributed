@@ -75,7 +75,7 @@ export class DetailView extends React.Component{
         return(
             <div>
                 <HeaderInfo logOut={this.logOut} search={this.onSearch}/>
-                <div id="Detail" style={{paddingTop:100,float:"left",marginLeft:-300}}>
+                <div id="Detail" style={{paddingTop:150,float:"left",marginLeft:-100,width:"80%"}}>
                     <DetailCard info={this.state.info}/>
                     <Menu onClick={this.handleClick} mode="horizontal">
                         <Menu.Item onClick={this.handleClickNotice1}>

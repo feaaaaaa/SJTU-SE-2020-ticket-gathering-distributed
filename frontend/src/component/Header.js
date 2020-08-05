@@ -53,10 +53,10 @@ export class HeaderInfo extends React.Component {
         }
     }
 
-    // handleClick = e => {
-    //     console.log(e.key);
-    //     this.setState({ current: e.key });
-    // };
+    handleClick = e => {
+        console.log(e.key);
+        this.setState({ current: e.key });
+    };
 
 
     render() {
@@ -163,6 +163,23 @@ export class HeaderInfo extends React.Component {
                         size="large"
                     />
                 </div>
+                {this.state.usertype==="Admin" &&
+                            <div style={{paddingLeft:1200,paddingTop:30}} className="wow slideInRight" data-wow-delay=".5s">
+                                <Dropdown
+                                    overlay={(
+                                        <Menu visible={false}>
+                                            <Menu.Item>
+                                                <a href="/admin">添加活动</a>
+                                            </Menu.Item>
+                                            <Menu.Item>
+                                                <a href= "/login">订单管理</a>
+                                            </Menu.Item>
+                                        </Menu>
+                                    )}>
+                                    <Button> Admin </Button>
+                                </Dropdown>
+                            </div>
+                            }
             </div>
         // https://www.cmdy5.com/guochanju/bailuyuan.html
         )

@@ -90,7 +90,7 @@ export class AuctionView extends React.Component{
             <div >
                 <HeaderInfo search={value => this.toggleSearch(value)}/>
                 <Divider plain className="divider"> </Divider>
-                <div id="sortPageDiv" style={{paddingBottom:100}}>
+                <div id="sortPageDiv" style={{paddingBottom:100,paddingTop:150}}>
                     <List
                         grid={{gutter: 10, column: 1}}
                         pagination={{
@@ -112,7 +112,6 @@ export class AuctionView extends React.Component{
                         )}
                     />
                 </div>
-                <RecommendList/>
             </div>
         )
     }
