@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "ticketGathering")
+@FeignClient(value = "ticketgathering")
 public interface OrderService {
 
     @RequestMapping(value = "/Order/GetOrderInfoByUser",method = RequestMethod.GET)
