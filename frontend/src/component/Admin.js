@@ -484,7 +484,11 @@ export class Admin extends React.Component{
              message.error("请先登录");
              return <Redirect to={{pathname: "/login"}}/>;
          } else if (localStorage.getItem("usertype") === "Admin")
-            return (<Demo/>);
+            return (
+                <div style={{paddingTop:150}}>
+                    <Demo/>
+                </div>
+            );
          else {
              message.error("无权限");
              return <Redirect to={{pathname: "/login"}}/>;

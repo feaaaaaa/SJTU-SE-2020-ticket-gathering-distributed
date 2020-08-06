@@ -1,6 +1,6 @@
 import React from 'react';
 import {LoginForm} from "../component/LoginForm";
-import background from "../resources/Login_background.jpg"
+import background from "../resources/loginBg2.jpg"
 import "../css/Login.css"
 import { PageHeader } from 'antd';
 

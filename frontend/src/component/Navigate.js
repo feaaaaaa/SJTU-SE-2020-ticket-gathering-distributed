@@ -16,7 +16,7 @@ export class Navigate extends React.Component{
 
 
         return(
-            <div className="animated tada" >
+            <div className="wow fadeInDown"  data-wow-duration=".8s" data-wow-delay=".2s" >
                 <div className="categoryDiv">
                 <Card >
                     {/*<Link to="/sortPage" onClick={()=>{localStorage.setItem("category","儿童亲子")}}>*/}

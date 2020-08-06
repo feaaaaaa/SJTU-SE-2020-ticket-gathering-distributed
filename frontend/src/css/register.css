@@ -9,6 +9,27 @@
 }
 
 #bg{
-    background-image: url("../resources/Login_background.jpg");
-    height: 1280px;
+    background-image: url("../resources/loginBg2.jpg");
+    color: white;
+    /*height: 1280px;*/
+    /*text-align: center;*/
+    height: 100%;
+    width: 100%;
+    background-size: cover;
+    position: absolute;
+    top: 0px;
+    bottom: 0px;
+    font-family:"Bookman Old Style","宋体";
+}
+.regp{
+    margin-bottom: 0px;
+    padding-top: 20px;
+    font-size: 15px;
+    color:white;
+    text-shadow:-1px -1px #607bfb,
+    0px 0px #6eeafb;
+}
+
+.input{
+    box-shadow:0 0 15px 3px #4de4ff;
 }

@@ -76,9 +76,9 @@ export class LoginForm extends React.Component {
             return <Redirect to={{pathname: "/"}}/>;
         }
         return (
-            <div className="animated rotateIn">
+            <div className=" headerBox" >
             <Form
-                id = "login_form"
+                id = "login_form" className="wow slideInDown" data-wow-duration="2s"
                 {...layout}
                 name="basic"
                 initialValues={{remember: true}}
@@ -93,7 +93,7 @@ export class LoginForm extends React.Component {
                 >
                     <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" size="large"
                            // style={{fontFamily:"BookMan Old Style",borderRadius: 10,width:400}}
-                           onChange={this.onChange} style={styles.input}/>
+                           onChange={this.onChange} style={styles.input} className="input"/>
                 </Form.Item>
                 {this.state.letters.length>0 && <div style={styles.letters}>
                     name:{this.state.letters}
@@ -108,7 +108,7 @@ export class LoginForm extends React.Component {
                         type="password"
                         placeholder="Password"
                         size="large"
-                        style={{fontFamily:"BookMan Old Style",borderRadius: 10,width:400}}
+                        style={{fontFamily:"BookMan Old Style",borderRadius: 10,width:400}} className="input"
                     />
                 </Form.Item>
                 <Form.Item>
@@ -126,8 +126,9 @@ export class LoginForm extends React.Component {
                 </Form.Item>
             </Form>
 
-                <div id="buttonDiv">
-                </div>
+                {/*<div id="buttonDiv">*/}
+                {/*    <h1>123456</h1>*/}
+                {/*</div>*/}
 
             </div>
         );

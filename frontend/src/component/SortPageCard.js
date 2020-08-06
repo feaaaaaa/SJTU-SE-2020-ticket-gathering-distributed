@@ -7,7 +7,7 @@ import React from "react";
 import "../css/HomeCard.css"
 import "../css/sortPage.css"
 import {deleteActivity} from "../service/AdminService";
-import {history} from "../utils/history";
+// import {history} from "../utils/history";
 import {Link, Redirect} from "react-router-dom";
 // import Link from "react-router-dom/modules/Link";
 const { Panel } = Collapse;
@@ -84,11 +84,15 @@ export class SortPageCard extends React.Component{
         }
         else
         return(
-             <div style={{paddingBottom:30}}>
+             <div style={{paddingBottom:30}} data-wow-duration=".5s" data-wow-offset="100" className="wow slideInRight">
                  {
                      this.props.usertype==="Admin" &&
                      <div style={{float: "right"}}>
-                         <Button onClick={()=>this.handleDelete(this.props.info)} >删除</Button>
+                         {/*onClick={()=>this.handleDelete(this.props.info)}*/}
+                         <Button  href="/adminModify" onClick={()=>{
+                             console.log("jumping to modify...");
+                             localStorage.setItem("modifyId",this.props.info.activityId);
+                         }}>修改</Button>
                      </div>
                  }
                  <div>
@@ -113,7 +117,7 @@ export class SortPageCard extends React.Component{
                                              <div style={{float: "right"}}>
                                                  <Button href="/adminAuction" onClick={()=>this.handleDetail(actitem.actitemId,actitem.activityId)}>添加竞拍</Button>
                                              </div>
-                                         }
+                                          }
                                          <ul>
                                              {actitem.price.map((day,index)=>(
                                                  <li key={index} style={{clear:"both"}}>
