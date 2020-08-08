@@ -39,3 +39,9 @@ PPT                            √
 高并发                         √
 代码优化                       √
 写注释（eclipse code formatter） 另：//logic -name    //logic -fix name  √
+
+## 5 2020-8-7 计划
+### 1.9 demo（mock单元测试），demo（clean backend code），文档的框架，大致提纲
+### 2 美化后端代码，改前端 （周三之前） ||  性能测试，监控
+### 3 性能测试，监控，文档
+### 4 PPT
