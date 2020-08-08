@@ -55,6 +55,20 @@ public class OrderInfo {
         this.activityIcon=activityIcon;
     }
 
+    public OrderInfo( Integer orderId,Integer userId,Integer actitemId,Integer price,Integer amount,String showtime,
+                      String orderTime,String title,String venue,String activityIcon){
+        this.orderId=orderId;
+        this.userId=userId;
+        this.actitemId=actitemId;
+        this.price=price;
+        this.amount=amount;
+        this.showtime=showtime;
+        this.orderTime=orderTime;
+        this.title=title;
+        this.venue=venue;
+        this.activityIcon=activityIcon;
+    }
+
     public Integer getOrderId(){return orderId;}
 
     public Integer getUserId(){return userId;}

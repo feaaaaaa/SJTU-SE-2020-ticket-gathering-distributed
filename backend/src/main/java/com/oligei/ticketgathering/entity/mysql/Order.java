@@ -3,6 +3,7 @@ package com.oligei.ticketgathering.entity.mysql;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Entity
@@ -15,6 +16,19 @@ public class Order {
     private Integer amount;
     private Date showtime;
     private Date orderTime;
+
+    public Order(){}
+
+    public Order( Integer orderId,Integer userId,Integer actitemId,Integer price,Integer amount,Date showtime,
+                      Date orderTime){
+        this.orderId=orderId;
+        this.userId=userId;
+        this.actitemId=actitemId;
+        this.price=price;
+        this.amount=amount;
+        this.showtime=showtime;
+        this.orderTime=orderTime;
+    }
 
     @Id
     @Column(name = "orderid")
