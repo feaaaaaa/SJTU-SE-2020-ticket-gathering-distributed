@@ -6,7 +6,6 @@ import "../css/sortPage.css"
 import "../css/headerInfo.css"
 import {category_search, search} from "../service/searchService";
 import { CaretRightOutlined } from '@ant-design/icons';
-import {async} from "fast-glob";
 // import Redirect from "react-router-dom/es/Redirect";
 import { UserOutlined } from '@ant-design/icons';
 import {HeaderInfo} from "../component/Header";
