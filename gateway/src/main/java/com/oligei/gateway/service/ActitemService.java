@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
-@FeignClient(value = "ticketGathering")
+@FeignClient(value = "ticketgathering")
 public interface ActitemService {
 
     @RequestMapping(value = "/Actitem/detail",method = RequestMethod.GET)

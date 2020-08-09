@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "ticketGathering")
+@FeignClient(value = "ticketgathering")
 public interface ActivityService {
 
     @RequestMapping(value = "/Activity/search",method = RequestMethod.GET)

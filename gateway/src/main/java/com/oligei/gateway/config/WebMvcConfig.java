@@ -25,6 +25,12 @@ public class WebMvcConfig implements WebMvcConfigurer {
         excludePath.add("/activity/FindActivityByCategoryHome");
         excludePath.add("/hi");
         excludePath.add("/");
+
+        excludePath.add("/swagger-ui.html");
+        excludePath.add("/webjars/**");
+        excludePath.add("/favicon.ico");
+        excludePath.add("/v2/api-docs");
+        excludePath.add("/swagger-resources/**");
         //excludePath.add("/actitem/detail");
         registry.addInterceptor(new AuthenInterceptor()).addPathPatterns("/**")
                                                         .excludePathPatterns(excludePath);

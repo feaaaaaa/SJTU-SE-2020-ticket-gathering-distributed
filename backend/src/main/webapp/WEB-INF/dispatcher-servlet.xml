@@ -5,7 +5,7 @@
        xmlns:mvc="http://www.springframework.org/schema/mvc" xmlns:p="http://www.springframework.org/schema/p"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
            http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd">
-    <context:component-scan base-package="com.oligei.ticket_gathering" />
+    <context:component-scan base-package="com.oligei.ticketgathering" />
 
     <!-- 启动Spring MVC的注解功能，完成请求和注解POJO的映射 -->
     <mvc:annotation-driven/>

@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Map;
 
-@FeignClient(value = "ticketGathering")
+@FeignClient(value = "ticketgathering")
 public interface UserService {
 
     @RequestMapping(value = "/User/Login",method = RequestMethod.GET)
