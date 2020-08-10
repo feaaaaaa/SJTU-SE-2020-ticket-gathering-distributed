@@ -1,4 +1,4 @@
-package com.oligei.feign.util;
+package com.oligei.auction.util;
 
 import java.util.List;
 import java.util.Map;

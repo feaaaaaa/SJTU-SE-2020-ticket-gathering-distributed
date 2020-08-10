@@ -1,4 +1,4 @@
-package com.oligei.feign.entity;
+package com.oligei.auction.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.GenericGenerator;

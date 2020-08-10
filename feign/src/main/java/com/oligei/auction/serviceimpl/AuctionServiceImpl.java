@@ -1,15 +1,15 @@
-package com.oligei.feign.serviceimpl;
+package com.oligei.auction.serviceimpl;
 
-import com.oligei.feign.dao.ActitemDao;
-import com.oligei.feign.dao.ActivityDao;
-import com.oligei.feign.dao.AuctionDao;
-import com.oligei.feign.dto.AuctionListItem;
-import com.oligei.feign.entity.Actitem;
-import com.oligei.feign.entity.Activity;
-import com.oligei.feign.entity.Auction;
-import com.oligei.feign.service.AuctionService;
-import com.oligei.feign.service.OrderService;
-import com.oligei.feign.util.Cache;
+import com.oligei.auction.dao.ActitemDao;
+import com.oligei.auction.dao.ActivityDao;
+import com.oligei.auction.dao.AuctionDao;
+import com.oligei.auction.dto.AuctionListItem;
+import com.oligei.auction.entity.Actitem;
+import com.oligei.auction.entity.Activity;
+import com.oligei.auction.entity.Auction;
+import com.oligei.auction.service.AuctionService;
+import com.oligei.auction.service.OrderService;
+import com.oligei.auction.util.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;

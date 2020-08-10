@@ -1,9 +1,7 @@
-package com.oligei.feign.service;
+package com.oligei.auction.service;
 
-import com.oligei.feign.dto.AuctionListItem;
-import com.oligei.feign.util.Cache;
-import org.springframework.cloud.openfeign.FeignClient;
-
+import com.oligei.auction.dto.AuctionListItem;
+import com.oligei.auction.util.Cache;
 import java.util.List;
 
 

@@ -1,4 +1,4 @@
-//package com.oligei.feign.util;
+//package com.oligei.auction.util;
 //
 //import com.oligei.feign.dao.AuctionDao;
 //import com.oligei.feign.service.AuctionService;
