@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface AuctionDao {
 
-    Boolean save(Auction auction);
+    Auction save(Auction auction);
 
     List<Auction> getAvailableAuctionsForNow();
 

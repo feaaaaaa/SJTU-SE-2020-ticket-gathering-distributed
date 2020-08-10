@@ -1,6 +1,7 @@
 package com.oligei.feign.service;
 
 import com.oligei.feign.dto.AuctionListItem;
+import com.oligei.feign.util.Cache;
 import org.springframework.cloud.openfeign.FeignClient;
 
 import java.util.List;
