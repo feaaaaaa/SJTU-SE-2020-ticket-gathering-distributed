@@ -5,6 +5,11 @@ export const addActivity = (value,token,callback) => {
     const url = '/activity/add';
     authRequest(url, data,token, callback);
 };
+// export const addActivity = (id,value,token,callback) => {
+//     const data={id:id,activity:value};
+//     const url = '/activity/add';
+//     authRequest(url, data,token, callback);
+// };
 
 export const deleteActivity=(value,token,callback)=>{
     const data={activityId:value};

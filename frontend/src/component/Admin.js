@@ -148,7 +148,8 @@ const Demo = () => {
         // arr=arr.concat(u);
         console.log("activity:"+JSON.stringify(arr));
         addActivity(JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
-            if(res===true)setSuccess(true);
+            // addActivity(0,JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
+                if(res===true)setSuccess(true);
             else if(res.message==="authentication failure"){setAuthen(true);localStorage.clear();}
             else if(res.message==="authorization failure")setAuthor(true);
             else message.error("错误！请稍后重试");
@@ -484,7 +485,11 @@ export class Admin extends React.Component{
              message.error("请先登录");
              return <Redirect to={{pathname: "/login"}}/>;
          } else if (localStorage.getItem("usertype") === "Admin")
-            return (<Demo/>);
+            return (
+                <div style={{paddingTop:150}}>
+                    <Demo/>
+                </div>
+            );
          else {
              message.error("无权限");
              return <Redirect to={{pathname: "/login"}}/>;
