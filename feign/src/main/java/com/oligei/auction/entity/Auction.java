@@ -1,6 +1,9 @@
 package com.oligei.auction.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,7 +15,11 @@ public class Auction {
     private Integer auctionid;
     private Integer actitemid;
     private Integer userid;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date ddl;
+
     private Integer initprice;
     private Integer orderprice;
     private Integer isover;

@@ -1,4 +1,4 @@
-package com.oligei.ticketgathering;
+package com.oligei.ticket_gathering;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
