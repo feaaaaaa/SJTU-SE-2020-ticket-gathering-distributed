@@ -9,6 +9,15 @@ import java.util.List;
 @FeignClient(value = "ticketgathering")
 public interface ActivityService {
 
+    @RequestMapping(value="/Activity/initActivity",method = RequestMethod.GET)
+    Boolean initActivity();
+
+    @RequestMapping(value = "/Activity/initSearchIndex",method = RequestMethod.GET)
+    Boolean initSearchIndex();
+
+    @RequestMapping(value = "/Activity/clear",method = RequestMethod.GET)
+    Boolean clear(@RequestParam(name = "name") String cacheName);
+
     @RequestMapping(value = "/Activity/search",method = RequestMethod.GET)
     public List<ActivitySortpage> search(@RequestParam(name = "search") String value);
 

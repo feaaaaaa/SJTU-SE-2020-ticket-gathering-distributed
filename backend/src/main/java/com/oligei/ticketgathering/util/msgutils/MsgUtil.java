@@ -22,27 +22,27 @@ public class MsgUtil {
 
 
 
-    public static Msg makeMsg(MsgCode code, JSONObject data){
-        return new Msg(code, data);
+    public static Msg<JSONObject> makeMsg(MsgCode code, JSONObject data){
+        return new Msg<JSONObject>(code, data);
     }
 
-    public static Msg makeMsg(MsgCode code, String msg, JSONObject data){
-        return new Msg(code, msg, data);
+    public static Msg<JSONObject> makeMsg(MsgCode code, String msg, JSONObject data){
+        return new Msg<JSONObject> (code, msg, data);
     }
 
-    public static Msg makeMsg(MsgCode code){
-        return new Msg(code);
+    public static Msg<JSONObject> makeMsg(MsgCode code){
+        return new Msg<JSONObject>(code);
     }
 
-    public static Msg makeMsg(MsgCode code, String msg){
-        return new Msg(code, msg);
+    public static Msg<JSONObject> makeMsg(MsgCode code, String msg){
+        return new Msg<JSONObject>(code, msg);
     }
 
-    public static Msg makeMsg(int status, String msg, JSONObject data){
-        return new Msg(status, msg, data);
+    public static Msg<JSONObject> makeMsg(int status, String msg, JSONObject data){
+        return new Msg<JSONObject> (status, msg, data);
     }
 
-    public static Msg makeMsg(int status, String msg){
-        return new Msg(status, msg);
+    public static Msg<JSONObject> makeMsg(int status, String msg){
+        return new Msg<JSONObject>(status, msg);
     }
 }

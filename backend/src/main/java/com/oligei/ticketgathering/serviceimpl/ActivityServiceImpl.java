@@ -11,12 +11,33 @@ import com.oligei.ticketgathering.entity.info.Cache;
 import com.oligei.ticketgathering.entity.mysql.Actitem;
 import com.oligei.ticketgathering.entity.mysql.Activity;
 import com.oligei.ticketgathering.service.ActivityService;
+import org.apache.lucene.analysis.Analyzer;
+import org.apache.lucene.document.Document;
+import org.apache.lucene.document.Field;
+import org.apache.lucene.document.IntField;
+import org.apache.lucene.document.TextField;
+import org.apache.lucene.index.DirectoryReader;
+import org.apache.lucene.index.IndexReader;
+import org.apache.lucene.index.IndexWriter;
+import org.apache.lucene.index.IndexWriterConfig;
+import org.apache.lucene.queryparser.classic.ParseException;
+import org.apache.lucene.queryparser.classic.QueryParser;
+import org.apache.lucene.search.IndexSearcher;
+import org.apache.lucene.search.Query;
+import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.TopDocs;
+import org.apache.lucene.store.Directory;
+import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.util.Version;
 import org.apdplat.word.segmentation.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.apdplat.word.WordSegmenter;
 import org.springframework.transaction.annotation.Transactional;
+import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.*;
 
 @Service
@@ -42,104 +63,61 @@ public class ActivityServiceImpl implements ActivityService {
 
 
     @Override
-    public List<ActivitySortpage> search(String value) {
-        if(value==null || value.equals("")|| value.equals("null")){
-            List<ActivitySortpage> cacheResult=cache.getValue("searchNull");
-            if(cacheResult!=null){
-                System.out.println("search null get from cache");
-                return cacheResult;
-            }
-            List<ActivitySortpage> activities=new LinkedList<>();
-            for(int i=10;i<=451;i+=9){
-                activities.add(findActivityAndActitem(i));
-            }
-            cache.addOrUpdateCache("searchNull",activities);
-            System.out.println("search null add into cache");
-            return activities;
+    public Boolean initSearchIndex() throws IOException {
+        String content;
+        int idmax = 12699;
+        Activity activity;
+        Collection<Document> docs = new ArrayList<>();
+        for (Integer id = 1; id <= idmax; ++id) {
+            activity = activityDao.findOneById(id);
+            content = activity.getTitle() + activity.getVenue() + activity.getActor();
+            System.out.println(id.toString() + content);
+            Document document = new Document();
+            document.add(new IntField("id", activity.getActivityId(), Field.Store.YES));
+            document.add(new TextField("title", content, Field.Store.YES));
+            docs.add(document);
         }
-        List<Word> words= WordSegmenter.seg(value);
-        System.out.println("words:"+words+words.size());
-        int n=words.size();
-        if(n==1||n==2){
-            String cacheName="search"+value;
-            List<ActivitySortpage> cacheResult=cache.getValue(cacheName);
-            if(cacheResult!=null) {
-                System.out.println(cacheName+" get from cache");
-                return cacheResult;
-            }
+        Directory directory = FSDirectory.open(new File("d:\\indexDir"));
+        Analyzer analyzer = new IKAnalyzer();
+        IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
+        conf.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
+        IndexWriter indexWriter = new IndexWriter(directory, conf);
+        indexWriter.addDocuments(docs);
+        indexWriter.commit();
+        indexWriter.close();
+        return true;
+    }
+
+    @Override
+    public List<ActivitySortpage> search(String value) throws IOException, ParseException {
+        Directory directory = FSDirectory.open(new File("d:\\indexDir"));
+        // 索引读取工具
+        IndexReader reader = DirectoryReader.open(directory);
+        // 索引搜索工具
+        IndexSearcher searcher = new IndexSearcher(reader);
+
+        // 创建查询解析器,两个参数：默认要查询的字段的名称，分词器
+        QueryParser parser = new QueryParser("title", new IKAnalyzer());
+        // 创建查询对象
+        Query query = parser.parse(value);
+
+        // 搜索数据,两个参数：查询条件对象要查询的最大结果条数
+        // 返回的结果是 按照匹配度排名得分前N名的文档信息（包含查询到的总条数信息、所有符合条件的文档的编号信息）。
+        TopDocs topDocs = searcher.search(query, 30);
+        // 获取总条数
+        System.out.println("本次搜索共找到" + topDocs.totalHits + "条数据");
+        // 获取得分文档对象（ScoreDoc）数组.SocreDoc中包含：文档的编号、文档的得分
+        ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+        List<ActivitySortpage> activitySortpages = new LinkedList<>();
+        for (ScoreDoc scoreDoc : scoreDocs) {
+            Document doc = reader.document(scoreDoc.doc);
+            System.out.println("id: " + doc.get("id"));
+//            System.out.println(activityDao.findOneById(Integer.parseInt(doc.get("id"))).getTitle());
+//            System.out.println("title: " + doc.get("title"));
+            System.out.println("得分： " + scoreDoc.score);
+            activitySortpages.add(findActivityAndActitem(Integer.parseInt(doc.get("id"))));
         }
-
-//        List<List<Activity>> activityList=new LinkedList<>();
-        List<List<Integer>> activityIdList=new LinkedList<>();
-        Set<Integer> idSet=new LinkedHashSet<>();
-        for(int i=0;i<n;++i){
-            String word=words.get(i).getText();
-
-//            word="%"+word+"%";
-//            List<Activity>  result=activityDao.findAllByTitleOrVenueOrActor(word,word,word);
-//            activityList.add(result);
-//            for(int j=0;j<activityList.get(i).size();++j)
-//                idSet.add(activityList.get(i).get(j).getActivityId());
-            String cacheName="idSet"+word;
-            List<Integer> result= idSetCache.getValue(cacheName);
-            if(result!=null)
-                System.out.println(cacheName+" get from cache");
-            else {
-                word = "%" + word + "%";
-                result = activityDao.findAllIdByTitleOrVenueOrActor(word, word, word);
-                idSetCache.addOrUpdateCache(cacheName,result);
-                System.out.println(cacheName+" add into cache");
-            }
-                activityIdList.add(result);
-                idSet.addAll(activityIdList.get(i));
-        }
-
-        int[] idArray=new int[idSet.size()];
-        int[] cntArray=new int[idSet.size()];
-        int cnt=0;
-        for(Integer i:idSet) {
-//            System.out.println("id:"+i);
-            idArray[cnt] = i;
-            cntArray[cnt]=0;
-            ++cnt;
-        }
-        Arrays.sort(idArray);
-
-//        for(int i=0;i<n;++i)
-//            for(int j=0;j<activityList.get(i).size();++j){
-//                int index=Arrays.binarySearch(idArray,activityList.get(i).get(j).getActivityId());
-//                cntArray[index]++;
-//            }
-        for(int i=0;i<n;++i)
-            for(int j=0;j<activityIdList.get(i).size();++j){
-                int index=Arrays.binarySearch(idArray,activityIdList.get(i).get(j));
-                cntArray[index]++;
-            }
-
-        List<ActivitySortpage> activities=new LinkedList<>();
-//        int basic=0;
-//        if(n>2)basic=1;
-//        if(n>5)basic=2;
-//        if(n>10)basic=n-5;
-        int basic=Math.max(0,n-3);
-        int resultCount=1;
-        for(int i=idSet.size();i>basic;--i){
-            for(int j=0;j<idSet.size()&&resultCount<=searchResultMax;++j){
-                if(cntArray[j]==i) {
-                        ActivitySortpage activitySortpage = findActivityAndActitem(idArray[j]);
-                        activities.add(activitySortpage);
-                        resultCount++;
-                }
-            }
-        }
-
-        if(n==1||n==2){
-            String cacheName="search"+value;
-            cache.addOrUpdateCache(cacheName,activities);
-            System.out.println(cacheName+" add into cache");
-        }
-
-        return activities;
+        return activitySortpages;
     }
 
     @Override
@@ -250,7 +228,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 
     @Override
-    public List<ActivitySortpage> selectSearch(String type,String name,String city) {
+    public List<ActivitySortpage> selectSearch(String type,String name,String city) throws IOException, ParseException {
         if (name.equals("全部") && city.equals("全国")) return search("");
 
         String cacheName=name+city;
@@ -387,9 +365,9 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Boolean initActivity() {
 
-        String init="初始化分词";
-        List<Word> words=WordSegmenter.seg(init);
-        System.out.println(words.toString());
+//        String init="初始化分词";
+//        List<Word> words=WordSegmenter.seg(init);
+//        System.out.println(words.toString());
 
         initActivityById(1000);
         initActivityById(2000);
@@ -439,148 +417,6 @@ public class ActivityServiceImpl implements ActivityService {
         cache.evictCache();
         return true;
     }
-
-
-
-
-
-
-//
-//    @Override
-//    public List<ActivitySortpage> search1(String value) {
-//        if(value==null || value.equals("")|| value.equals("null")){
-//            List<ActivitySortpage> cacheResult=cache.getValue("searchNull");
-//            if(cacheResult!=null){
-//                System.out.println("search null get from cache");
-//                return cacheResult;
-//            }
-//            List<ActivitySortpage> activities=new LinkedList<>();
-//            for(int i=10;i<=451;i+=9){
-//                activities.add(findActivityAndActitem(i));
-//            }
-//            cache.addOrUpdateCache("searchNull",activities);
-//            System.out.println("search null add into cache");
-//            return activities;
-//        }
-//        List<Word> words= WordSegmenter.seg(value);
-//        System.out.println("words:"+words+words.size());
-//        int n=words.size();
-//        if(n==1||n==2){
-//            String cacheName="search"+value;
-//            List<ActivitySortpage> cacheResult=cache.getValue(cacheName);
-//            if(cacheResult!=null) {
-//                System.out.println(cacheName+" get from cache");
-//                return cacheResult;
-//            }
-//        }
-//
-////        List<List<Activity>> activityList=new LinkedList<>();
-//        List<List<Integer>> activityIdList=new LinkedList<>();
-//        Set<Integer> idSet=new LinkedHashSet<>();
-//        for(int i=0;i<n;++i){
-//            String word=words.get(i).getText();
-//
-////            word="%"+word+"%";
-////            List<Activity>  result=activityDao.findAllByTitleOrVenueOrActor(word,word,word);
-////            activityList.add(result);
-////            for(int j=0;j<activityList.get(i).size();++j)
-////                idSet.add(activityList.get(i).get(j).getActivityId());
-//            String cacheName="idSet"+word;
-//            List<Integer> result= idSetCache.getValue(cacheName);
-//            if(result!=null)
-//                System.out.println(cacheName+" get from cache");
-//            else {
-//                word = "%" + word + "%";
-//                result = activityDao.findAllIdByTitleOrVenueOrActor(word, word, word);
-//                idSetCache.addOrUpdateCache(cacheName,result);
-//                System.out.println(cacheName+" add into cache");
-//            }
-//            activityIdList.add(result);
-//            idSet.addAll(activityIdList.get(i));
-//        }
-//
-//        return new LinkedList<>();
-//    }
-//
-//
-//    @Override
-//    public List<ActivitySortpage> search2(String value) {
-//        if(value==null || value.equals("")|| value.equals("null")){
-//            List<ActivitySortpage> cacheResult=cache.getValue("searchNull");
-//            if(cacheResult!=null){
-//                System.out.println("search null get from cache");
-//                return cacheResult;
-//            }
-//            List<ActivitySortpage> activities=new LinkedList<>();
-//            for(int i=10;i<=451;i+=9){
-//                activities.add(findActivityAndActitem(i));
-//            }
-//            cache.addOrUpdateCache("searchNull",activities);
-//            System.out.println("search null add into cache");
-//            return activities;
-//        }
-//        List<Word> words= WordSegmenter.seg(value);
-//        System.out.println("words:"+words+words.size());
-//        int n=words.size();
-//        if(n==1||n==2){
-//            String cacheName="search"+value;
-//            List<ActivitySortpage> cacheResult=cache.getValue(cacheName);
-//            if(cacheResult!=null) {
-//                System.out.println(cacheName+" get from cache");
-//                return cacheResult;
-//            }
-//        }
-//
-////        List<List<Activity>> activityList=new LinkedList<>();
-//        List<List<Integer>> activityIdList=new LinkedList<>();
-//        Set<Integer> idSet=new LinkedHashSet<>();
-//        for(int i=0;i<n;++i){
-//            String word=words.get(i).getText();
-//
-////            word="%"+word+"%";
-////            List<Activity>  result=activityDao.findAllByTitleOrVenueOrActor(word,word,word);
-////            activityList.add(result);
-////            for(int j=0;j<activityList.get(i).size();++j)
-////                idSet.add(activityList.get(i).get(j).getActivityId());
-//            String cacheName="idSet"+word;
-//            List<Integer> result= idSetCache.getValue(cacheName);
-//            if(result!=null)
-//                System.out.println(cacheName+" get from cache");
-//            else {
-//                word = "%" + word + "%";
-//                result = activityDao.findAllIdByTitleOrVenueOrActor(word, word, word);
-//                idSetCache.addOrUpdateCache(cacheName,result);
-//                System.out.println(cacheName+" add into cache");
-//            }
-//            activityIdList.add(result);
-//            idSet.addAll(activityIdList.get(i));
-//        }
-//
-//        int[] idArray=new int[idSet.size()];
-//        int[] cntArray=new int[idSet.size()];
-//        int cnt=0;
-//        for(Integer i:idSet) {
-////            System.out.println("id:"+i);
-//            idArray[cnt] = i;
-//            cntArray[cnt]=0;
-//            ++cnt;
-//        }
-//        Arrays.sort(idArray);
-//
-////        for(int i=0;i<n;++i)
-////            for(int j=0;j<activityList.get(i).size();++j){
-////                int index=Arrays.binarySearch(idArray,activityList.get(i).get(j).getActivityId());
-////                cntArray[index]++;
-////            }
-//        for(int i=0;i<n;++i)
-//            for(int j=0;j<activityIdList.get(i).size();++j){
-//                int index=Arrays.binarySearch(idArray,activityIdList.get(i).get(j));
-//                cntArray[index]++;
-//            }
-//
-//        List<ActivitySortpage> activities=new LinkedList<>();
-//            return activities;
-//    }
 
 
 }

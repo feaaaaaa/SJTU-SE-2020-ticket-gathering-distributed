@@ -1,5 +1,7 @@
 package com.oligei.ticketgathering;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,8 +24,14 @@ public class TicketGatheringApplication {
         return new BCryptPasswordEncoder();
     }
 
+    private static final Logger logger = LoggerFactory.getLogger(TicketGatheringApplication.class);
+
     public static void main(String[] args) {
         SpringApplication.run(TicketGatheringApplication.class, args);
+        logger.debug("123456 This is a debug message.");
+        logger.info("123456 This is an info message.");
+        logger.warn("123456 This is a warn message.");
+        logger.error("123456 This is an error message.");
     }
 
     @Value("${server.port}")
