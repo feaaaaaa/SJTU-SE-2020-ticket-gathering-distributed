@@ -2,9 +2,11 @@ package com.oligei.ticketgathering.controller;
 
 import com.oligei.ticketgathering.dto.ActivitySortpage;
 import com.oligei.ticketgathering.service.ActivityService;
+import org.apache.lucene.queryparser.classic.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -18,8 +20,14 @@ public class ActivityController {
 
     private int cnt=0;
 
+
+    @RequestMapping("/initSearchIndex")
+    public Boolean initSearchIndex() throws IOException {
+        return activityService.initSearchIndex();
+    }
+
     @RequestMapping("/search")
-    public List<ActivitySortpage> search(@RequestParam(name = "search") String value) {
+    public List<ActivitySortpage> search(@RequestParam(name = "search") String value) throws IOException, ParseException {
         System.out.println("value:" + value);
         return activityService.search(value);
     }
@@ -58,7 +66,7 @@ public class ActivityController {
 //    @RequestBody CategoryQuery categoryQuery
     public List<ActivitySortpage> selectSearch(@RequestParam(name = "type")String type,
                                                          @RequestParam(name = "name")String name,
-                                                         @RequestParam(name = "city")String city) {
+                                                         @RequestParam(name = "city")String city) throws IOException, ParseException {
         return activityService.selectSearch(type,name,city);
     }
 
@@ -70,14 +78,6 @@ public class ActivityController {
     @RequestMapping("/initActivity")
     public Boolean initActivity(){
         return activityService.initActivity();
-    }
-
-    @RequestMapping("/test")
-    public Boolean test() throws InterruptedException {
-        System.out.println("!"+cnt);
-        TimeUnit.SECONDS.sleep(1);
-        System.out.println(++cnt);
-        return true;
     }
 
     @RequestMapping("/clear")

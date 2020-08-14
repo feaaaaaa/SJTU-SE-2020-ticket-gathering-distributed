@@ -10,6 +10,7 @@ import com.oligei.ticketgathering.TicketGatheringApplication;
 import com.oligei.ticketgathering.entity.mysql.User;
 import com.oligei.ticketgathering.service.UserService;
 import com.oligei.ticketgathering.util.TokenUtil;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.web.bind.annotation.*;
@@ -56,7 +57,7 @@ public class UserController {
      * @date
      */
     @RequestMapping("/Register")
-    public Msg register(@RequestBody User user) {
+    public Msg<JSONObject> register(@RequestBody User user) {
         if(user==null){
             logger.error("NullPointerException",new NullPointerException("null user --UserController register"));
             return MsgUtil.makeMsg(201,"空参数",null);

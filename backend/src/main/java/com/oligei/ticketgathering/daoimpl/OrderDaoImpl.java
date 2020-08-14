@@ -5,8 +5,10 @@ import com.oligei.ticketgathering.entity.info.OrderInfo;
 import com.oligei.ticketgathering.entity.mysql.Order;
 import com.oligei.ticketgathering.repository.OrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Repository;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,18 +18,43 @@ public class OrderDaoImpl implements OrderDao {
     @Autowired
     private OrderRepository orderRepository;
 
+//    @Override
+//    public List<Order> getOrderByUserId(int userId) {
+//        return orderRepository.getOrderByUserId(userId);
+//    }
+
     @Override
-    public List<Order> getOrderByUserId(int userId){
-        return orderRepository.getOrderByUserId(userId);
+    public List<OrderInfo> getUserOrder(int userId) {
+        /**
+        *@Description get Order using userId
+        *@Param [userId]
+        *@return java.util.List<com.oligei.ticketgathering.entity.info.OrderInfo>
+        *@Author Yang Yicheng
+        *@date 2020/8/10
+        *@Throws InvalidDataAccessApiUsageException using illegal userId
+        *@Throws NullPointerException Order not found
+        */
+        if (userId<=0){
+          throw new InvalidDataAccessApiUsageException("using illegal userId");
+        }
+
+        List<OrderInfo> result=orderRepository.getUserOrder(userId);
+        if(result==null){
+          throw new NullPointerException("Order not found");
+        }
+        return result;
     }
 
     @Override
-    public List<OrderInfo> getUserOrder(int userId){
-        return orderRepository.getUserOrder(userId);
-    }
-    @Override
-    public boolean addOrder(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime){
-        Order saveOrder=new Order();
+    public boolean addOrder(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime) {
+        /**
+        *@Description insert an order into database
+        *@Param [userId, actitemId, price, amount, showtime, orderTime]
+        *@return boolean
+        *@Author Yang Yicheng
+        *@date 2020/8/12
+        */
+        Order saveOrder = new Order();
         saveOrder.setActitemId(actitemId);
         saveOrder.setAmount(amount);
         saveOrder.setOrderTime(orderTime);
