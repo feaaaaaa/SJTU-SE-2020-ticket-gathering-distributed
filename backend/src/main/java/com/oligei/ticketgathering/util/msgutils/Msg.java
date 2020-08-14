@@ -2,18 +2,18 @@ package com.oligei.ticketgathering.util.msgutils;
 
 import net.sf.json.JSONObject;
 
-public class Msg {
+public class Msg<T> {
     private int status;
     private String msg;
-    private JSONObject data;
+    private T data;
 
-    Msg(MsgCode msg, JSONObject data){
+    Msg(MsgCode msg, T data){
         this.status = msg.getStatus();
         this.msg = msg.getMsg();
         this.data = data;
     }
 
-    Msg(MsgCode msg, String extra, JSONObject data){
+    Msg(MsgCode msg, String extra, T data){
         this.status = msg.getStatus();
         this.msg = extra;
         this.data = data;
@@ -31,7 +31,7 @@ public class Msg {
         this.data = null;
     }
 
-    Msg(int status, String extra, JSONObject data){
+    public Msg(int status, String extra, T data){
         this.status = status;
         this.msg = extra;
         this.data = data;
@@ -59,11 +59,11 @@ public class Msg {
         this.msg = msg;
     }
 
-    public JSONObject getData() {
+    public T getData() {
         return data;
     }
 
-    public void setData(JSONObject data) {
+    public void setData(T data) {
         this.data = data;
     }
 
