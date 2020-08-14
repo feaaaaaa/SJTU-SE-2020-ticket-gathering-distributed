@@ -26,7 +26,12 @@ public class ActitemDaoImpl implements ActitemDao {
     public Actitem findOneById(Integer id) {
         Actitem actitem = actitemRepository.getOne(id);
         ActitemMongoDB actitemMongoDB = actitemMongoDBRepository.findByActitemId(id);
-        actitem.setPrice(actitemMongoDB.getPrice());
+        try {
+            actitem.setPrice(actitemMongoDB.getPrice());
+        }
+        catch(NullPointerException e){
+            throw new NullPointerException("invalid actiemId expected");
+        }
         return actitem;
     }
 
@@ -66,19 +71,32 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     public boolean modifyRepository(int actitemId, int price, int amount, String showtime) {
+        /**
+        *@Description modify data in mongoDB and Mysql
+        *@Param [actitemId, price, amount, showtime]
+        *@return boolean
+        *@Author Yang Yicheng
+        *@date 2020/8/12
+        *@Throws ArrayIndexOutOfBoundsException no item found so the index overflows
+        *@Throws ArithmeticException the repository of actitem is zero
+        *@Throws NullPointerException invalid actiemId expected
+        */
         Actitem actitem = findOneById(actitemId);
+        if(actitem==null||actitem.getPrice()==null){
+            throw new NullPointerException("invalid actiemId expected");
+        }
         List<JSONObject> prices = actitem.getPrice();
-//        showtime =  showtime.substring(0,9);
-        System.out.println(showtime);
+//        System.out.println(showtime);
         int i, j, repository = 0;
         for (i = 0; i < prices.size(); i++) {
+//            System.out.println(prices.get(i).getString("time"));
             if (Objects.equals(showtime, prices.get(i).getString("time"))) {
                 break;
             }
         }
         if(i==prices.size()){
-            System.out.println("no actitem found");
-            return false;
+//            System.out.println(i);
+            throw new ArrayIndexOutOfBoundsException("no actitem found");
         }
         JSONObject tmp = prices.get(i);
         JSONArray tickets = tmp.getJSONArray("class");
@@ -86,9 +104,8 @@ public class ActitemDaoImpl implements ActitemDao {
             JSONObject ticket = tickets.getJSONObject(j);
             if (Objects.equals(price, Integer.parseInt(ticket.getString("price")))) {
                 repository = Integer.parseInt(ticket.getString("num"));
-                if (Objects.equals(0, repository)) {
-                    System.out.println("the num is zero");
-                    return false;
+                if (Objects.equals(0, repository) || repository<amount) {
+                    throw new ArithmeticException("the repository is zero");
                 } else {
                     repository = repository +amount;
                     ticket.put("num", repository);
@@ -98,8 +115,7 @@ public class ActitemDaoImpl implements ActitemDao {
             }
         }
         if(j==tickets.size()){
-            System.out.println("no actitem found");
-            return false;
+            throw new ArrayIndexOutOfBoundsException("no actitem found");
         }
         tmp.put("class", tickets);
         prices.set(i, tmp);

@@ -8,6 +8,7 @@ import org.mockito.ArgumentMatcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.text.DateFormat;
@@ -16,6 +17,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -55,10 +57,23 @@ class OrderDaoTest {
 
         System.out.println("using existed userId to test");
         assertEquals(1, orderDao.getUserOrder(existedUserId).get(0).getOrderId());
+        assertEquals(3, orderDao.getUserOrder(existedUserId).size());
+
         System.out.println("using none existed userId to test");
-        assertNull(orderDao.getUserOrder(noneExistedUserId));
+        try {
+            orderDao.getUserOrder(noneExistedUserId);
+        }
+        catch (NullPointerException e){
+            assertEquals("Order not found",e.getMessage());
+        }
+
         System.out.println("using illegal userId to test");
-        assertNull(orderDao.getUserOrder(illegalUserId));
+        try {
+            orderDao.getUserOrder(illegalUserId);
+        }
+        catch (InvalidDataAccessApiUsageException e){
+            assertEquals("using illegal userId",e.getMessage());
+        }
     }
 
     @Test
@@ -81,39 +96,11 @@ class OrderDaoTest {
         verify(orderRepository,times(1)).save(any(Order.class));
 
         /*自定义匹配的类型*/
-        when(orderRepository.save(argThat(new ArgumentMatcher<Order>() {
-            @Override
-            public boolean matches(Order order) {
-                return order!=null;
-            }
-        }))).thenReturn(saveOrder);
+        when(orderRepository.save(argThat(Objects::nonNull))).thenReturn(saveOrder);
         assertTrue(orderDao.addOrder(1, 1, 100, 2, Showtime, OrderTime));
 
         /*verify+time 判断该方法调用了几次*/
-        verify(orderRepository,times(2)).save(argThat(new ArgumentMatcher<Order>() {
-            @Override
-            public boolean matches(Order order) {
-                return order!=null;
-            }
-        }));
-
-        /*抛异常 以及检查异常*/
-        when(orderRepository.save(any(Order.class))).thenThrow(new RuntimeException("failed"));
-
-        /*方法一*/
-        final Date finalShowtime = Showtime; //final：类似const lambda里面必须要用final的量
-        final Date finalOrderTime = OrderTime;
-        assertThrows(RuntimeException.class,()->{
-            orderDao.addOrder(1, 1, 100, 2, finalShowtime, finalOrderTime);
-        },"failed");
-
-        /*方法二*/
-        try {
-            orderDao.addOrder(1, 1, 100, 2, Showtime, OrderTime);
-        }
-        catch (RuntimeException ex){
-            assertEquals("failed",ex.getMessage());
-        }
+        verify(orderRepository,times(2)).save(argThat(Objects::nonNull));
 
     }
 }
