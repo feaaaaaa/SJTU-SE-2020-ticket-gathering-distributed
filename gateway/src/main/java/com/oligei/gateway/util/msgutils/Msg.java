@@ -11,6 +11,8 @@ public class Msg<T> {
     private String msg;
     private T data;
 
+    Msg(){}
+
     Msg(Msg<T> Msg){
         this.status = Msg.status;
         this.msg = Msg.msg;
