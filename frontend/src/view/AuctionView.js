@@ -32,40 +32,18 @@ export class AuctionView extends React.Component{
 
     toggleSearch=(value)=>{
         this.setState({isSearch:true,search:value});
-        // console.log("搜索内容："+value+"!!!");
-        // if (value !== this.state.search) {
-        //     localStorage.setItem("search", value);
-        //     this.setState({search: value});
-        //     search(value, (res) => {
-        //         console.log(value);
-        //         console.log("??res:" + JSON.stringify(res));
-        //         if (res != null)
-        //             this.setState({activity: res})
-        //     });
-        // }
     }
 
     componentDidMount() {
-        // let username=localStorage.getItem("username");
-        // if(username!=null){
-        //     this.setState({username:username,login:true});
-        // }
-        // const value = localStorage.getItem("search");
-        // this.setState({search: value});
-        // const callback = data =>{
-        //     console.log("rendering");
-        //     console.log("数据："+data);
-        //     this.setState({auctions:data});
-        // }
-        // getAuctions(callback);
         this.handleRender();
     }
 
     handleRender = () =>{
         const callback = data =>{
+            let trueData = data.data;
             console.log("rendering");
             console.log("数据："+data);
-            this.setState({auctions:data});
+            this.setState({auctions:trueData});
         }
         getAuctions(localStorage.getItem("token"),callback);
     }

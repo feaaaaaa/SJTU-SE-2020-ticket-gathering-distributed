@@ -16,10 +16,7 @@ import javax.annotation.PostConstruct;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class AuctionServiceImpl implements AuctionService {
@@ -86,6 +83,13 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public Boolean save(Integer actitemid, String ddl,String showtime, Integer initprice,Integer orderprice, Integer amount) {
+        Objects.requireNonNull(actitemid,"null actitemdid --AuctionServiceImpl save");
+        Objects.requireNonNull(ddl,"null ddl --AuctionServiceImpl save");
+        Objects.requireNonNull(showtime,"null showtime --AuctionServiceImpl save");
+        Objects.requireNonNull(initprice,"null initprice --AuctionServiceImpl save");
+        Objects.requireNonNull(orderprice,"null orderprice --AuctionServiceImpl save");
+        Objects.requireNonNull(amount,"null amount --AuctionServiceImpl save");
+
         Auction auction = new Auction();
 
         DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
@@ -123,34 +127,35 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionListItem> getAvailableAuctions() {
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
-                java.util.Locale.ENGLISH);
-        String dateNow = df.format(new Date());
-        List<Integer> list = new ArrayList<>();
-        Date d1 = null,d2 = null;
-        for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
-            String dateDdl = entry.getValue().getDdl().toString();
-            try {
-                d1 = df.parse(dateNow);
-                d2 = simpleDateFormat.parse(dateDdl);
-            }catch (Exception e){
-                e.printStackTrace();;
-            }
-            if(d1.getTime()>d2.getTime())
-            {
-                list.add(entry.getValue().getAuctionid());
-                whenSetOver(entry.getValue().getAuctionid());
-            }
-        }
-
-        for(Integer i : list){
-            auctionListItemCache.evictCache(i);
-        }
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
+//                java.util.Locale.ENGLISH);
+//        String dateNow = df.format(new Date());
+//        List<Integer> list = new ArrayList<>();
+//        Date d1 = null,d2 = null;
+//        for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
+//            String dateDdl = entry.getValue().getDdl().toString();
+//            try {
+//                d1 = df.parse(dateNow);
+//                d2 = simpleDateFormat.parse(dateDdl);
+//            }catch (Exception e){
+//                e.printStackTrace();;
+//            }
+//            if(d1.getTime()>d2.getTime())
+//            {
+//                list.add(entry.getValue().getAuctionid());
+//                whenSetOver(entry.getValue().getAuctionid());
+//            }
+//        }
+//
+//        for(Integer i : list){
+//            auctionListItemCache.evictCache(i);
+//        }
 
         List<AuctionListItem> auctionListItems = new ArrayList<>();
         for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
             System.out.println(entry.getKey());
+            System.out.println(entry.getValue().getDdl());
             auctionListItems.add(entry.getValue());
         }
         return auctionListItems;
@@ -158,6 +163,9 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) {
+        Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl joinAuction");
+        Objects.requireNonNull(userid,"null userid --AuctionServiceImpl joinAuction");
+        Objects.requireNonNull(orderprice,"null orderprice --AuctionServiceImpl joinAuction");
         Auction auction = auctionDao.findOneById(auctionid);
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -174,12 +182,12 @@ public class AuctionServiceImpl implements AuctionService {
         {
             whenSetOver(auction.getAuctionid());
             auctionListItemCache.evictCache(auctionid);
-            return -1;
+            return -1; //超时
         }
         AuctionListItem oldAuctionListItem = auctionListItemCache.getValue(auctionid);
         System.out.println("old price:"+oldAuctionListItem.getPrice());
         if(oldAuctionListItem.getPrice() > orderprice)
-            return -2;
+            return -2; //出价低
         AuctionListItem auctionListItem = auctionListItemCache.getValue(auctionid);
         AuctionListItem auctionListItem1 = new AuctionListItem(auctionListItem.getAuctionid(),auctionListItem.getDdl(),orderprice,new Date(),auctionListItem.getAmount(),
                 auctionListItem.getTitle(),auctionListItem.getActor(),auctionListItem.getVenue(),userid,auctionListItem.getActivityIcon());
