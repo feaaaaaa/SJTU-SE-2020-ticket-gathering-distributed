@@ -28,6 +28,8 @@ export class AuctionCard extends React.Component{
             const callback = data => {
                 if(data === -1)
                     this.openNotificationIsOver("warning");
+                else if(data === -2)
+                    this.openNotificationLowerPrice("warning");
                 else {
                     this.openNotificationPurchase("success");
                 }

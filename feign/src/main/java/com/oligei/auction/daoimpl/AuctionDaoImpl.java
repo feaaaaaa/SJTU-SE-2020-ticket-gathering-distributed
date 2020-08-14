@@ -15,10 +15,8 @@ public class AuctionDaoImpl implements AuctionDao {
     private AuctionRepository auctionRepository;
 
     @Override
-    public Boolean save(Auction auction) {
-        auctionRepository.save(auction);
-
-        return true;
+    public Auction save(Auction auction) {
+        return auctionRepository.save(auction);
     }
 
     @Override

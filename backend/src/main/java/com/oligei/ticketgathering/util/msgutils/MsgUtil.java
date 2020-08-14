@@ -23,8 +23,8 @@ public class MsgUtil {
 
 
 
-    public static Msg makeMsg(MsgCode code, JSONObject data){
-        return new Msg(code, data);
+    public static Msg<JSONObject> makeMsg(MsgCode code, JSONObject data){
+        return new Msg<JSONObject>(code, data);
     }
 
     public static Msg<JSONObject> makeMsg(MsgCode code, String msg, JSONObject data){
@@ -39,7 +39,7 @@ public class MsgUtil {
         return new Msg<JSONObject>(code, msg);
     }
 
-    public static Msg<JSONObject> makeMsg(int status, String msg, JSONObject data){
+    public static Msg<JSONObject> makeMsg(int status, String msg, JSONObject data) {
         return new Msg<JSONObject>(status, msg, data);
     }
 

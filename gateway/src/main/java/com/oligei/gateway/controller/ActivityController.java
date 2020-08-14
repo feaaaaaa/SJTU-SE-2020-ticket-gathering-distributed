@@ -5,6 +5,7 @@ import com.oligei.gateway.service.ActivityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -20,6 +21,21 @@ public class ActivityController {
     public List<ActivitySortpage> search(@RequestParam(name = "search") String value) {
         System.out.println("value:" + value);
         return activityService.search(value);
+    }
+
+    @RequestMapping("/initActivity")
+    public Boolean initActivity() {
+        return activityService.initActivity();
+    }
+
+    @RequestMapping("/initSearchIndex")
+    public Boolean initSearchIndex() {
+        return activityService.initSearchIndex();
+    }
+
+    @RequestMapping("/clear")
+    public Boolean clear(@RequestParam(name = "name")String cacheName){
+        return activityService.clear(cacheName);
     }
 
     @RequestMapping("/add")
