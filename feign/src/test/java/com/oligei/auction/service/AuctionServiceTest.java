@@ -20,7 +20,7 @@ class AuctionServiceTest {
     @Autowired
     private AuctionService auctionService;
 
-    @MockBean
+    @Autowired
     private AuctionDao auctionDao;
 
     @Test

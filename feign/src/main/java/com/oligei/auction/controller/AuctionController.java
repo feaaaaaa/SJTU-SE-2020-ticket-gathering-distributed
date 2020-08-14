@@ -61,7 +61,6 @@ public class AuctionController {
     @RequestMapping("/join")
     public Msg<Integer> joinAuction(@RequestParam("auctionid")Integer auctionid,@RequestParam("userid")Integer userid,@RequestParam("price")Integer price)
     {
-//        return auctionService.joinAuction(auctionid,userid,price);
         Integer result;
         try {
             result = auctionService.joinAuction(auctionid,userid,price);

@@ -2,6 +2,7 @@ package com.oligei.gateway.controller;
 
 import com.oligei.gateway.dto.AuctionListItem;
 import com.oligei.gateway.service.AuctionService;
+import com.oligei.gateway.util.msgutils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,21 +20,21 @@ public class AuctionController {
     private AuctionService auctionService;
 
     @RequestMapping("/add")
-    public boolean addAuction(@RequestParam("actitemid")Integer actitemid,@RequestParam("ddl")String ddl,
-                              @RequestParam("showtime")String showtime,@RequestParam("initprice")Integer initprice,
-                              @RequestParam("orderprice")Integer orderprice, @RequestParam("amount")Integer amount)
+    public Msg<Boolean> addAuction(@RequestParam("actitemid")Integer actitemid, @RequestParam("ddl")String ddl,
+                                   @RequestParam("showtime")String showtime, @RequestParam("initprice")Integer initprice,
+                                   @RequestParam("orderprice")Integer orderprice, @RequestParam("amount")Integer amount)
     {
         return auctionService.addAuction(actitemid,ddl,showtime,initprice,orderprice,amount);
     }
 
 
     @RequestMapping("/get")
-    public List<AuctionListItem> getAuctions(){
+    public Msg<List<AuctionListItem>> getAuctions(){
         return auctionService.getAuctions();
     }
 
     @RequestMapping("/join")
-    public Integer joinAuction(@RequestParam("auctionid")Integer auctionid,@RequestParam("userid")Integer userid,@RequestParam("price")Integer price)
+    public Msg<Integer> joinAuction(@RequestParam("auctionid")Integer auctionid,@RequestParam("userid")Integer userid,@RequestParam("price")Integer price)
     {
         return auctionService.joinAuction(auctionid,userid,price);
     }

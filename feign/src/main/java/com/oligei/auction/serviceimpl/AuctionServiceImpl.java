@@ -11,6 +11,8 @@ import com.oligei.auction.service.AuctionService;
 import com.oligei.auction.service.OrderService;
 import com.oligei.auction.util.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.text.DateFormat;
@@ -19,6 +21,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 @Service
+@EnableScheduling
 public class AuctionServiceImpl implements AuctionService {
 
     @Autowired
@@ -127,37 +130,13 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionListItem> getAvailableAuctions() {
-//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
-//                java.util.Locale.ENGLISH);
-//        String dateNow = df.format(new Date());
-//        List<Integer> list = new ArrayList<>();
-//        Date d1 = null,d2 = null;
-//        for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
-//            String dateDdl = entry.getValue().getDdl().toString();
-//            try {
-//                d1 = df.parse(dateNow);
-//                d2 = simpleDateFormat.parse(dateDdl);
-//            }catch (Exception e){
-//                e.printStackTrace();;
-//            }
-//            if(d1.getTime()>d2.getTime())
-//            {
-//                list.add(entry.getValue().getAuctionid());
-//                whenSetOver(entry.getValue().getAuctionid());
-//            }
-//        }
-//
-//        for(Integer i : list){
-//            auctionListItemCache.evictCache(i);
-//        }
-
         List<AuctionListItem> auctionListItems = new ArrayList<>();
         for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
             System.out.println(entry.getKey());
             System.out.println(entry.getValue().getDdl());
             auctionListItems.add(entry.getValue());
         }
+        System.out.println(auctionListItems.size());
         return auctionListItems;
     }
 
@@ -215,6 +194,35 @@ public class AuctionServiceImpl implements AuctionService {
             {
                 whenSetOver(auction.getAuctionid());
             }
+        }
+    }
+
+    @Scheduled(cron = "0/1 * * * * ?")
+    public void flushAuctions(){
+        System.out.println("flushing");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
+                java.util.Locale.ENGLISH);
+        String dateNow = df.format(new Date());
+        List<Integer> list = new ArrayList<>();
+        Date d1 = null,d2 = null;
+        for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
+            String dateDdl = entry.getValue().getDdl().toString();
+            try {
+                d1 = df.parse(dateNow);
+                d2 = simpleDateFormat.parse(dateDdl);
+            }catch (Exception e){
+                e.printStackTrace();;
+            }
+            if(d1.getTime()>d2.getTime())
+            {
+                list.add(entry.getValue().getAuctionid());
+                whenSetOver(entry.getValue().getAuctionid());
+            }
+        }
+
+        for(Integer i : list){
+            auctionListItemCache.evictCache(i);
         }
     }
 }
