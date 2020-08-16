@@ -27,6 +27,35 @@ public class Auction {
     private Date ordertime;
     private Integer amount;
 
+    public Auction(){}
+
+    public Auction(Integer auctionid,Integer actitemid,Date ddl,Integer initprice
+            ,Integer orderprice, Date showtime,Integer amount)
+    {
+        this.auctionid = auctionid;
+        this.actitemid = actitemid;
+        this.userid = 0;
+        this.ddl = ddl;
+        this.initprice = initprice;
+        this.orderprice = orderprice;
+        this.isover = 0;
+        this.showtime = showtime;
+        this.amount = amount;
+    }
+
+    public Auction(Integer actitemid,Date ddl,Integer initprice
+                    ,Integer orderprice, Date showtime,Integer amount)
+    {
+        this.actitemid = actitemid;
+        this.userid = 0;
+        this.ddl = ddl;
+        this.initprice = initprice;
+        this.orderprice = orderprice;
+        this.isover = 0;
+        this.showtime = showtime;
+        this.amount = amount;
+    }
+
     @Id
     @Column(name = "auctionid")
     @GeneratedValue(generator = "increment")

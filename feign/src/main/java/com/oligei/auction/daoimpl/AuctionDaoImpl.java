@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class AuctionDaoImpl implements AuctionDao {
@@ -16,6 +17,8 @@ public class AuctionDaoImpl implements AuctionDao {
 
     @Override
     public Auction save(Auction auction) {
+        Objects.requireNonNull(auction,"null auction --AuctionDaoImpl save");
+
         return auctionRepository.save(auction);
     }
 

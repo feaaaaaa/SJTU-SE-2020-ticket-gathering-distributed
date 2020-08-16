@@ -1,5 +1,6 @@
 package com.oligei.ticketgathering.util.msgutils;
 
+import net.sf.json.JSONArray;
 import net.sf.json.JSONObject;
 
 
@@ -27,7 +28,7 @@ public class MsgUtil {
     }
 
     public static Msg<JSONObject> makeMsg(MsgCode code, String msg, JSONObject data){
-        return new Msg<JSONObject> (code, msg, data);
+        return new Msg<JSONObject>(code, msg, data);
     }
 
     public static Msg<JSONObject> makeMsg(MsgCode code){
@@ -38,11 +39,15 @@ public class MsgUtil {
         return new Msg<JSONObject>(code, msg);
     }
 
-    public static Msg<JSONObject> makeMsg(int status, String msg, JSONObject data){
-        return new Msg<JSONObject> (status, msg, data);
+    public static Msg<JSONObject> makeMsg(int status, String msg, JSONObject data) {
+        return new Msg<JSONObject>(status, msg, data);
     }
 
     public static Msg<JSONObject> makeMsg(int status, String msg){
         return new Msg<JSONObject>(status, msg);
+    }
+
+    public static Msg<JSONArray> makeMsg(MsgCode code, String msg, JSONArray data){
+        return new Msg<JSONArray>(code, msg, data);
     }
 }
