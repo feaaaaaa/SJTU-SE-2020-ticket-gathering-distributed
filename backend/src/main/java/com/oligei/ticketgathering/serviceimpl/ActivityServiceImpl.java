@@ -155,7 +155,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 //    @Override
     /**
-     *@description use id to find activity&actitems to make a activitySortpage
+     *@description use id to find activity and actitems to make a activitySortpage
      *@param id the activityId
      *@return ActivitySortpage that have the id
      *@author feaaaaaa
@@ -396,6 +396,9 @@ public class ActivityServiceImpl implements ActivityService {
         initActivityById(11000);
         initActivityById(12000);
 
+        //add home page to cache
+        findActivityByCategoryHome();
+
 
 //        String[] citys = {"北京","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","上海","江苏","浙江","安徽","福建","江西","山东","河南","湖北",
 //                "湖南","广东","广西", "海南","重庆","四川","贵州","云南","西藏","陕西","甘肃","青海","宁夏","新疆","台湾","澳门","香港",
@@ -408,7 +411,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @Description add 1000 activitySortpage into cache
+     * @description add 1000 activitySortpage into cache
      * @param cnt the max id that add into cache
      * @author feaaaaaa
      * @date 2020.08.14
@@ -422,7 +425,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @Description clear cache which have home cache and select search
+     * @description  clear cache which have home cache and select search
      * @return true if clear clear successfully
      * @author feaaaaaa
      * @date 2020.08.14

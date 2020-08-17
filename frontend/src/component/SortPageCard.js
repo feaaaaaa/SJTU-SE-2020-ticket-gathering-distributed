@@ -89,10 +89,10 @@ export class SortPageCard extends React.Component{
                      this.props.usertype==="Admin" &&
                      <div style={{float: "right"}}>
                          {/*onClick={()=>this.handleDelete(this.props.info)}*/}
-                         <Button  href="/adminModify" onClick={()=>{
-                             console.log("jumping to modify...");
-                             localStorage.setItem("modifyId",this.props.info.activityId);
-                         }}>修改</Button>
+                         {/*<Button  href="/adminModify" onClick={()=>{*/}
+                         {/*    console.log("jumping to modify...");*/}
+                         {/*    localStorage.setItem("modifyId",this.props.info.activityId);*/}
+                         {/*}}>修改</Button>*/}
                      </div>
                  }
                  <div>

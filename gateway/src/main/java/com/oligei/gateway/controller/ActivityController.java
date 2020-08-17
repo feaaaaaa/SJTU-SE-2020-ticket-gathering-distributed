@@ -7,7 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.net.SocketTimeoutException;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 @RestController
 @RequestMapping("/activity")
@@ -21,32 +24,62 @@ public class ActivityController {
     @RequestMapping("/search")
     public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value) {
         System.out.println("value:" + value);
-        return activityService.search(value);
+        try{
+            return activityService.search(value);
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(0,"请求超时，请重试",new LinkedList<>());
+        }
     }
 
     @RequestMapping("/initActivity")
     public Msg<Boolean> initActivity() {
-        return activityService.initActivity();
+        try {
+            return activityService.initActivity();
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(0,"请求已发送",true);
+        }
     }
 
     @RequestMapping("/initSearchIndex")
     public Msg<Boolean> initSearchIndex() {
-        return activityService.initSearchIndex();
+        try{
+            return activityService.initSearchIndex();
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(0,"请求已发送",true);
+        }
     }
 
     @RequestMapping("/clear")
     public Msg<Boolean> clear(){
-        return activityService.clear();
+        try{
+            return activityService.clear();
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(0,"请求已发送",true);
+        }
     }
 
     @RequestMapping("/add")
     public Msg<Boolean> add(@RequestParam(name = "activity") String activity) {
-        return activityService.add(activity);
+        try{
+            return activityService.add(activity);
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(0,"超时，请重试",true);
+        }
     }
 
     @RequestMapping("/delete")
     public Msg<Boolean> delete(@RequestParam(name = "activityId") String activityid) {
-        return activityService.delete(activityid);
+        try{
+            return activityService.delete(activityid);
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(0,"超时，请重试",true);
+        }
     }
 
     @RequestMapping("/RecommendOnContent")

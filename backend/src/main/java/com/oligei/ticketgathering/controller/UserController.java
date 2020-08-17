@@ -50,10 +50,10 @@ public class UserController {
     }
 
     /**
-     * @Description register
+     * register
      * @param user user to be registered
      * @return Msg(status,msg,data) 200 is OK, 201 is fail
-     * @Author
+     * @author
      * @date
      */
     @RequestMapping("/Register")
