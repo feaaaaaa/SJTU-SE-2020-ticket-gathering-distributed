@@ -1,8 +1,11 @@
 package com.oligei.gateway.controller;
 
+import com.oligei.gateway.GatewayApplication;
 import com.oligei.gateway.dto.ActivitySortpage;
 import com.oligei.gateway.service.ActivityService;
 import com.oligei.gateway.util.msgutils.Msg;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +23,8 @@ public class ActivityController {
     @Autowired
     private ActivityService activityService;
 
+    private static final Logger logger = LoggerFactory.getLogger(GatewayApplication.class);
+
 
     @RequestMapping("/search")
     public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value) {
@@ -27,7 +32,7 @@ public class ActivityController {
         try{
             return activityService.search(value);
         }catch (feign.RetryableException e){
-            System.out.println(e);
+            logger.error("请求超时",e);
             return new Msg<>(0,"请求超时，请重试",new LinkedList<>());
         }
     }
