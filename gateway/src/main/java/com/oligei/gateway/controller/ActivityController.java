@@ -2,6 +2,7 @@ package com.oligei.gateway.controller;
 
 import com.oligei.gateway.dto.ActivitySortpage;
 import com.oligei.gateway.service.ActivityService;
+import com.oligei.gateway.util.msgutils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,33 +19,33 @@ public class ActivityController {
 
 
     @RequestMapping("/search")
-    public List<ActivitySortpage> search(@RequestParam(name = "search") String value) {
+    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value) {
         System.out.println("value:" + value);
         return activityService.search(value);
     }
 
     @RequestMapping("/initActivity")
-    public Boolean initActivity() {
+    public Msg<Boolean> initActivity() {
         return activityService.initActivity();
     }
 
     @RequestMapping("/initSearchIndex")
-    public Boolean initSearchIndex() {
+    public Msg<Boolean> initSearchIndex() {
         return activityService.initSearchIndex();
     }
 
     @RequestMapping("/clear")
-    public Boolean clear(@RequestParam(name = "name")String cacheName){
-        return activityService.clear(cacheName);
+    public Msg<Boolean> clear(){
+        return activityService.clear();
     }
 
     @RequestMapping("/add")
-    public Boolean add(@RequestParam(name = "activity") String activity) {
+    public Msg<Boolean> add(@RequestParam(name = "activity") String activity) {
         return activityService.add(activity);
     }
 
     @RequestMapping("/delete")
-    public Boolean delete(@RequestParam(name = "activityId") String activityid) {
+    public Msg<Boolean> delete(@RequestParam(name = "activityId") String activityid) {
         return activityService.delete(activityid);
     }
 

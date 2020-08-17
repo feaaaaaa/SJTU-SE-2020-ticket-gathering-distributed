@@ -31,6 +31,8 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.apdplat.word.segmentation.Word;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.apdplat.word.WordSegmenter;
 import org.springframework.transaction.annotation.Transactional;
@@ -49,23 +51,29 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private ActitemDao actitemDao;
 
-    @Autowired
-    private UserDao userDao;
 
-//    @Autowired
     private Cache<List<ActivitySortpage>> cache=new Cache<>();
 
     private Cache<ActivitySortpage> oneCache=new Cache<>();
 
-    private Cache<List<Integer>> idSetCache=new Cache<>();
+//    private Cache<List<Integer>> idSetCache=new Cache<>();
 
     private  int searchResultMax=30;
 
 
     @Override
+    /**
+     * @Description initialize a search index (which only need to be done once)
+     * @return true if initialize finished successfully
+     * @author feaaaaaa
+     * @date 2020.08.14
+     * @throws JpaObjectRetrievalFailureException if idmax is wrong
+     * @throws IOException if open file fails
+     */
     public Boolean initSearchIndex() throws IOException {
         String content;
-        int idmax = 12699;
+        int idmax = activityDao.findMaxActivityId();
+        System.out.println(idmax);
         Activity activity;
         Collection<Document> docs = new ArrayList<>();
         for (Integer id = 1; id <= idmax; ++id) {
@@ -89,7 +97,33 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    /**
+     * @Description use index to get search id, then get data from cache and return
+     * @param value search value
+     * @return true if initialize finished successfully
+     * @author feaaaaaa
+     * @date 2020.08.14
+     * @throws IOException if open file fails
+     * @throws ParseException if parse of value fails
+     * @throws JpaObjectRetrievalFailureException if id is invalid
+     */
     public List<ActivitySortpage> search(String value) throws IOException, ParseException {
+        //null
+        if (value == null || value.equals("") || value.equals("null")) {
+            List<ActivitySortpage> cacheResult = cache.getValue("searchNull");
+            if (cacheResult != null) {
+                System.out.println("search null get from cache");
+                return cacheResult;
+            }
+            List<ActivitySortpage> activities = new LinkedList<>();
+            for (int i = 10; i <= 451; i += 9) {
+                activities.add(findActivityAndActitem(i));
+            }
+            cache.addOrUpdateCache("searchNull", activities);
+            System.out.println("search null add into cache");
+            return activities;
+        }
+        //not null
         Directory directory = FSDirectory.open(new File("d:\\indexDir"));
         // 索引读取工具
         IndexReader reader = DirectoryReader.open(directory);
@@ -101,9 +135,8 @@ public class ActivityServiceImpl implements ActivityService {
         // 创建查询对象
         Query query = parser.parse(value);
 
-        // 搜索数据,两个参数：查询条件对象要查询的最大结果条数
-        // 返回的结果是 按照匹配度排名得分前N名的文档信息（包含查询到的总条数信息、所有符合条件的文档的编号信息）。
-        TopDocs topDocs = searcher.search(query, 30);
+        // 搜索数据,两个参数：查询条件对象要查询的最大结果条数, 返回的结果是 按照匹配度排名得分前N名的文档信息（包含查询到的总条数信息、所有符合条件的文档的编号信息）。
+        TopDocs topDocs = searcher.search(query, searchResultMax);
         // 获取总条数
         System.out.println("本次搜索共找到" + topDocs.totalHits + "条数据");
         // 获取得分文档对象（ScoreDoc）数组.SocreDoc中包含：文档的编号、文档的得分
@@ -111,18 +144,28 @@ public class ActivityServiceImpl implements ActivityService {
         List<ActivitySortpage> activitySortpages = new LinkedList<>();
         for (ScoreDoc scoreDoc : scoreDocs) {
             Document doc = reader.document(scoreDoc.doc);
-            System.out.println("id: " + doc.get("id"));
+//            System.out.println("id: " + doc.get("id"));
 //            System.out.println(activityDao.findOneById(Integer.parseInt(doc.get("id"))).getTitle());
 //            System.out.println("title: " + doc.get("title"));
-            System.out.println("得分： " + scoreDoc.score);
+//            System.out.println("得分： " + scoreDoc.score);
             activitySortpages.add(findActivityAndActitem(Integer.parseInt(doc.get("id"))));
         }
         return activitySortpages;
     }
 
-    @Override
+//    @Override
+    /**
+     *@description use id to find activity&actitems to make a activitySortpage
+     *@param id the activityId
+     *@return ActivitySortpage that have the id
+     *@author feaaaaaa
+     *@date 2020.8.15
+     *@throws NullPointerException when id is null or the param of activitySortpage is null
+     *@throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
+     */
     public ActivitySortpage findActivityAndActitem(Integer id) {
 
+        Objects.requireNonNull(id,"null id --ActivityServiceImpl findActivityAndActitem");
         String cacheName="ActivitySortpage"+id.toString();
         ActivitySortpage cacheResult=oneCache.getValue(cacheName);
         if(cacheResult!=null){
@@ -130,15 +173,8 @@ public class ActivityServiceImpl implements ActivityService {
             return cacheResult;
         }
 
-        Activity activity;
-        try {
-            activity = activityDao.findOneById(id);
-        } catch (javax.persistence.EntityNotFoundException e) {
-            return null;
-        }
-        if(activity==null) return null;
+        Activity activity= activityDao.findOneById(id);
         List<Actitem> actitems=actitemDao.findAllByActivityId(id);
-
         cacheResult= new ActivitySortpage (
                 activity.getActivityId(),
                 activity.getTitle(),
@@ -154,18 +190,27 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    /**
+     *@description parse the string info of activity and save it
+     *@param activity
+     *@return save success or fail
+     *@author feaaaaaa
+     *@date 2020.8.15
+     *@throws NullPointerException when param is null
+     *@throws ArrayIndexOutOfBoundsException,NumberFormatException if string activity is not the correct format
+     */
     public Boolean add(String activity) {
-        System.out.println(activity);
+        Objects.requireNonNull(activity,"null activity --ActivityServiceImpl add");
         activity=activity.substring(1,activity.length()-1);
         String[] arr = activity.split(",");
-        System.out.println(Arrays.toString(arr));
+//        System.out.println(Arrays.toString(arr));
         int webcnt=Integer.parseInt(arr[0]);
         int daycnt=Integer.parseInt(arr[1]);
         int classcnt=Integer.parseInt(arr[2]);
         String city=arr[8].substring(1,arr[8].length()-1);
         String category=arr[9].substring(1,arr[9].length()-1);
         String subcategory=arr[10].substring(1,arr[10].length()-1);
-        System.out.println(city+category+subcategory);
+//        System.out.println(city+category+subcategory);
 
         Activity savedActivity=activityDao.add(arr[3].substring(1,arr[3].length()-1),arr[4].substring(1,arr[4].length()-1),arr[5].substring(1,arr[5].length()-1),
                 arr[6].substring(1,arr[6].length()-1),arr[7].substring(1,arr[7].length()-1));
@@ -209,8 +254,8 @@ public class ActivityServiceImpl implements ActivityService {
 //            System.out.println(actitemMongo.toString());
 //            List<JSONObject> tmp=new LinkedList<>();
 //            tmp.add(actitemMongo);
-            System.out.println("!!!!");
-            System.out.println(prices.toString());
+//            System.out.println("!!!!");
+//            System.out.println(prices.toString());
             actitemDao.insertActitemInMongo(actitemId,prices);
         }
         return true;
@@ -218,7 +263,18 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     @Transactional
+    /**
+     *@description use activityId to delete activity&all the actitem
+     *@param id the activityId of activity
+     *@return delete success or fail
+     *@author feaaaaaa
+     *@date 2020.8.15
+     *@throws NullPointerException when id is null
+     *@throws JpaObjectRetrievalFailureException when id is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
+     */// TODO: 2020/8/17 actitemDao
     public Boolean delete(Integer activityId) {
+        Objects.requireNonNull(activityId,"null id --ActivityServiceImpl delete");
         List<Actitem> actitems=actitemDao.findAllByActivityId(activityId);
         for(Actitem a : actitems)
             actitemDao.deleteActitem(a.getActitemId());
@@ -248,6 +304,13 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    /**
+     * @Description call findActivityByOneCategoryHome 8 times to find a list of activitySortpage for homepage
+     * @return total list of activitySortpage for homepage
+     * @author feaaaaaa
+     * @date 2020.08.14
+     * @throws // TODO: 2020/8/17
+     */
     public List<ActivitySortpage> findActivityByCategoryHome() {
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>(findActivityByOneCategoryHome("儿童亲子"));
         activitySortpages.addAll(findActivityByOneCategoryHome("话剧歌剧"));
@@ -258,87 +321,30 @@ public class ActivityServiceImpl implements ActivityService {
         activitySortpages.addAll(findActivityByOneCategoryHome("音乐会"));
         activitySortpages.addAll(findActivityByOneCategoryHome("演唱会"));
 
-//        int i = 0;
-//        List<Integer> activities;
-//        List<ActivitySortpage> cacheResult=new LinkedList<>();
-//        List<ActivitySortpage> cacheTmp=new LinkedList<>();
-//
-//        cacheResult=cache.getValue("儿童亲子");
-//        if(cacheResult!=null){
-//            System.out.println("儿童亲子 get from cache");
-//            activitySortpages.addAll(cacheResult);
-//        }
-//        else {
-//            activities = activityDao.findActivityByCategoryAndCity("category", "儿童亲子", "全国");
-//            for (Integer a : activities) {
-//                activitySortpages.add(findActivityAndActitem(a));
-//                if (++i >= 10) break;
-//            }
-//            cache.addOrUpdateCache("儿童亲子",activitySortpages);
-//        }
-//
-//        cacheResult=cache.getValue("话剧歌剧");
-//        if(cacheResult!=null){
-//            System.out.println("话剧歌剧 get from cache");
-//            activitySortpages.addAll(cacheResult);
-//        }
-//        else {
-//            activities = activityDao.findActivityByCategoryAndCity("category", "话剧歌剧", "全国");
-//            for (Integer a : activities) {
-//                activitySortpages.add(findActivityAndActitem(a));
-//                if (++i >= 20) break;
-//            }
-//        }
-//
-//        activities=activityDao.findActivityByCategoryAndCity("category","旅游展览","全国");
-//        for(Integer a:activities){
-//            activitySortpages.add(findActivityAndActitem(a));
-//            if(++i>=30)break;
-//        }
-//
-//        activities=activityDao.findActivityByCategoryAndCity("category","曲苑杂坛","全国");
-//        for(Integer a:activities){
-//            activitySortpages.add(findActivityAndActitem(a));
-//            if(++i>=40)break;
-//        }
-//
-//        activities=activityDao.findActivityByCategoryAndCity("category","体育","全国");
-//        for(Integer a:activities){
-//            activitySortpages.add(findActivityAndActitem(a));
-//            if(++i>=50)break;
-//        }
-//
-//        activities=activityDao.findActivityByCategoryAndCity("category","舞蹈芭蕾","全国");
-//        for(Integer a:activities){
-//            activitySortpages.add(findActivityAndActitem(a));
-//            if(++i>=60)break;
-//        }
-//
-//        activities=activityDao.findActivityByCategoryAndCity("category","音乐会","全国");
-//        for(Integer a:activities){
-//            activitySortpages.add(findActivityAndActitem(a));
-//            if(++i>=70)break;
-//        }
-//
-//        activities=activityDao.findActivityByCategoryAndCity("category","演唱会","全国");
-//        for(Integer a:activities){
-//            activitySortpages.add(findActivityAndActitem(a));
-//            if(++i>=80)break;
-//        }
         return activitySortpages;
     }
 
-    public List<ActivitySortpage> findActivityByOneCategoryHome(String name){
+    /**
+     * @Description use findActivityByCategoryAndCity("category", name, "全国")  to get one content of homepage from cache
+     * @return a list of activitySortpage for homepage
+     * @param name name of category
+     * @author feaaaaaa
+     * @date 2020.08.14
+     * @throws // TODO: 2020/8/17
+     */
+    private List<ActivitySortpage> findActivityByOneCategoryHome(String name){
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>();
         int i = 0;
         List<Integer> activities;
         List<ActivitySortpage> cacheResult=new LinkedList<>();
 
+        //get from cache
         cacheResult=cache.getValue(name);
         if(cacheResult!=null&&cacheResult.size()!=0){
             System.out.println(name+" get from cache");
             activitySortpages.addAll(cacheResult);
         }
+        //1st time, add into cache, which will be done in initialization
         else {
             System.out.println(name+" put into cache");
             activities = activityDao.findActivityByCategoryAndCity("category", name, "全国");
@@ -363,12 +369,20 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    /**
+     * @Description add all the activitySortpage into cache
+     * @return true if initialize finished successfully
+     * @author feaaaaaa
+     * @date 2020.08.14
+     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
+     */
     public Boolean initActivity() {
 
 //        String init="初始化分词";
 //        List<Word> words=WordSegmenter.seg(init);
 //        System.out.println(words.toString());
 
+        //add all the activitySortpage into cache
         initActivityById(1000);
         initActivityById(2000);
         initActivityById(3000);
@@ -383,40 +397,51 @@ public class ActivityServiceImpl implements ActivityService {
         initActivityById(12000);
 
 
-        String[] citys = {"北京","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","上海","江苏","浙江","安徽","福建","江西","山东","河南","湖北",
-                "湖南","广东","广西", "海南","重庆","四川","贵州","云南","西藏","陕西","甘肃","青海","宁夏","新疆","台湾","澳门","香港",
-                "北京","成都","重庆","长春","长沙","大连","东莞","佛山","福州","广州","贵阳","哈尔滨","海口","杭州","合肥","呼和浩特","济南",
-                "昆明","南昌","南京","南宁","宁波","青岛","厦门","上海","深圳","沈阳","石家庄","苏州","太原","天津","无锡","武汉","西安","郑州", "珠海"
-        };
-        for(String s :citys)
-            initActivityByCity(s);
+//        String[] citys = {"北京","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","上海","江苏","浙江","安徽","福建","江西","山东","河南","湖北",
+//                "湖南","广东","广西", "海南","重庆","四川","贵州","云南","西藏","陕西","甘肃","青海","宁夏","新疆","台湾","澳门","香港",
+//                "北京","成都","重庆","长春","长沙","大连","东莞","佛山","福州","广州","贵阳","哈尔滨","海口","杭州","合肥","呼和浩特","济南",
+//                "昆明","南昌","南京","南宁","宁波","青岛","厦门","上海","深圳","沈阳","石家庄","苏州","太原","天津","无锡","武汉","西安","郑州", "珠海"
+//        };
+//        for(String s :citys)
+//            initActivityByCity(s);
         return true;
     }
 
+    /**
+     * @Description add 1000 activitySortpage into cache
+     * @param cnt the max id that add into cache
+     * @author feaaaaaa
+     * @date 2020.08.14
+     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
+     */
     public void initActivityById(int cnt) {
         int basic=Math.max(1,cnt-1000);
         for(int i=basic;i<cnt;++i){
             findActivityAndActitem(i);
-            System.out.println("size:"+oneCache.getSize());
         }
     }
 
-    public void initActivityByCity(String city) {
-        String cacheName = "idSet" + city;
-        city = "%" + city + "%";
-        List<Integer> result = activityDao.findAllIdByTitleOrVenueOrActor(city, city, city);
-        idSetCache.addOrUpdateCache(cacheName, result);
-        System.out.println(cacheName + " add into cache");
-    }
-
+    /**
+     * @Description clear cache which have home cache and select search
+     * @return true if clear clear successfully
+     * @author feaaaaaa
+     * @date 2020.08.14
+     */
     @Override
-    public Boolean clear(String cacheName) {
-        if(cacheName==null||cacheName.equals("")||cacheName.equals("null"))
-            idSetCache.evictCache();
-        idSetCache.evictCache(cacheName);
+    public Boolean clear() {
+//        if(cacheName==null||cacheName.equals("")||cacheName.equals("null"))
+//            idSetCache.evictCache();
+//        idSetCache.evictCache(cacheName);
         cache.evictCache();
         return true;
     }
 
 
+    //    public void initActivityByCity(String city) {
+//        String cacheName = "idSet" + city;
+//        city = "%" + city + "%";
+//        List<Integer> result = activityDao.findAllIdByTitleOrVenueOrActor(city, city, city);
+//        idSetCache.addOrUpdateCache(cacheName, result);
+//        System.out.println(cacheName + " add into cache");
+//    }
 }

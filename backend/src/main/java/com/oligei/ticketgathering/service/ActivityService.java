@@ -12,12 +12,12 @@ public interface ActivityService {
     List<ActivitySortpage> search(String value) throws IOException, ParseException;
 //    List<ActivitySortpage> search1(String value);
 //    List<ActivitySortpage> search2(String value);
-    ActivitySortpage findActivityAndActitem(Integer id);
+//    ActivitySortpage findActivityAndActitem(Integer id);
     Boolean add(String activity);
     Boolean delete(Integer activityId);
     List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId);
     Boolean initActivity();
-    Boolean clear(String cacheName);
+    Boolean clear();
     Boolean initSearchIndex() throws IOException;
 
 }

@@ -1,6 +1,7 @@
 package com.oligei.gateway.service;
 
 import com.oligei.gateway.dto.ActivitySortpage;
+import com.oligei.gateway.util.msgutils.Msg;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -10,22 +11,22 @@ import java.util.List;
 public interface ActivityService {
 
     @RequestMapping(value="/Activity/initActivity",method = RequestMethod.GET)
-    Boolean initActivity();
+    Msg<Boolean> initActivity();
 
     @RequestMapping(value = "/Activity/initSearchIndex",method = RequestMethod.GET)
-    Boolean initSearchIndex();
+    Msg<Boolean> initSearchIndex();
 
     @RequestMapping(value = "/Activity/clear",method = RequestMethod.GET)
-    Boolean clear(@RequestParam(name = "name") String cacheName);
+    Msg<Boolean> clear();
 
     @RequestMapping(value = "/Activity/search",method = RequestMethod.GET)
-    public List<ActivitySortpage> search(@RequestParam(name = "search") String value);
+    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value);
 
     @RequestMapping(value = "/Activity/add",method = RequestMethod.POST)
-    public Boolean add(@RequestParam(name = "activity") String activity);
+    public Msg<Boolean> add(@RequestParam(name = "activity") String activity);
 
     @RequestMapping(value = "/Activity/delete",method = RequestMethod.POST)
-    public Boolean delete(@RequestParam(name = "activityId") String activityid);
+    public Msg<Boolean> delete(@RequestParam(name = "activityId") String activityid);
 
     @RequestMapping(value = "/Activity/RecommendOnContent",method = RequestMethod.GET)
     public List<ActivitySortpage> recommendOnContent(@RequestParam(name = "userId") Integer userId,
