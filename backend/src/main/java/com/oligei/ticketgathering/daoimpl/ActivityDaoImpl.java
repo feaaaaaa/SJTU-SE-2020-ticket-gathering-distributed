@@ -6,10 +6,12 @@ import com.oligei.ticketgathering.entity.mysql.Activity;
 import com.oligei.ticketgathering.entity.neo4j.*;
 import com.oligei.ticketgathering.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -116,16 +118,19 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     *@description use activityId to delete the activity
-     *@param id the activityId of activity
-     *@return delete success or fail
-     *@author feaaaaaa
-     *@date 2020.8.15
-     *@throws NullPointerException when id is null
-     *@throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
+     * @description use activityId to delete the activity
+     * @param id the activityId of activity
+     * @return delete success or fail
+     * @author feaaaaaa
+     * @date 2020.8.15
+     * @throws NullPointerException when id is null
+     * @throws JpaObjectRetrievalFailureException when id is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
      */
     public Boolean delete(Integer activityId) {
         Objects.requireNonNull(activityId,"null id --ActivityDaoimpl delete");
+        if(activityId<=0)
+            throw new JpaObjectRetrievalFailureException(new EntityNotFoundException("invalid id --ActivityDaoImpl delete"));
         activityRepository.deleteById(activityId);
         return true;
     }

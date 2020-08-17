@@ -31,6 +31,7 @@ import org.apache.lucene.store.FSDirectory;
 import org.apache.lucene.util.Version;
 import org.apdplat.word.segmentation.Word;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.apdplat.word.WordSegmenter;
@@ -51,7 +52,6 @@ public class ActivityServiceImpl implements ActivityService {
     private ActitemDao actitemDao;
 
 
-//    @Autowired
     private Cache<List<ActivitySortpage>> cache=new Cache<>();
 
     private Cache<ActivitySortpage> oneCache=new Cache<>();
@@ -105,6 +105,7 @@ public class ActivityServiceImpl implements ActivityService {
      * @date 2020.08.14
      * @throws IOException if open file fails
      * @throws ParseException if parse of value fails
+     * @throws JpaObjectRetrievalFailureException if id is invalid
      */
     public List<ActivitySortpage> search(String value) throws IOException, ParseException {
         //null
@@ -152,7 +153,7 @@ public class ActivityServiceImpl implements ActivityService {
         return activitySortpages;
     }
 
-    @Override
+//    @Override
     /**
      *@description use id to find activity&actitems to make a activitySortpage
      *@param id the activityId
@@ -263,14 +264,15 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     @Transactional
     /**
-     *@description use activityId to delete activity&all hte actitem
+     *@description use activityId to delete activity&all the actitem
      *@param id the activityId of activity
      *@return delete success or fail
      *@author feaaaaaa
      *@date 2020.8.15
      *@throws NullPointerException when id is null
-     *@throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
-     */
+     *@throws JpaObjectRetrievalFailureException when id is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
+     */// TODO: 2020/8/17 actitemDao
     public Boolean delete(Integer activityId) {
         Objects.requireNonNull(activityId,"null id --ActivityServiceImpl delete");
         List<Actitem> actitems=actitemDao.findAllByActivityId(activityId);
@@ -301,6 +303,7 @@ public class ActivityServiceImpl implements ActivityService {
         return activitySortpages;
     }
 
+    @Override
     /**
      * @Description call findActivityByOneCategoryHome 8 times to find a list of activitySortpage for homepage
      * @return total list of activitySortpage for homepage
@@ -308,7 +311,6 @@ public class ActivityServiceImpl implements ActivityService {
      * @date 2020.08.14
      * @throws // TODO: 2020/8/17
      */
-    @Override
     public List<ActivitySortpage> findActivityByCategoryHome() {
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>(findActivityByOneCategoryHome("儿童亲子"));
         activitySortpages.addAll(findActivityByOneCategoryHome("话剧歌剧"));
@@ -366,6 +368,7 @@ public class ActivityServiceImpl implements ActivityService {
         return activitySortpages;
     }
 
+    @Override
     /**
      * @Description add all the activitySortpage into cache
      * @return true if initialize finished successfully
@@ -373,7 +376,6 @@ public class ActivityServiceImpl implements ActivityService {
      * @date 2020.08.14
      * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
      */
-    @Override
     public Boolean initActivity() {
 
 //        String init="初始化分词";
