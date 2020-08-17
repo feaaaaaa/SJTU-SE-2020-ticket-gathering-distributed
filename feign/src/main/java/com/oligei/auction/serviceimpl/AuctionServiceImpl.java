@@ -130,6 +130,31 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     public List<AuctionListItem> getAvailableAuctions() {
+                System.out.println("flushing");
+        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
+                java.util.Locale.ENGLISH);
+        String dateNow = df.format(new Date());
+        List<Integer> list = new ArrayList<>();
+        Date d1 = null,d2 = null;
+        for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
+            String dateDdl = entry.getValue().getDdl().toString();
+            try {
+                d1 = df.parse(dateNow);
+                d2 = simpleDateFormat.parse(dateDdl);
+            }catch (Exception e){
+                e.printStackTrace();;
+            }
+            if(d1.getTime()>d2.getTime())
+            {
+                list.add(entry.getValue().getAuctionid());
+                whenSetOver(entry.getValue().getAuctionid());
+            }
+        }
+
+        for(Integer i : list){
+            auctionListItemCache.evictCache(i);
+        }
         List<AuctionListItem> auctionListItems = new ArrayList<>();
         for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
             System.out.println(entry.getKey());
@@ -197,32 +222,32 @@ public class AuctionServiceImpl implements AuctionService {
         }
     }
 
-    @Scheduled(cron = "0/1 * * * * ?")
-    public void flushAuctions(){
-        System.out.println("flushing");
-        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
-                java.util.Locale.ENGLISH);
-        String dateNow = df.format(new Date());
-        List<Integer> list = new ArrayList<>();
-        Date d1 = null,d2 = null;
-        for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
-            String dateDdl = entry.getValue().getDdl().toString();
-            try {
-                d1 = df.parse(dateNow);
-                d2 = simpleDateFormat.parse(dateDdl);
-            }catch (Exception e){
-                e.printStackTrace();;
-            }
-            if(d1.getTime()>d2.getTime())
-            {
-                list.add(entry.getValue().getAuctionid());
-                whenSetOver(entry.getValue().getAuctionid());
-            }
-        }
-
-        for(Integer i : list){
-            auctionListItemCache.evictCache(i);
-        }
-    }
+//    @Scheduled(cron = "0/1 * * * * ?")
+//    public void flushAuctions(){
+//        System.out.println("flushing");
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
+//                java.util.Locale.ENGLISH);
+//        String dateNow = df.format(new Date());
+//        List<Integer> list = new ArrayList<>();
+//        Date d1 = null,d2 = null;
+//        for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
+//            String dateDdl = entry.getValue().getDdl().toString();
+//            try {
+//                d1 = df.parse(dateNow);
+//                d2 = simpleDateFormat.parse(dateDdl);
+//            }catch (Exception e){
+//                e.printStackTrace();;
+//            }
+//            if(d1.getTime()>d2.getTime())
+//            {
+//                list.add(entry.getValue().getAuctionid());
+//                whenSetOver(entry.getValue().getAuctionid());
+//            }
+//        }
+//
+//        for(Integer i : list){
+//            auctionListItemCache.evictCache(i);
+//        }
+//    }
 }

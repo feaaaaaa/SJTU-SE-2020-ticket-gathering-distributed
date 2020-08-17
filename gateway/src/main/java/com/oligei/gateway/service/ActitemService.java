@@ -8,5 +8,5 @@ import org.springframework.web.bind.annotation.*;
 public interface ActitemService {
 
     @RequestMapping(value = "/Actitem/detail",method = RequestMethod.GET)
-    public JSONObject getDetail(@RequestParam(name = "actitemid") Integer actitemid, @RequestParam(name = "userId") Integer userId);
+    public JSONObject getDetail(@RequestParam(name = "actitemid") Integer actitemid, @RequestParam(name = "userid") Integer userId);
 }
