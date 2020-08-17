@@ -17,7 +17,7 @@ public interface ActivityService {
     Boolean delete(Integer activityId);
     List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId);
     Boolean initActivity();
-    Boolean clear(String cacheName);
+    Boolean clear();
     Boolean initSearchIndex() throws IOException;
 
 }

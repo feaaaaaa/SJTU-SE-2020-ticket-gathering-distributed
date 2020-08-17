@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.oligei.ticketgathering.entity.mysql.Actitem;
 
 import java.util.List;
+import java.util.Objects;
 
 @JsonIgnoreProperties(value = { "hibernateLazyInitializer"})
 public class ActivitySortpage {
@@ -19,6 +20,13 @@ public class ActivitySortpage {
     public ActivitySortpage() {}
     public ActivitySortpage(Integer activityId,String title,String actor,String timescale,
                             String venue, String activityIcon, List<Actitem> actitems) {
+        Objects.requireNonNull(activityId,"null id --ActivitySortpage");
+        Objects.requireNonNull(title,"null title --ActivitySortpage");
+        Objects.requireNonNull(actor,"null actor --ActivitySortpage");
+        Objects.requireNonNull(timescale,"null timescale --ActivitySortpage");
+        Objects.requireNonNull(venue,"null venue --ActivitySortpage");
+        Objects.requireNonNull(activityIcon,"null icon --ActivitySortpage");
+        Objects.requireNonNull(actitems,"null actitems --ActivitySortpage");
         this.activityId=activityId;
         this.title=title;
         this.actor=actor;

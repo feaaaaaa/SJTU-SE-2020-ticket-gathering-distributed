@@ -81,8 +81,8 @@ public class ActivityController {
     }
 
     @RequestMapping("/clear")
-    public Boolean clear(@RequestParam(name = "name")String cacheName){
-        return activityService.clear(cacheName);
+    public Boolean clear(){//@RequestParam(name = "name")String cacheName
+        return activityService.clear();
     }
 
 }

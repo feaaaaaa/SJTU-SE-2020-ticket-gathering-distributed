@@ -11,4 +11,7 @@ public interface ActivityRepository extends JpaRepository<Activity,Integer> {
 
     @Query("select a.activityId from Activity a where a.title like :title or a.actor like :actor or a.venue like :venue")
     List<Integer> findAllIdByTitleLikeOrVenueLikeOrActorLike(String title, String venue, String actor);
+
+    @Query("select max(a.activityId) from Activity a ")
+    Integer findMaxId();
 }

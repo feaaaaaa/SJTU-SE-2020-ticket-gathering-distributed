@@ -66,4 +66,11 @@ class ActivityServiceTest {
 //        assertNotEquals(0,activityService.selectSearch("subcategory","音乐剧","全国")
 //                .size());
 //    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void add(){
+        activityService.add("null");
+    }
 }
