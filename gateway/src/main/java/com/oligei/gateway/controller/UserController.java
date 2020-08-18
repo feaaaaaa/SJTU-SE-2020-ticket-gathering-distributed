@@ -9,6 +9,7 @@ package com.oligei.gateway.controller;
 
 import com.oligei.gateway.entity.User;
 import com.oligei.gateway.service.UserService;
+import com.oligei.gateway.util.msgutils.Msg;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,8 @@ public class UserController {
     private UserService userService;
 
     @RequestMapping("/Login")
-    public Map<String,Object> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
-                                    HttpServletResponse response) {
+    public Msg<Map<String,Object>> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
+                                         HttpServletResponse response) {
         HttpServletResponse httpServletResponse = new HttpServletResponse() {
             @Override
             public void addCookie(Cookie cookie) {
@@ -222,17 +223,17 @@ public class UserController {
     }
 
     @RequestMapping("/Register")
-    public boolean register(@RequestBody User user) {
+    public Msg<Boolean> register(@RequestBody User user) {
         return userService.register(user);
     }
 
     @RequestMapping("/ExistsByUsername")
-    public boolean existsByUsername(@RequestParam(name = "username") String username) {
+    public Msg<Boolean> existsByUsername(@RequestParam(name = "username") String username) {
         return userService.existsByUsername(username);
     }
 
     @RequestMapping("/FindByUserId")
-    public User findUserByUserId(@RequestParam(name = "userId")Integer userId){
+    public Msg<User> findUserByUserId(@RequestParam(name = "userId")Integer userId){
         return userService.findUserByUserId(userId);
     }
 }

@@ -32,21 +32,38 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(TicketGatheringApplication.class);
 
     @RequestMapping("/Login")
-    public Map<String,Object> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
-                                    HttpServletResponse response) {
+    public Msg<Map<String,Object>> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
+                                         HttpServletResponse response) {
+        /**
+         *@Description check username and password
+         *@Param [username, password]
+         *@return com.oligei.ticketgathering.entity.mysql.User
+         *@Author Yang Yicheng
+         *@date 2020/8/18
+         */
         Map<String,Object> map = new HashMap<>();
-        User existed_user = userService.login(username, password);
-        if (existed_user == null) {
+        User existed_user=null;
+        try{
+            existed_user= userService.login(username, password);
+        }
+        catch(NullPointerException e){
+            logger.error("NullPointerException",e);
             map.put("message","login failure");
+            return new Msg<Map<String,Object>>(201,"密码错误或用户不存在",map);
         }
-        else {
-            String token = TokenUtil.sign(existed_user);
-            map.put("message","login success");
-            map.put("token",token);
-            map.put("user",existed_user);
-        }
-        System.out.println(map);
-        return map;
+//        if (existed_user == null) {
+//            map.put("message","login failure");
+//        }
+//        else {
+        String token = TokenUtil.sign(existed_user);
+        map.put("message","login success");
+        map.put("token",token);
+        map.put("user",existed_user);
+
+
+//        }
+//        System.out.println(map);
+        return new Msg<Map<String,Object>>(200,"登录成功" ,map);
     }
 
     /**
@@ -75,12 +92,35 @@ public class UserController {
     }
 
     @RequestMapping("/ExistsByUsername")
-    public boolean existsByUsername(@RequestParam(name = "username") String username) {
-        return userService.existsByUsername(username);
+    public Msg<Boolean> existsByUsername(@RequestParam(name = "username") String username) {
+        /**
+         *@Description check whether the user is exsisted
+         *@Param [username]
+         *@return boolean
+         *@Author Yang Yicheng
+         *@date 2020/8/18
+         */
+        return new Msg<Boolean>(200,"查询成功",userService.existsByUsername(username));
     }
 
     @RequestMapping("/FindByUserId")
-    public User findUserByUserId(Integer userId){
-        return userService.findUserByUserId(userId);
+    public Msg<User> findUserByUserId(Integer userId){
+        /**
+         *@Description get userInfo by userId
+         *@Param [userId]
+         *@return com.oligei.ticketgathering.entity.mysql.User
+         *@Author Yang Yicheng
+         *@date 2020/8/18
+         *@Throws NullPointerException if userId is not exist
+         */
+        User user=null;
+        try{
+            user=userService.findUserByUserId(userId);
+        }
+        catch(NullPointerException e){
+            logger.error("NullPointerException",e);
+            return new Msg<User>(201,"该用户不存在",null);
+        }
+        return new Msg<User>(201,"查询成功",user);
     }
 }
