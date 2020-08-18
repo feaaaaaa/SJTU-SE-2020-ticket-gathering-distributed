@@ -24,16 +24,16 @@ public class OrderDaoImpl implements OrderDao {
 //    }
 
     @Override
+    /**
+     *@Description get Order using userId
+     *@Param [userId]
+     *@return java.util.List<com.oligei.ticketgathering.entity.info.OrderInfo>
+     *@Author Yang Yicheng
+     *@date 2020/8/10
+     *@Throws InvalidDataAccessApiUsageException using illegal userId
+     *@Throws NullPointerException Order not found
+     */
     public List<OrderInfo> getUserOrder(int userId) {
-        /**
-        *@Description get Order using userId
-        *@Param [userId]
-        *@return java.util.List<com.oligei.ticketgathering.entity.info.OrderInfo>
-        *@Author Yang Yicheng
-        *@date 2020/8/10
-        *@Throws InvalidDataAccessApiUsageException using illegal userId
-        *@Throws NullPointerException Order not found
-        */
         if (userId<=0){
           throw new InvalidDataAccessApiUsageException("using illegal userId");
         }
@@ -46,14 +46,14 @@ public class OrderDaoImpl implements OrderDao {
     }
 
     @Override
+    /**
+     *@Description insert an order into database
+     *@Param [userId, actitemId, price, amount, showtime, orderTime]
+     *@return boolean
+     *@Author Yang Yicheng
+     *@date 2020/8/12
+     */
     public boolean addOrder(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime) {
-        /**
-        *@Description insert an order into database
-        *@Param [userId, actitemId, price, amount, showtime, orderTime]
-        *@return boolean
-        *@Author Yang Yicheng
-        *@date 2020/8/12
-        */
         Order saveOrder = new Order();
         saveOrder.setActitemId(actitemId);
         saveOrder.setAmount(amount);

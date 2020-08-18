@@ -32,15 +32,15 @@ public class UserController {
     private static final Logger logger = LoggerFactory.getLogger(TicketGatheringApplication.class);
 
     @RequestMapping("/Login")
+    /**
+     *check username and password
+     *@Param [username, password]
+     *@return com.oligei.ticketgathering.entity.mysql.User
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public Msg<Map<String,Object>> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
                                          HttpServletResponse response) {
-        /**
-         *@Description check username and password
-         *@Param [username, password]
-         *@return com.oligei.ticketgathering.entity.mysql.User
-         *@Author Yang Yicheng
-         *@date 2020/8/18
-         */
         Map<String,Object> map = new HashMap<>();
         User existed_user=null;
         try{
@@ -92,27 +92,27 @@ public class UserController {
     }
 
     @RequestMapping("/ExistsByUsername")
+    /**
+     *check whether the user is exsisted
+     *@Param [username]
+     *@return boolean
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public Msg<Boolean> existsByUsername(@RequestParam(name = "username") String username) {
-        /**
-         *@Description check whether the user is exsisted
-         *@Param [username]
-         *@return boolean
-         *@Author Yang Yicheng
-         *@date 2020/8/18
-         */
         return new Msg<Boolean>(200,"查询成功",userService.existsByUsername(username));
     }
 
     @RequestMapping("/FindByUserId")
+    /**
+     *get userInfo by userId
+     *@Param [userId]
+     *@return com.oligei.ticketgathering.entity.mysql.User
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     *@Throws NullPointerException if userId is not exist
+     */
     public Msg<User> findUserByUserId(Integer userId){
-        /**
-         *@Description get userInfo by userId
-         *@Param [userId]
-         *@return com.oligei.ticketgathering.entity.mysql.User
-         *@Author Yang Yicheng
-         *@date 2020/8/18
-         *@Throws NullPointerException if userId is not exist
-         */
         User user=null;
         try{
             user=userService.findUserByUserId(userId);

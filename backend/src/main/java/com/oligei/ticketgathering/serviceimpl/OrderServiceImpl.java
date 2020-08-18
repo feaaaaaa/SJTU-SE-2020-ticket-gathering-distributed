@@ -43,16 +43,16 @@ public class OrderServiceImpl implements OrderService {
 //    }
 
     @Override
+    /**
+     *@Description get Order using userId
+     *@Param [userId]
+     *@return java.util.List<com.oligei.ticketgathering.entity.info.OrderInfo>
+     *@Author Yang Yicheng
+     *@date 2020/8/10
+     *@Throws InvalidDataAccessApiUsageException using illegal userId
+     *@Throws NullPointerException Order not found
+     */
     public List<OrderInfo> getUserOrder(int userId) {
-        /**
-        *@Description get Order using userId
-        *@Param [userId]
-        *@return java.util.List<com.oligei.ticketgathering.entity.info.OrderInfo>
-        *@Author Yang Yicheng
-        *@date 2020/8/10
-        *@Throws InvalidDataAccessApiUsageException using illegal userId
-        *@Throws NullPointerException Order not found
-        */
         if (userId<=0){
             throw new InvalidDataAccessApiUsageException("using illegal userId");
         }
@@ -64,14 +64,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    /**
+     *@Description insert an order into database
+     *@Param [userId, actitemId, initPrice, orderPrice, amount, showtime, orderTime]
+     *@return boolean
+     *@Author Yang Yicheng
+     *@date 2020/8/12
+     */
     public boolean addOrder(int userId, int actitemId, int initPrice, int orderPrice, int amount, String showtime, String orderTime) {
-        /**
-        *@Description insert an order into database
-        *@Param [userId, actitemId, initPrice, orderPrice, amount, showtime, orderTime]
-        *@return boolean
-        *@Author Yang Yicheng
-        *@date 2020/8/12
-        */
         if (actitemDao.modifyRepository(actitemId, initPrice, -amount, showtime)) {
             DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
             DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

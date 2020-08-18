@@ -36,15 +36,15 @@ public class UserDaoImpl implements UserDao {
     private BCryptPasswordEncoder encoder;
 
     @Override
+    /**
+     *@Description check username and password
+     *@Param [username, password]
+     *@return com.oligei.ticketgathering.entity.mysql.User
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     *@Throws NullPointerException user is null or the password is incorrrect
+     */
     public User login(String username, String password) {
-        /**
-        *@Description check username and password
-        *@Param [username, password]
-        *@return com.oligei.ticketgathering.entity.mysql.User
-        *@Author Yang Yicheng
-        *@date 2020/8/18
-        *@Throws NullPointerException user is null or the password is incorrrect
-        */
 //        User user=new User(1,"oligei","Male","123456","123456", "123456","123456","123456");
         User user = userRepository.checkUser(username);
         if (user != null && encoder.matches(password, user.getPassword())){
@@ -86,28 +86,28 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
+    /**
+     *@Description check whether the user is exsisted
+     *@Param [username]
+     *@return boolean
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public boolean existsByUsername(String username) {
-        /**
-        *@Description check whether the user is exsisted
-        *@Param [username]
-        *@return boolean
-        *@Author Yang Yicheng
-        *@date 2020/8/18
-        */
         User user = userRepository.findUserByUsername(username);
         return user != null;
     }
 
     @Override
+    /**
+     *@Description get userInfo by userId
+     *@Param [userId]
+     *@return com.oligei.ticketgathering.entity.mysql.User
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     *@Throws NullPointerException if userId is not exist
+     */
     public User findUserByUserId(Integer userId){
-        /**
-        *@Description get userInfo by userId
-        *@Param [userId]
-        *@return com.oligei.ticketgathering.entity.mysql.User
-        *@Author Yang Yicheng
-        *@date 2020/8/18
-        *@Throws NullPointerException if userId is not exist
-        */
         User user=userRepository.findUserByUserId(userId);
         UserMongoDB userIcon=userMongoDBRepository.findByUserId(userId);
         if(user==null ||userIcon==null){

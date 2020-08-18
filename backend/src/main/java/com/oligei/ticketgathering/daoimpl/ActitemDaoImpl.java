@@ -23,6 +23,14 @@ public class ActitemDaoImpl implements ActitemDao {
     private ActitemMongoDBRepository actitemMongoDBRepository;
 
     @Override
+    /**
+     *@Description
+     *@Param [id]
+     *@return com.oligei.ticketgathering.entity.mysql.Actitem
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     *@Throws NullPointerException invalid actitemid
+     */
     public Actitem findOneById(Integer id) {
         Actitem actitem = actitemRepository.getOne(id);
         ActitemMongoDB actitemMongoDB = actitemMongoDBRepository.findByActitemId(id);
@@ -36,8 +44,19 @@ public class ActitemDaoImpl implements ActitemDao {
     }
 
     @Override
+    /**
+     *find all activity using activityId
+     *@Param [id]
+     *@return java.util.List<com.oligei.ticketgathering.entity.mysql.Actitem>
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     *@Throws NullPointerException no activity found
+     */
     public List<Actitem> findAllByActivityId(Integer id) {
         List<Actitem> actitems = actitemRepository.findAllByActivityId(id);
+        if (actitems==null||actitems.size()==0){
+            throw new NullPointerException("no activity found");
+        }
         for (int i = 0; i < actitems.size(); ++i) {
             ActitemMongoDB actitemMongoDB = actitemMongoDBRepository.findByActitemId(actitems.get(i).getActitemId());
             if (actitemMongoDB == null) System.out.println(actitems.get(i).getActitemId() + "null");
@@ -47,40 +66,68 @@ public class ActitemDaoImpl implements ActitemDao {
     }
 
     @Override
+    /**
+     *delete data from moongoDB
+     *@Param [actitemId]
+     *@return void
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public void deleteMongoDBByActitemId(Integer actitemId) {
         actitemMongoDBRepository.deleteByActitemId(actitemId);
     }
 
     @Override
+    /**
+     *insert into mongoDB
+     *@Param [actitemId, price]
+     *@return com.oligei.ticketgathering.entity.mongodb.ActitemMongoDB
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public ActitemMongoDB insertActitemInMongo(int actitemId, List<JSONObject> price) {
         ActitemMongoDB actitemMongoDB = new ActitemMongoDB(actitemId, price);
         return actitemMongoDBRepository.save(actitemMongoDB);
     }
 
     @Override
+    /**
+     *save actitem
+     *@Param [activityId, website]
+     *@return com.oligei.ticketgathering.entity.mysql.Actitem
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public Actitem add(int activityId, String website) {
         return actitemRepository.save(new Actitem(null, activityId, website));
     }
 
     @Override
     public Boolean deleteActitem(Integer actitemId) {
+        /**
+        *delete Actitem from database
+        *@Param [actitemId]
+        *@return java.lang.Boolean
+        *@Author Yang Yicheng
+        *@date 2020/8/18
+        */
         actitemRepository.deleteById(actitemId);
         actitemMongoDBRepository.deleteByActitemId(actitemId);
         return true;
     }
 
     @Override
+    /**
+     *modify data in mongoDB and Mysql
+     *@Param [actitemId, price, amount, showtime]
+     *@return boolean
+     *@Author Yang Yicheng
+     *@date 2020/8/12
+     *@Throws ArrayIndexOutOfBoundsException no item found so the index overflows
+     *@Throws ArithmeticException the repository of actitem is zero
+     *@Throws NullPointerException invalid actiemId expected
+     */
     public boolean modifyRepository(int actitemId, int price, int amount, String showtime) {
-        /**
-        *@Description modify data in mongoDB and Mysql
-        *@Param [actitemId, price, amount, showtime]
-        *@return boolean
-        *@Author Yang Yicheng
-        *@date 2020/8/12
-        *@Throws ArrayIndexOutOfBoundsException no item found so the index overflows
-        *@Throws ArithmeticException the repository of actitem is zero
-        *@Throws NullPointerException invalid actiemId expected
-        */
         Actitem actitem = findOneById(actitemId);
         if(actitem==null||actitem.getPrice()==null){
             throw new NullPointerException("invalid actiemId expected");
