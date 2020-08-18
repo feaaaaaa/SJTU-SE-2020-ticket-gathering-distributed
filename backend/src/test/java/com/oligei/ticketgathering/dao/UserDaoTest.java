@@ -73,10 +73,10 @@ class UserDaoTest {
         assertNull(userDao.login(username2,password2));
         System.out.println("Username null, password not null");
         assertThrows(NullPointerException.class, ()-> userDao.login(null,password1),
-                "null username --UserDaoimpl login");
+                "null username --UserDaoImpl login");
         System.out.println("Username not null, password null");
         assertThrows(NullPointerException.class, ()-> userDao.login(username1,null),
-                "null password --UserDaoimpl login");
+                "null password --UserDaoImpl login");
     }
 
     @Test
@@ -100,7 +100,7 @@ class UserDaoTest {
         verify(userNeo4jRepository,times(1)).save(argThat(Objects::nonNull));
         System.out.println("User null");
         assertThrows(NullPointerException.class, ()-> userDao.register(null),
-                "null user --UserDaoimpl register");
+                "null user --UserDaoImpl register");
     }
 
     @Test
@@ -118,7 +118,7 @@ class UserDaoTest {
         assertFalse(userDao.existsByUsername(username2));
         System.out.println("Null username");
         assertThrows(NullPointerException.class, ()-> userDao.existsByUsername(null),
-                "null username --UserDaoimpl existsByUsername");
+                "null username --UserDaoImpl existsByUsername");
     }
 
     @Test

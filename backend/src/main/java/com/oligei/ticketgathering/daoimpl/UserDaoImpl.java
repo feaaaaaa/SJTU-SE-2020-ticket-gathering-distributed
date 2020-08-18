@@ -38,8 +38,8 @@ public class UserDaoImpl implements UserDao {
      *@throws NullPointerException if username or password is null
      */
     public User login(String username, String password) {
-        Objects.requireNonNull(username,"null username --UserDaoimpl login");
-        Objects.requireNonNull(password,"null password --UserDaoimpl login");
+        Objects.requireNonNull(username,"null username --UserDaoImpl login");
+        Objects.requireNonNull(password,"null password --UserDaoImpl login");
         User user = userRepository.checkUser(username);
         if (user == null) return null;
         if (encoder.matches(password, user.getPassword())) return user;
@@ -57,7 +57,7 @@ public class UserDaoImpl implements UserDao {
      *@throws InvalidDataAccessApiUsageException if invalid data(include null) used in repository
      */
     public boolean register(User user) {
-        Objects.requireNonNull(user,"null user --UserDaoimpl register");
+        Objects.requireNonNull(user,"null user --UserDaoImpl register");
         String personIcon = user.getPersonIcon();
         user.setPersonIcon("");
         String rawPassword = user.getPassword();
@@ -82,7 +82,7 @@ public class UserDaoImpl implements UserDao {
      *@throws NullPointerException if username is null
      */
     public boolean existsByUsername(String username) {
-        Objects.requireNonNull(username,"null username --UserDaoimpl existsByUsername");
+        Objects.requireNonNull(username,"null username --UserDaoImpl existsByUsername");
         User user = userRepository.findUserByUsername(username);
         return user != null;
     }
@@ -97,7 +97,7 @@ public class UserDaoImpl implements UserDao {
      *@throws NullPointerException if userId is null
      */
     public User findUserByUserId(Integer userId){
-        Objects.requireNonNull(userId,"null userId --UserDaoimpl findUserByUserId");
+        Objects.requireNonNull(userId,"null userId --UserDaoImpl findUserByUserId");
         User user=userRepository.findUserByUserId(userId);
         UserMongoDB userIcon=userMongoDBRepository.findByUserId(userId);
         if (user == null || userIcon == null) return null;

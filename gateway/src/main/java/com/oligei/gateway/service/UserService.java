@@ -18,8 +18,8 @@ import java.util.Map;
 public interface UserService {
 
     @RequestMapping(value = "/User/Login",method = RequestMethod.GET)
-    public Msg<Map<String,Object>> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
-                                         HttpServletResponse response);
+    public Msg<Map<String,Object>> login(@RequestParam(name = "username") String username,
+                                         @RequestParam(name = "password") String password);
 
     @RequestMapping(value = "/User/Register",method = RequestMethod.POST)
     public Msg<Boolean> register(@RequestBody User user);
