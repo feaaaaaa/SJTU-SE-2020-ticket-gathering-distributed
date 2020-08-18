@@ -41,10 +41,13 @@ export class RegisterView extends React.Component{
     async handleUsername(e) {
         const value = e.target.value;
         const callback = async (data) => {
-            if (data) {
+            if (data.status === 200) {
                 await this.setState({usernameErrorVisible: true});
-            } else {
+            } else if (data.status === 201) {
                 await this.setState({username: value, usernameErrorVisible: false})
+            }
+            else {
+                console.log("error");
             }
         };
         await checkUser(value, callback);
@@ -94,7 +97,9 @@ export class RegisterView extends React.Component{
 
     handleSubmit(){
         const callback =  (data) => {
-            this.setState({registered:data});
+            if (data.status === 200)
+                this.setState({registered:data});
+            else console.log("error");
         };
         console.log(this.state);
         if(this.state.username!=null &&this.state.password!=null &&this.state.email!=null
