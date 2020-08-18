@@ -63,7 +63,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description initialize a search index (which only need to be done once)
+     *  initialize a search index (which only need to be done once)
      * @return true if initialize finished successfully
      * @author feaaaaaa
      * @date 2020.08.14
@@ -98,14 +98,16 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description use index to get search id, then get data from cache and return
+     *  use index to get search id, then get data from cache and return
      * @param value search value
      * @return true if initialize finished successfully
      * @author feaaaaaa
      * @date 2020.08.14
+     * @throws NullPointerException the param of activitySortpage is null or the mongo data of actitem is null
      * @throws IOException if open file fails
      * @throws ParseException if parse of value fails
      * @throws JpaObjectRetrievalFailureException if id is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> search(String value) throws IOException, ParseException {
         //null
@@ -155,13 +157,14 @@ public class ActivityServiceImpl implements ActivityService {
 
 //    @Override
     /**
-     *@description use id to find activity and actitems to make a activitySortpage
+     * use id to find activity and actitems to make a activitySortpage
      *@param id the activityId
      *@return ActivitySortpage that have the id
      *@author feaaaaaa
      *@date 2020.8.15
-     *@throws NullPointerException when id is null or the param of activitySortpage is null
+     *@throws NullPointerException when id is null or the param of activitySortpage is null or the mongo data of actitem is null
      *@throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
+     *@throws EmptyResultDataAccessException when activity is not found
      */
     public ActivitySortpage findActivityAndActitem(Integer id) {
 
@@ -191,7 +194,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     *@description parse the string info of activity and save it
+     * parse the string info of activity and save it
      *@param activity
      *@return save success or fail
      *@author feaaaaaa
@@ -264,15 +267,15 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     @Transactional
     /**
-     *@description use activityId to delete activity&all the actitem
+     * use activityId to delete activity&all the actitem
      *@param id the activityId of activity
      *@return delete success or fail
      *@author feaaaaaa
      *@date 2020.8.15
-     *@throws NullPointerException when id is null
+     *@throws NullPointerException when id is null or mongo data is null
      *@throws JpaObjectRetrievalFailureException when id is invalid
      *@throws EmptyResultDataAccessException when activity is not found
-     */// TODO: 2020/8/17 actitemDao
+     */
     public Boolean delete(Integer activityId) {
         Objects.requireNonNull(activityId,"null id --ActivityServiceImpl delete");
         List<Actitem> actitems=actitemDao.findAllByActivityId(activityId);
@@ -305,7 +308,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description call findActivityByOneCategoryHome 8 times to find a list of activitySortpage for homepage
+     *  call findActivityByOneCategoryHome 8 times to find a list of activitySortpage for homepage
      * @return total list of activitySortpage for homepage
      * @author feaaaaaa
      * @date 2020.08.14
@@ -325,7 +328,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @Description use findActivityByCategoryAndCity("category", name, "全国")  to get one content of homepage from cache
+     *  use findActivityByCategoryAndCity("category", name, "全国")  to get one content of homepage from cache
      * @return a list of activitySortpage for homepage
      * @param name name of category
      * @author feaaaaaa
@@ -370,7 +373,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description add all the activitySortpage into cache
+     *  add all the activitySortpage into cache
      * @return true if initialize finished successfully
      * @author feaaaaaa
      * @date 2020.08.14
@@ -411,7 +414,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @description add 1000 activitySortpage into cache
+     *  add 1000 activitySortpage into cache
      * @param cnt the max id that add into cache
      * @author feaaaaaa
      * @date 2020.08.14
@@ -425,7 +428,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @description  clear cache which have home cache and select search
+     *   clear cache which have home cache and select search
      * @return true if clear clear successfully
      * @author feaaaaaa
      * @date 2020.08.14

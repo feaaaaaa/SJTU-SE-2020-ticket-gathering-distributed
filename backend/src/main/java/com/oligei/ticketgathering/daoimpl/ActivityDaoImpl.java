@@ -43,7 +43,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     *@description use activityId to find activity(no data in mongo)
+     * use activityId to find activity(no data in mongo)
      *@param id the activityId of activity
      *@return the activity
      *@author feaaaaaa
@@ -99,7 +99,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     *@description save an activity with title,actor,timescale,venue,activityIcon
+     * save an activity with title,actor,timescale,venue,activityIcon
      *@param title,actor,timescale,venue,activityIcon
      *@return the saved activity
      *@author feaaaaaa
@@ -118,7 +118,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     * @description use activityId to delete the activity
+     *  use activityId to delete the activity
      * @param id the activityId of activity
      * @return delete success or fail
      * @author feaaaaaa
@@ -151,7 +151,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     *@description find max activityId
+     * find max activityId
      *@return max activityId
      *@author feaaaaaa
      *@date 2020.8.15

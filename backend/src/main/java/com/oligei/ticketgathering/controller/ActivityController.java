@@ -30,7 +30,7 @@ public class ActivityController {
 
     @RequestMapping("/initSearchIndex")
     /**
-     * @Description initialize search index
+     *  initialize search index
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
      * @Author feaaaaaa
      * @date 2020.8.17
@@ -58,7 +58,7 @@ public class ActivityController {
 
     @RequestMapping("/search")
     /**
-     * @Description use value to search
+     *  use value to search
      * @param value search value
      * @return Msg(status,msg,ListA of ActivitySortpage) 200 is OK, 201 is predicted exception, 202 is unpredicted exception
      * @Author feaaaaaa
@@ -78,9 +78,9 @@ public class ActivityController {
         }catch (JpaObjectRetrievalFailureException e){
             logger.error("使用非法id进行查询",e);
             return new Msg<>(201,"使用非法id进行查询",new LinkedList<>());
-        } catch (Exception e){
-            logger.error("其他错误",e);
-            return new Msg<>(202,"其他错误",new LinkedList<>());
+        } catch (EmptyResultDataAccessException e){
+            logger.error("activity查找失败",e);
+            return new Msg<>(201,"activity查找失败",new LinkedList<>());
         }
         return new Msg<>(200,"搜索成功",activitySortpages);
     }
@@ -99,7 +99,7 @@ public class ActivityController {
 
     @RequestMapping("/add")
     /**
-     * @Description add activity&actitems
+     *  add activity&actitems
      * @param activity info of activity which to be saved
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
      * @Author feaaaaaa
@@ -128,7 +128,7 @@ public class ActivityController {
 
     @RequestMapping("/delete")
     /**
-     * @Description delete activity&actitems
+     *  delete activity&actitems
      * @param activityId id of activity&actitem that to be deleted
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 203 is no exception but wrong
      * @Author feaaaaaa
@@ -173,7 +173,7 @@ public class ActivityController {
 
     @RequestMapping("/FindActivityByCategoryHome")
     /**
-     * @Description find activitySorpage of home
+     *  find activitySorpage of home
      * @return 
      * @Author feaaaaaa
      * @date 2020.8.17
@@ -186,7 +186,7 @@ public class ActivityController {
     
     @RequestMapping("/initActivity")
     /**
-     * @Description add all the activity into cache
+     *  add all the activity into cache
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 203 is no exception but wrong
      * @Author feaaaaaa
      * @date 2020.8.17
@@ -208,7 +208,7 @@ public class ActivityController {
 
     @RequestMapping("/clear")
     /**
-     * @Description clear cache of home & search null
+     *  clear cache of home & search null
      * @return Msg(status,msg,Boolean) 200 is OK, 203 is no exception but wrong
      * @Author feaaaaaa
      * @date 2020.8.17

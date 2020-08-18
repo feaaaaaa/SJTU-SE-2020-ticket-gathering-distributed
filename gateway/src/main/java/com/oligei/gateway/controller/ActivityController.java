@@ -4,6 +4,7 @@ import com.oligei.gateway.GatewayApplication;
 import com.oligei.gateway.dto.ActivitySortpage;
 import com.oligei.gateway.service.ActivityService;
 import com.oligei.gateway.util.msgutils.Msg;
+import feign.FeignException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,10 @@ public class ActivityController {
             return activityService.search(value);
         }catch (feign.RetryableException e){
             logger.error("请求超时",e);
-            return new Msg<>(0,"请求超时，请重试",new LinkedList<>());
+            return new Msg<>(504,"请求超时，请重试",new LinkedList<>());
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",new LinkedList<>());
         }
     }
 
@@ -43,7 +47,10 @@ public class ActivityController {
             return activityService.initActivity();
         }catch (feign.RetryableException e){
             System.out.println(e);
-            return new Msg<>(0,"请求已发送",true);
+            return new Msg<>(504,"请求已发送",true);
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",false);
         }
     }
 
@@ -53,7 +60,10 @@ public class ActivityController {
             return activityService.initSearchIndex();
         }catch (feign.RetryableException e){
             System.out.println(e);
-            return new Msg<>(0,"请求已发送",true);
+            return new Msg<>(504,"请求已发送",true);
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",false);
         }
     }
 
@@ -63,7 +73,10 @@ public class ActivityController {
             return activityService.clear();
         }catch (feign.RetryableException e){
             System.out.println(e);
-            return new Msg<>(0,"请求已发送",true);
+            return new Msg<>(504,"请求已发送",true);
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",false);
         }
     }
 
@@ -73,7 +86,10 @@ public class ActivityController {
             return activityService.add(activity);
         }catch (feign.RetryableException e){
             System.out.println(e);
-            return new Msg<>(0,"超时，请重试",true);
+            return new Msg<>(504,"超时，请重试",true);
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",false);
         }
     }
 
@@ -83,7 +99,10 @@ public class ActivityController {
             return activityService.delete(activityid);
         }catch (feign.RetryableException e){
             System.out.println(e);
-            return new Msg<>(0,"超时，请重试",true);
+            return new Msg<>(504,"超时，请重试",true);
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",false);
         }
     }
 
