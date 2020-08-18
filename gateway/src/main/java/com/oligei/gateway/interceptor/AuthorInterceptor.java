@@ -26,8 +26,8 @@ public class AuthorInterceptor implements HandlerInterceptor {
         response.setContentType("application/json; charset=utf-8");
         try{
             JSONObject json = new JSONObject();
-            json.put("msg","认证失败！");
-            json.put("status",-100);
+            json.put("msg","无权限，请重新认证！");
+            json.put("status",-101);
             json.put("data",null);
             response.getWriter().append(json.toJSONString());
             System.out.println("authorization failure");
