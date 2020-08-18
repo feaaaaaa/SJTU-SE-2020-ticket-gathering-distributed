@@ -1,4 +1,4 @@
-import {Card, Col, List, PageHeader, Row} from 'antd';
+import {Card, Col, List, message, PageHeader, Row} from 'antd';
 import React from "react";
 import {concerts, sports} from "../const/activity";
 import {HomeCard} from "./HomeCard";
@@ -27,26 +27,30 @@ export class HomeCategoryPage extends React.Component{
 
     componentDidMount() {
         homeSearch((res)=>{
-            console.log(JSON.stringify(res));
+            console.log("homeSearch return:"+JSON.stringify(res));
             if(res!=null) {
-                console.log("children:",res[0]);
-                console.log("opera:",res[10]);
-                console.log("song:",res[20]);
-                console.log("tour:",res[30]);
-                console.log("sports:",res[40]);
-                console.log("dance:",res[50]);
-                console.log("concerts:",res[60]);
-                console.log("vocal:",res[70]);
-                this.setState({
-                    children: res.slice(0, 10),
-                    opera: res.slice(10, 20),
-                    song: res.slice(20, 30),
-                    tour: res.slice(30, 40),
-                    sports: res.slice(40, 50),
-                    dance: res.slice(50, 60),
-                    concerts: res.slice(60, 70),
-                    vocal: res.slice(70, 80)
-                })
+                if (res.status !== 200)
+                    message.error(res.msg);
+                else {
+                    console.log("children:",res.data[0]);
+                    console.log("opera:",res.data[10]);
+                    console.log("song:",res.data[20]);
+                    console.log("tour:",res.data[30]);
+                    console.log("sports:",res.data[40]);
+                    console.log("dance:",res.data[50]);
+                    console.log("concerts:",res.data[60]);
+                    console.log("vocal:",res.data[70]);
+                    this.setState({
+                        children: res.data.slice(0, 10),
+                        opera: res.data.slice(10, 20),
+                        song: res.data.slice(20, 30),
+                        tour: res.data.slice(30, 40),
+                        sports: res.data.slice(40, 50),
+                        dance: res.data.slice(50, 60),
+                        concerts: res.data.slice(60, 70),
+                        vocal: res.data.slice(70, 80)
+                    })
+                }
             }
         })
     }

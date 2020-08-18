@@ -107,23 +107,46 @@ public class ActivityController {
     }
 
     @RequestMapping("/RecommendOnContent")
-    public List<ActivitySortpage> recommendOnContent(@RequestParam(name = "userId") Integer userId,
+    public Msg<List<ActivitySortpage>> recommendOnContent(@RequestParam(name = "userId") Integer userId,
                                                      @RequestParam(name = "activityId") Integer activityId) {
-        return activityService.recommendOnContent(userId, activityId);
+        try{
+            return activityService.recommendOnContent(userId, activityId);
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(504,"超时，请重试",new LinkedList<>());
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",new LinkedList<>());
+        }
     }
 
     @RequestMapping("/FindActivityByCategory")
 //    @RequestBody CategoryQuery categoryQuery
-    public List<ActivitySortpage> selectSearch(@RequestParam(name = "type")String type,
+    public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
                                                @RequestParam(name = "name")String name,
                                                @RequestParam(name = "city")String city) {
-        return activityService.selectSearch(type,name,city);
+        try{
+            return activityService.selectSearch(type,name,city);
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(504,"超时，请重试",new LinkedList<>());
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",new LinkedList<>());
+        }
     }
 
     @RequestMapping("/FindActivityByCategoryHome")
 //    @RequestBody CategoryQuery categoryQuery
-    public List<ActivitySortpage> findActivityByCategoryHome(){
-        System.out.println();
-        return activityService.findActivityByCategoryHome();
+    public Msg<List<ActivitySortpage>> findActivityByCategoryHome(){
+        try{
+            return activityService.findActivityByCategoryHome();
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(504,"超时，请重试",new LinkedList<>());
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",new LinkedList<>());
+        }
     }
 }

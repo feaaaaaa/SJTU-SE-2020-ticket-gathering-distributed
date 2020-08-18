@@ -34,7 +34,9 @@ export class SortPageView extends React.Component{
     };
 
     category_search(res){
-        this.setState({activity: res})
+        if(res.status!==200)
+            message.error(res.msg);
+        this.setState({activity: res.data})
     }
 
     logOut(){
@@ -72,8 +74,11 @@ export class SortPageView extends React.Component{
         else if(category!=null)
             category_search("category",category,"全国",(res) => {
                 console.log("select search return:" + JSON.stringify(res));
-                if(res!=null)
-                    this.setState({activity: res});
+                if(res!=null) {
+                    if(res.status!==200)
+                        message.error(res.msg);
+                    this.setState({activity: res.data});
+                }
             });
         else search(value, (res) => {
             console.log("search return:" + JSON.stringify(res));

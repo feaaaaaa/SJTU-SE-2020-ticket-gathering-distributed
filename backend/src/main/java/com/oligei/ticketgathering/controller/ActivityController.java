@@ -176,7 +176,7 @@ public class ActivityController {
 
     @RequestMapping("/FindActivityByCategory")
     /**
-     *  find activitySorpage of home
+     *  find activitySorpage of select search
      * @return
      * @author ziliuziliu, feaaaaaa
      * @date 2020.8.17
