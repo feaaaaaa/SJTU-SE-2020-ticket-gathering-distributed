@@ -21,14 +21,14 @@ public class UserServiceImpl implements UserService {
     private UserDao userDao;
 
     @Override
+    /**
+     *@Description check username and password
+     *@Param [username, password]
+     *@return com.oligei.ticketgathering.entity.mysql.User
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public User login(String username, String password) {
-        /**
-         *@Description check username and password
-         *@Param [username, password]
-         *@return com.oligei.ticketgathering.entity.mysql.User
-         *@Author Yang Yicheng
-         *@date 2020/8/18
-         */
         return userDao.login(username, password);
     }
 
@@ -51,27 +51,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    /**
+     *@Description check whether the user is exsisted
+     *@Param [username]
+     *@return boolean
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public boolean existsByUsername(String username) {
-        /**
-         *@Description check whether the user is exsisted
-         *@Param [username]
-         *@return boolean
-         *@Author Yang Yicheng
-         *@date 2020/8/18
-         */
         return userDao.existsByUsername(username);
     }
 
     @Override
+    /**
+     *@Description get userInfo by userId
+     *@Param [userId]
+     *@return com.oligei.ticketgathering.entity.mysql.User
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     *@Throws NullPointerException if userId is not exist
+     */
     public User findUserByUserId(Integer userId){
-        /**
-         *@Description get userInfo by userId
-         *@Param [userId]
-         *@return com.oligei.ticketgathering.entity.mysql.User
-         *@Author Yang Yicheng
-         *@date 2020/8/18
-         *@Throws NullPointerException if userId is not exist
-         */
         return userDao.findUserByUserId(userId);
     }
 }

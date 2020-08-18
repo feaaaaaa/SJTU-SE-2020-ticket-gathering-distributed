@@ -71,40 +71,68 @@ public class ActitemDaoImpl implements ActitemDao {
     }
 
     @Override
+    /**
+     *delete data from moongoDB
+     *@Param [actitemId]
+     *@return void
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public void deleteMongoDBByActitemId(Integer actitemId) {
         actitemMongoDBRepository.deleteByActitemId(actitemId);
     }
 
     @Override
+    /**
+     *insert into mongoDB
+     *@Param [actitemId, price]
+     *@return com.oligei.ticketgathering.entity.mongodb.ActitemMongoDB
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public ActitemMongoDB insertActitemInMongo(int actitemId, List<JSONObject> price) {
         ActitemMongoDB actitemMongoDB = new ActitemMongoDB(actitemId, price);
         return actitemMongoDBRepository.save(actitemMongoDB);
     }
 
     @Override
+    /**
+     *save actitem
+     *@Param [activityId, website]
+     *@return com.oligei.ticketgathering.entity.mysql.Actitem
+     *@Author Yang Yicheng
+     *@date 2020/8/18
+     */
     public Actitem add(int activityId, String website) {
         return actitemRepository.save(new Actitem(null, activityId, website));
     }
 
     @Override
     public Boolean deleteActitem(Integer actitemId) {
+        /**
+        *delete Actitem from database
+        *@Param [actitemId]
+        *@return java.lang.Boolean
+        *@Author Yang Yicheng
+        *@date 2020/8/18
+        */
         actitemRepository.deleteById(actitemId);
         actitemMongoDBRepository.deleteByActitemId(actitemId);
         return true;
     }
 
     @Override
+    /**
+     *modify data in mongoDB and Mysql
+     *@Param [actitemId, price, amount, showtime]
+     *@return boolean
+     *@Author Yang Yicheng
+     *@date 2020/8/12
+     *@Throws ArrayIndexOutOfBoundsException no item found so the index overflows
+     *@Throws ArithmeticException the repository of actitem is zero
+     *@Throws NullPointerException invalid actiemId expected
+     */
     public boolean modifyRepository(int actitemId, int price, int amount, String showtime) {
-        /**
-        *@Description modify data in mongoDB and Mysql
-        *@Param [actitemId, price, amount, showtime]
-        *@return boolean
-        *@Author Yang Yicheng
-        *@date 2020/8/12
-        *@Throws ArrayIndexOutOfBoundsException no item found so the index overflows
-        *@Throws ArithmeticException the repository of actitem is zero
-        *@Throws NullPointerException invalid actiemId expected
-        */
         Actitem actitem = findOneById(actitemId);
         if(actitem==null||actitem.getPrice()==null){
             throw new NullPointerException("invalid actiemId expected");
