@@ -175,11 +175,34 @@ public class ActivityController {
     }
 
     @RequestMapping("/FindActivityByCategory")
+    /**
+     *  find activitySorpage of home
+     * @return
+     * @author ziliuziliu, feaaaaaa
+     * @date 2020.8.17
+     */
 //    @RequestBody CategoryQuery categoryQuery
-    public List<ActivitySortpage> selectSearch(@RequestParam(name = "type")String type,
+    public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
                                                          @RequestParam(name = "name")String name,
-                                                         @RequestParam(name = "city")String city) throws IOException, ParseException {
-        return activityService.selectSearch(type,name,city);
+                                                         @RequestParam(name = "city")String city){
+        try{
+            return new Msg<>(200,"成功",activityService.selectSearch(type,name,city));
+        }catch (IOException e){
+            logger.error("索引文件无法打开",e);
+            return new Msg<>(201, "索引文件无法打开", new LinkedList<>());
+        }catch (ParseException e){
+            logger.error("关键词解析失败",e);
+            return new Msg<>(201,"关键词解析失败",new LinkedList<>());
+        }catch (JpaObjectRetrievalFailureException e){
+            logger.error("使用非法id进行查询",e);
+            return new Msg<>(201,"使用非法id进行查询",new LinkedList<>());
+        } catch (EmptyResultDataAccessException e){
+            logger.error("activity查找失败",e);
+            return new Msg<>(201,"activity查找失败",new LinkedList<>());
+        } catch(InvalidDataAccessApiUsageException e){
+            logger.error("非法type",e);
+            return new Msg<>(201,"非法type",new LinkedList<>());
+        }
     }
 
     @RequestMapping("/FindActivityByCategoryHome")
@@ -188,10 +211,20 @@ public class ActivityController {
      * @return 
      * @author feaaaaaa
      * @date 2020.8.17
-     */// TODO: 2020/8/17  
-    public List<ActivitySortpage> findActivityByCategoryHome(){
-        // TODO: 2020/8/17  
-        return activityService.findActivityByCategoryHome();
+     */
+    public Msg<List<ActivitySortpage>> findActivityByCategoryHome(){
+        try{
+            return new Msg<>(200,"成功",activityService.findActivityByCategoryHome());
+        }catch (NullPointerException e){
+            logger.error("空值",e);
+            return new Msg<>(201,"空值",new LinkedList<>());
+        }catch (JpaObjectRetrievalFailureException e){
+            logger.error("内部错误",e);
+            return new Msg<>(201,"内部错误",new LinkedList<>());
+        }catch (EmptyResultDataAccessException e){
+            logger.error("未查找到数据",e);
+            return new Msg<>(201,"未查找到数据",new LinkedList<>());
+        }
     }
 
     

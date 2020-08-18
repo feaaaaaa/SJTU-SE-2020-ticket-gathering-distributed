@@ -190,16 +190,22 @@ class ActivityDaoTest {
     @Transactional
     @Rollback
     void findActivityByCategoryAndCity() {
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","成都")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","成都")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("123","全部","成都")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","全国")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","全国")
-                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","成都")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","成都")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("123","全部","成都")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","全国")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","全国")
+//                .size());
+        assertThrows(NullPointerException.class,()->activityDao.findActivityByCategoryAndCity(null,"name","city"));
+        assertThrows(NullPointerException.class,()->activityDao.findActivityByCategoryAndCity("type",null,"city"));
+        assertThrows(NullPointerException.class,()->activityDao.findActivityByCategoryAndCity("type","name",null));
+
+        assertThrows(InvalidDataAccessApiUsageException.class,()->activityDao.findActivityByCategoryAndCity("type","舞蹈","city"));
+
     }
 
     @Test

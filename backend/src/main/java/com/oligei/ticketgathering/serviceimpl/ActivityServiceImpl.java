@@ -288,7 +288,24 @@ public class ActivityServiceImpl implements ActivityService {
 
 
     @Override
+    /**
+     *  use index to get search id, then get data from cache and return
+     * @param value search value
+     * @return true if initialize finished successfully
+     * @author ziliuziliu,feaaaaaa
+     * @date 2020.08.14
+     * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
+     * @throws InvalidDataAccessApiUsageException when type is invalid
+     */
     public List<ActivitySortpage> selectSearch(String type,String name,String city) throws IOException, ParseException {
+        Objects.requireNonNull(type,"null type --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(name,"null name --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(city,"null city --ActivityServiceImpl selectSearch");
+        if(!type.equals("category") && !type.equals("subcategory"))
+            throw new InvalidDataAccessApiUsageException("invalid category");
+
         if (name.equals("全部") && city.equals("全国")) return search("");
 
         String cacheName=name+city;
@@ -313,7 +330,9 @@ public class ActivityServiceImpl implements ActivityService {
      * @return total list of activitySortpage for homepage
      * @author feaaaaaa
      * @date 2020.08.14
-     * @throws // TODO: 2020/8/17
+     *@throws NullPointerException when the param of activitySortpage is null or the mongo data of actitem is null
+     *@throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> findActivityByCategoryHome() {
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>(findActivityByOneCategoryHome("儿童亲子"));
@@ -333,14 +352,18 @@ public class ActivityServiceImpl implements ActivityService {
      * @return a list of activitySortpage for homepage
      * @param name name of category
      * @author feaaaaaa
-     * @date 2020.08.14
-     * @throws // TODO: 2020/8/17
+     * @date 2020.08.18
+     *@throws NullPointerException when name is null or the param of activitySortpage is null or the mongo data of actitem is null
+     *@throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
      */
     private List<ActivitySortpage> findActivityByOneCategoryHome(String name){
+        Objects.requireNonNull(name,"null name --ActivityServiceImpl findActivityByOneCategoryHome");
+
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>();
         int i = 0;
         List<Integer> activities;
-        List<ActivitySortpage> cacheResult=new LinkedList<>();
+        List<ActivitySortpage> cacheResult;
 
         //get from cache
         cacheResult=cache.getValue(name);

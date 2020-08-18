@@ -23,8 +23,8 @@ public class ActivityDaoImpl implements ActivityDao {
     @Autowired
     private ActivityRepository activityRepository;
 
-    @Autowired
-    private ActivityMongoDBRepository activityMongoDBRepository;
+//    @Autowired
+//    private ActivityMongoDBRepository activityMongoDBRepository;
 
     @Autowired
     private ActivityNeo4jRepository activityNeo4jRepository;
@@ -62,21 +62,34 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
+    /**
+     * use activityId to find activity(no data in mongo)
+     *@param type,name,city
+     *@return the list of id of activity
+     *@author ziliuziliu, feaaaaaa
+     *@date 2020.8.18
+     *@throws NullPointerException when param is null
+     *@throws InvalidDataAccessApiUsageException when type is invalid
+     */
     public List<Integer> findActivityByCategoryAndCity(String type, String name, String city) {
+        Objects.requireNonNull(type,"null type --ActivityDaoImpl findActivityByCategoryAndCity");
+        Objects.requireNonNull(name,"null name --ActivityDaoImpl findActivityByCategoryAndCity");
+        Objects.requireNonNull(city,"null city --ActivityDaoImpl findActivityByCategoryAndCity");
+        if(!type.equals("category") && !type.equals("subcategory"))
+            throw new InvalidDataAccessApiUsageException("invalid category");
+
         List<ActivityNeo4j> activityNeo4js = new ArrayList<ActivityNeo4j>();
         if (name.equals("全部"))
             activityNeo4js = activityNeo4jRepository.findActivityByCity(city);
         else if (city.equals("全国")) {
             if (type.equals("category"))
                 activityNeo4js = activityNeo4jRepository.findActivityByCategory(name);
-            else if (type.equals("subcategory"))
-                activityNeo4js = activityNeo4jRepository.findActivityBySubcategory(name);
+            else activityNeo4js = activityNeo4jRepository.findActivityBySubcategory(name);
         }
         else {
             if (type.equals("category"))
                 activityNeo4js = activityNeo4jRepository.findActivityByCategoryAndCity(name,city);
-            else if (type.equals("subcategory"))
-                activityNeo4js = activityNeo4jRepository.findActivityBySubcategoryAndCity(name,city);
+            else activityNeo4js = activityNeo4jRepository.findActivityBySubcategoryAndCity(name,city);
         }
         List<Integer> activities = new ArrayList<Integer>();
         for (Object activityNeo4j: activityNeo4js) {
