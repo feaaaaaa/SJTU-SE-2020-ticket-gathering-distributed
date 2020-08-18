@@ -87,7 +87,24 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
+    /**
+     * use userId and activityId to get id of activity that is the same kind of activity and haven't been seen by the user
+     *@param userId,activityId
+     *@return the list of id of recommend activity
+     *@author ziliuziliu, feaaaaaa
+     *@date 2020.8.18
+     *@throws NullPointerException when param is null
+     *@throws InvalidDataAccessApiUsageException when id is invalid
+     */
     public List<Integer> recommendOnContent(Integer userId, Integer activityId) {
+        //check params
+        Objects.requireNonNull(userId,"null userId --ActivityDaoImpl recommendOnContent");
+        Objects.requireNonNull(activityId,"null activityId --ActivityDaoImpl recommendOnContent");
+        if(userId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid userId --ActivityDaoImpl recommendOnContent");
+        if(activityId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid activityId --ActivityDaoImpl recommendOnContent");
+        //get ids of recommend activities
         List<Integer> activities = new ArrayList<Integer>();
         List<ActivityNeo4j> activityNeo4js = activityNeo4jRepository.recommendOnContent(String.valueOf(userId), String.valueOf(activityId));
         for (Object activityNeo4j: activityNeo4js) {
@@ -159,6 +176,8 @@ public class ActivityDaoImpl implements ActivityDao {
     public Integer findMaxActivityId(){
         return activityRepository.findMaxId();
     }
+
+
     //    @Override
 //    public List<Activity> findAllByTitleOrVenueOrActor(String title, String venue, String actor) {
 //        return activityRepository.findAllByTitleLikeOrVenueLikeOrActorLike(title, venue, actor);

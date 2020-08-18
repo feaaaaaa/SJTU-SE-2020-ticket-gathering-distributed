@@ -12,6 +12,7 @@ import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -39,7 +40,7 @@ class ActivityServiceTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     * test search
      * @author feaaaaaa
      * @date 2020.08.17
      */
@@ -68,7 +69,34 @@ class ActivityServiceTest {
     @Transactional
     @Rollback
     void recommendOnContent() {
-        assertEquals(4, activityService.recommendOnContent(1,10).size());
+
+        Integer existedUserId=1;
+        Integer existedActivityId=10;
+        Integer invalidUSerId=-1;
+        Integer invalidActivityId=-10;
+        List<Integer> integers=new LinkedList<>();
+        for(Integer i=1;i<=4;++i)
+            integers.add(i);
+        doReturn(integers).when(activityDao).recommendOnContent(existedUserId,existedActivityId);
+
+        Activity existedAcitivity=new Activity(1,"test","actor","timescale","venue","activityIcon");
+        Actitem existedActitem=new Actitem(1,1,"123");
+        List<Actitem> existedActitems=new LinkedList<>();
+        existedActitems.add(existedActitem);
+        for(int i=1;i<=4;++i) {
+            doReturn(existedAcitivity).when(activityDao).findOneById(i);
+            doReturn(existedActitems).when(actitemDao).findAllByActivityId(i);
+        }
+
+        //null
+        assertThrows(NullPointerException.class,()->activityService.recommendOnContent(null,existedActivityId));
+        assertThrows(NullPointerException.class,()->activityService.recommendOnContent(existedUserId,null));
+        //invalid
+        assertThrows(InvalidDataAccessApiUsageException.class,()->activityService.recommendOnContent(invalidUSerId,existedActivityId));
+        assertThrows(InvalidDataAccessApiUsageException.class,()->activityService.recommendOnContent(existedUserId,invalidActivityId));
+        //valid
+        assertEquals(4, activityService.recommendOnContent(existedUserId,existedActivityId).size());
+
     }
 
 //    @Test
@@ -91,7 +119,7 @@ class ActivityServiceTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     *  test add
      * @author feaaaaaa
      * @date 2020.08.17
      */
@@ -105,7 +133,7 @@ class ActivityServiceTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     *  test delete
      * @author feaaaaaa
      * @date 2020.08.17
      */
@@ -119,7 +147,7 @@ class ActivityServiceTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     *  test clear
      * @author feaaaaaa
      * @date 2020.08.17
      */

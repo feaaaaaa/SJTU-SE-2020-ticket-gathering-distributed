@@ -9,12 +9,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 @RestController
@@ -32,7 +34,7 @@ public class ActivityController {
     /**
      *  initialize search index
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
-     * @Author feaaaaaa
+     * @author feaaaaaa
      * @date 2020.8.17
      */
     public Msg<Boolean> initSearchIndex() {
@@ -61,7 +63,7 @@ public class ActivityController {
      *  use value to search
      * @param value search value
      * @return Msg(status,msg,ListA of ActivitySortpage) 200 is OK, 201 is predicted exception, 202 is unpredicted exception
-     * @Author feaaaaaa
+     * @author feaaaaaa
      * @date 2020.8.17
      */
     public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value) {
@@ -85,24 +87,12 @@ public class ActivityController {
         return new Msg<>(200,"搜索成功",activitySortpages);
     }
 
-//    @RequestMapping("/search1")
-//    public List<ActivitySortpage> search1(@RequestParam(name = "search") String value) {
-//        System.out.println("value:" + value);
-//        return activityService.search1(value);
-//    }
-//
-//    @RequestMapping("/search2")
-//    public List<ActivitySortpage> search2(@RequestParam(name = "search") String value) {
-//        System.out.println("value:" + value);
-//        return activityService.search2(value);
-//    }
-
     @RequestMapping("/add")
     /**
      *  add activity&actitems
      * @param activity info of activity which to be saved
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
-     * @Author feaaaaaa
+     * @author feaaaaaa
      * @date 2020.8.17
      */
     public Msg<Boolean> add(@RequestParam(name = "activity") String activity) {
@@ -128,10 +118,10 @@ public class ActivityController {
 
     @RequestMapping("/delete")
     /**
-     *  delete activity&actitems
-     * @param activityId id of activity&actitem that to be deleted
+     *  delete activity and actitems
+     * @param activityId id of activity and actitem that to be deleted
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 203 is no exception but wrong
-     * @Author feaaaaaa
+     * @author feaaaaaa
      * @date 2020.8.17
      */
     public Msg<Boolean> delete(@RequestParam(name = "activityId") String activityid) {
@@ -158,9 +148,30 @@ public class ActivityController {
     }
 
     @RequestMapping("/RecommendOnContent")
-    public List<ActivitySortpage> recommendOnContent(@RequestParam(name = "userId") Integer userId,
+    /**
+     *  find recommend content
+     * @param userId,activityId id od user and the activity that he/she clicks
+     * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception
+     * @author ziliuziliu, feaaaaaa
+     * @date 2020.8.18
+     */
+    public Msg<List<ActivitySortpage>> recommendOnContent(@RequestParam(name = "userId") Integer userId,
                                                      @RequestParam(name = "activityId") Integer activityId) {
-        return activityService.recommendOnContent(userId, activityId);
+        try{
+            return new Msg<>(200,"成功",activityService.recommendOnContent(userId, activityId));
+        }catch (NullPointerException e){
+            logger.error("空值",e);
+            return new Msg<>(201,"空值",new LinkedList<>());
+        }catch (InvalidDataAccessApiUsageException e){
+            logger.error("非法值",e);
+            return new Msg<>(201,"非法值",new LinkedList<>());
+        }catch (JpaObjectRetrievalFailureException e){
+            logger.error("内部错误",e);
+            return new Msg<>(201,"内部错误",new LinkedList<>());
+        }catch (EmptyResultDataAccessException e){
+            logger.error("未查找到数据",e);
+            return new Msg<>(201,"未查找到数据",new LinkedList<>());
+        }
     }
 
     @RequestMapping("/FindActivityByCategory")
@@ -175,7 +186,7 @@ public class ActivityController {
     /**
      *  find activitySorpage of home
      * @return 
-     * @Author feaaaaaa
+     * @author feaaaaaa
      * @date 2020.8.17
      */// TODO: 2020/8/17  
     public List<ActivitySortpage> findActivityByCategoryHome(){
@@ -188,7 +199,7 @@ public class ActivityController {
     /**
      *  add all the activity into cache
      * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 203 is no exception but wrong
-     * @Author feaaaaaa
+     * @author feaaaaaa
      * @date 2020.8.17
      */
     public Msg<Boolean> initActivity(){
@@ -210,7 +221,7 @@ public class ActivityController {
     /**
      *  clear cache of home & search null
      * @return Msg(status,msg,Boolean) 200 is OK, 203 is no exception but wrong
-     * @Author feaaaaaa
+     * @author feaaaaaa
      * @date 2020.8.17
      */
     public Msg<Boolean> clear(){//@RequestParam(name = "name")String cacheName

@@ -32,6 +32,7 @@ import org.apache.lucene.util.Version;
 import org.apdplat.word.segmentation.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.apdplat.word.WordSegmenter;
@@ -361,7 +362,26 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    /**
+     * use userId and activityId to get ActivitySortpage that is the same kind of activity and haven't been seen by the user
+     *@param userId,activityId
+     *@return the list of recommend activity
+     *@author ziliuziliu, feaaaaaa
+     *@date 2020.8.18
+     *@throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     *@throws InvalidDataAccessApiUsageException when param is invalid
+     *@throws JpaObjectRetrievalFailureException when id found by neo4j and used to find activitySortpage is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
+     */
     public List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId) {
+        //check param
+        Objects.requireNonNull(userId,"null userId --ActivityServiceImpl recommendOnContent");
+        Objects.requireNonNull(activityId,"null activityId --ActivityServiceImpl recommendOnContent");
+        if(userId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid userId --ActivityServiceImpl recommendOnContent");
+        if(activityId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid activityId --ActivityServiceImpl recommendOnContent");
+        //find activity
         List<Integer> activities = activityDao.recommendOnContent(userId, activityId);
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>();
         for (Integer activity : activities) {
