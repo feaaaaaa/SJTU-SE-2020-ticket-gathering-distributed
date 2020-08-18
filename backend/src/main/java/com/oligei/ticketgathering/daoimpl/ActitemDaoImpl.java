@@ -8,6 +8,8 @@ import com.oligei.ticketgathering.entity.mysql.Actitem;
 import com.oligei.ticketgathering.repository.ActitemMongoDBRepository;
 import com.oligei.ticketgathering.repository.ActitemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -23,25 +25,47 @@ public class ActitemDaoImpl implements ActitemDao {
     private ActitemMongoDBRepository actitemMongoDBRepository;
 
     @Override
+    /**
+     *  use actitemId to find the actitem
+     * @param id the actitemId of actitem
+     * @return actitem that actitemId equals id
+     * @author feaaaaaa
+     * @date 2020.8.17
+     * @throws NullPointerException when id is null or mongo data is null
+     * @throws JpaObjectRetrievalFailureException when id is invalid
+     * @throws EmptyResultDataAccessException when actitem is not found
+     */
     public Actitem findOneById(Integer id) {
+        Objects.requireNonNull(id,"null id --actitemDaoImpl findOneById");
         Actitem actitem = actitemRepository.getOne(id);
         ActitemMongoDB actitemMongoDB = actitemMongoDBRepository.findByActitemId(id);
-        try {
+        if (actitemMongoDB != null)
             actitem.setPrice(actitemMongoDB.getPrice());
-        }
-        catch(NullPointerException e){
-            throw new NullPointerException("invalid actiemId expected");
-        }
+        else
+            throw new NullPointerException("null mongoDB data of id"+id.toString()+" --actitemDaoImpl findOneById");
         return actitem;
     }
 
     @Override
+    /**
+     *  use activityId to find all the actitem
+     * @param id the activityId of activity and actitem
+     * @return list of actitem that activityId equals id
+     * @author feaaaaaa
+     * @date 2020.8.17
+     * @throws NullPointerException when id is null or mongo data is null
+     * @throws JpaObjectRetrievalFailureException when id is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
+     */
     public List<Actitem> findAllByActivityId(Integer id) {
+        Objects.requireNonNull(id,"null id --actitemDaoImpl findAllByActivityId");
         List<Actitem> actitems = actitemRepository.findAllByActivityId(id);
-        for (int i = 0; i < actitems.size(); ++i) {
-            ActitemMongoDB actitemMongoDB = actitemMongoDBRepository.findByActitemId(actitems.get(i).getActitemId());
-            if (actitemMongoDB == null) System.out.println(actitems.get(i).getActitemId() + "null");
-            else actitems.get(i).setPrice(actitemMongoDB.getPrice());
+        for (Actitem actitem : actitems) {
+            ActitemMongoDB actitemMongoDB = actitemMongoDBRepository.findByActitemId(actitem.getActitemId());
+            if (actitemMongoDB != null)
+                actitem.setPrice(actitemMongoDB.getPrice());
+            else
+                throw new NullPointerException("null mongoDB data of id"+id.toString()+"--actitemDaoImpl findAllByActivityId");
         }
         return actitems;
     }
