@@ -44,13 +44,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     /**
-     *@Description get Order using userId
-     *@Param [userId]
-     *@return java.util.List<com.oligei.ticketgathering.entity.info.OrderInfo>
-     *@Author Yang Yicheng
-     *@date 2020/8/10
-     *@Throws InvalidDataAccessApiUsageException using illegal userId
-     *@Throws NullPointerException Order not found
+     *  get order using user id
+     * @param userId
+     * @return OrderInfo
+     * @author Yang Yicheng
+     * @date 2020/8/10
+     * @throws InvalidDataAccessApiUsageException using illegal userId
+     * @throws NullPointerException Order not found
      */
     public List<OrderInfo> getUserOrder(int userId) {
         if (userId<=0){
@@ -65,11 +65,11 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     /**
-     *@Description insert an order into database
-     *@Param [userId, actitemId, initPrice, orderPrice, amount, showtime, orderTime]
-     *@return boolean
-     *@Author Yang Yicheng
-     *@date 2020/8/12
+     *  insert an order into database
+     * @param userId,actitemId,initPrice,orderPrice,amount,showtime,orderTime
+     * @return boolean
+     * @author Yang Yicheng
+     * @date 2020/8/12
      */
     public boolean addOrder(int userId, int actitemId, int initPrice, int orderPrice, int amount, String showtime, String orderTime) {
         if (actitemDao.modifyRepository(actitemId, initPrice, -amount, showtime)) {
