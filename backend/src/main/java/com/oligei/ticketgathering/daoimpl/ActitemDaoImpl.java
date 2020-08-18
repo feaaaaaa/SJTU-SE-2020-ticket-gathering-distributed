@@ -72,11 +72,11 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     /**
-     *delete data from moongoDB
-     *@Param [actitemId]
-     *@return void
-     *@Author Yang Yicheng
-     *@date 2020/8/18
+     *  delete data from moongoDB
+     * @param actitemId
+     * @return void
+     * @author
+     * @date 2020/8/18
      */
     public void deleteMongoDBByActitemId(Integer actitemId) {
         actitemMongoDBRepository.deleteByActitemId(actitemId);
@@ -84,11 +84,11 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     /**
-     *insert into mongoDB
-     *@Param [actitemId, price]
-     *@return com.oligei.ticketgathering.entity.mongodb.ActitemMongoDB
-     *@Author Yang Yicheng
-     *@date 2020/8/18
+     * insert into mongoDB
+     * @param [actitemId, price]
+     * @return ActitemMongoDB
+     * @author
+     * @date 2020/8/18
      */
     public ActitemMongoDB insertActitemInMongo(int actitemId, List<JSONObject> price) {
         ActitemMongoDB actitemMongoDB = new ActitemMongoDB(actitemId, price);
@@ -97,10 +97,10 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     /**
-     *save actitem
-     *@Param [activityId, website]
+     * save actitem
+     * @param activityId, website
      *@return com.oligei.ticketgathering.entity.mysql.Actitem
-     *@Author Yang Yicheng
+     *@Author
      *@date 2020/8/18
      */
     public Actitem add(int activityId, String website) {
@@ -108,14 +108,14 @@ public class ActitemDaoImpl implements ActitemDao {
     }
 
     @Override
+    /**
+     *  delete Actitem from database
+     * @param actitemId
+     * @return Boolean
+     * @author
+     * @date 2020/8/18
+     */
     public Boolean deleteActitem(Integer actitemId) {
-        /**
-        *delete Actitem from database
-        *@Param [actitemId]
-        *@return java.lang.Boolean
-        *@Author Yang Yicheng
-        *@date 2020/8/18
-        */
         actitemRepository.deleteById(actitemId);
         actitemMongoDBRepository.deleteByActitemId(actitemId);
         return true;
@@ -123,14 +123,14 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     /**
-     *modify data in mongoDB and Mysql
-     *@Param [actitemId, price, amount, showtime]
-     *@return boolean
-     *@Author Yang Yicheng
-     *@date 2020/8/12
-     *@Throws ArrayIndexOutOfBoundsException no item found so the index overflows
-     *@Throws ArithmeticException the repository of actitem is zero
-     *@Throws NullPointerException invalid actiemId expected
+     *  modify data in mongoDB and Mysql
+     * @param actitemId, price, amount, showtime
+     * @return boolean
+     * @author Yang Yicheng
+     * @date 2020/8/12
+     * @throws ArrayIndexOutOfBoundsException no item found so the index overflows
+     * @throws ArithmeticException the repository of actitem is zero
+     * @throws NullPointerException invalid actiemId expected
      */
     public boolean modifyRepository(int actitemId, int price, int amount, String showtime) {
         Actitem actitem = findOneById(actitemId);

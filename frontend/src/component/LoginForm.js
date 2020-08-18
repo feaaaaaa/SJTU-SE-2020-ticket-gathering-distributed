@@ -38,8 +38,12 @@ export class LoginForm extends React.Component {
     }
     onFinish = values => {
         const callback =  (data) => {
-            console.log("???"+JSON.stringify(data.token));
-            this.setState({user:data.user,firstLogin:false,token:data.token});
+            if(data.status===201){
+                this.setState({firstLogin:false});
+            }
+            if(data.status===200){
+                this.setState({user:data.data.user,firstLogin:false,token:data.data.token});
+            }
         };
         console.log(values);
         login(values,callback);
