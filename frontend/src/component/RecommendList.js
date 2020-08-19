@@ -1,5 +1,5 @@
 import React from "react";
-import {Card, List} from 'antd';
+import {Card, List, message} from 'antd';
 import "../css/recommendList.css"
 import { sports} from "../const/activity";
 import {getRecommend} from "../service/userService";
@@ -17,9 +17,12 @@ export class RecommendList extends React.Component{
     async componentDidMount() {
         await getRecommend(localStorage.getItem("userId"), localStorage.getItem("activityId"), localStorage.getItem("token"),
             (res) => {
-                console.log(res);
-                if (res != null && res.message == null)
-                    this.setState({activity: res})
+                console.log("commend return:"+res);
+                if (res != null) {
+                    if(res.status!==200)
+                        message.error(res.msg);
+                    this.setState({activity: res.data})
+                }
             });
         console.log("recommondList:"+JSON.stringify(this.state.activity));
     }

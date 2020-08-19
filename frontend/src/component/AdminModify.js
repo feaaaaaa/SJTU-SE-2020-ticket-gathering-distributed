@@ -147,7 +147,7 @@ const Demo = () => {
         }
         // arr=arr.concat(u);
         console.log("activity:"+JSON.stringify(arr));
-        addActivity(JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
+        addActivity(localStorage.getItem("modifyId"),JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
             if(res===true)setSuccess(true);
             else if(res.message==="authentication failure"){setAuthen(true);localStorage.clear();}
             else if(res.message==="authorization failure")setAuthor(true);

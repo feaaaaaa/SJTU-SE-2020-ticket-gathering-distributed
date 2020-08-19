@@ -6,7 +6,6 @@ import "../css/sortPage.css"
 import "../css/headerInfo.css"
 import {category_search, search} from "../service/searchService";
 import { CaretRightOutlined } from '@ant-design/icons';
-import {async} from "fast-glob";
 // import Redirect from "react-router-dom/es/Redirect";
 import { UserOutlined } from '@ant-design/icons';
 import {HeaderInfo} from "../component/Header";
@@ -35,7 +34,9 @@ export class SortPageView extends React.Component{
     };
 
     category_search(res){
-        this.setState({activity: res})
+        if(res.status!==200)
+            message.error(res.msg);
+        this.setState({activity: res.data})
     }
 
     logOut(){
@@ -72,14 +73,20 @@ export class SortPageView extends React.Component{
         }
         else if(category!=null)
             category_search("category",category,"全国",(res) => {
-                console.log("??123:" + JSON.stringify(res));
-                if(res!=null)
-                    this.setState({activity: res});
+                console.log("select search return:" + JSON.stringify(res));
+                if(res!=null) {
+                    if(res.status!==200)
+                        message.error(res.msg);
+                    this.setState({activity: res.data});
+                }
             });
         else search(value, (res) => {
-            console.log("??123:" + JSON.stringify(res));
-            if(res!=null)
-                this.setState({activity: res})
+            console.log("search return:" + JSON.stringify(res));
+            // if(res!=null)
+            //     this.setState({activity: res})
+            if(res.status!==200)
+                message.error(res.msg);
+            this.setState({activity:res.data});
         });
     }
 
@@ -89,14 +96,15 @@ export class SortPageView extends React.Component{
             // console.log(nextState.search==="");
             this.setState({search: nextState.search});
             search(nextState.search, (res) => {
-                console.log("??res:" + JSON.stringify(res));
-                if (res != null)
-                    this.setState({
-                        activity: res,
-                        type:"category",
-                        category:"全部",
-                        city:"全国"
-                    })
+                console.log("search return:" + JSON.stringify(res));
+                if (res.status !== 200)
+                    message.error(res.msg);
+                this.setState({
+                    activity: res.data,
+                    type: "category",
+                    category: "全部",
+                    city: "全国"
+                })
             });
         }
     }

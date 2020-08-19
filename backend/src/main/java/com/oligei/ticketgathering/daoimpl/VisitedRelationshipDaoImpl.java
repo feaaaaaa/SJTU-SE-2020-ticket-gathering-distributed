@@ -8,6 +8,8 @@ import com.oligei.ticketgathering.repository.VisitedRelationshipRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import java.util.Objects;
+
 @Repository
 public class VisitedRelationshipDaoImpl implements VisitedRelationshipDao {
 
@@ -21,7 +23,17 @@ public class VisitedRelationshipDaoImpl implements VisitedRelationshipDao {
     private VisitedRelationshipRepository visitedRelationshipRepository;
 
     @Override
+    /**
+     *save visited history
+     *@param userId,activityId
+     *@return the saved visitedrelationship
+     *@author ziliuziliu
+     *@date 2020/8/19
+     *@throws NullPointerException if userId is null
+     */
     public VisitedRelationship saveVisitedHistory(Integer userId, Integer activityId) {
+        Objects.requireNonNull(userId,"null userId --VisitedRelationshipDaoImpl saveVisitedHistory");
+        Objects.requireNonNull(activityId,"null activityId --VisitedRelationshipDaoImpl saveVisitedHistory");
         return visitedRelationshipRepository.saveVisitedHistory(userId.toString(),activityId.toString());
     }
 }

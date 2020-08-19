@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class AuctionDaoImpl implements AuctionDao {
@@ -15,19 +16,42 @@ public class AuctionDaoImpl implements AuctionDao {
     private AuctionRepository auctionRepository;
 
     @Override
-    public Boolean save(Auction auction) {
-        auctionRepository.save(auction);
+    /**
+    *save an auction
+    *@Param: [auction]
+    *@return: com.oligei.auction.entity.Auction
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
+    public Auction save(Auction auction) {
+        Objects.requireNonNull(auction,"null auction --AuctionDaoImpl save");
 
-        return true;
+        return auctionRepository.save(auction);
     }
 
     @Override
+    /**
+    *get all available auctions
+    *@Param: []
+    *@return: java.util.List<com.oligei.auction.entity.Auction>
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     public List<Auction> getAvailableAuctionsForNow() {
         return auctionRepository.findAuctionsByIsoverEquals(0);
     }
 
     @Override
+    /**
+    *find an auction by id
+    *@Param: [auctionid]
+    *@return: com.oligei.auction.entity.Auction
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     public Auction findOneById(Integer auctionid) {
+        Objects.requireNonNull(auctionid,"null auctionid --AuctionDaoImpl findOneById");
+
         return auctionRepository.getOne(auctionid);
     }
 

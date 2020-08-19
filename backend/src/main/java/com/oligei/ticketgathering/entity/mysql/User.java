@@ -9,6 +9,7 @@ package com.oligei.ticketgathering.entity.mysql;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import java.util.Objects;
 
 @Entity
 @Table(name = "tg_users")

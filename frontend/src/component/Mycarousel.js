@@ -18,7 +18,7 @@ export class Mycarousel extends React.Component{
                 <img src={require('../resources/2.jpg')} alt="carousel1" className="carouselImg"/>
                 <img src={require('../resources/3.jpg')} alt="carousel2" className="carouselImg"/>
                 <img src={require('../resources/4.jpg')} alt="carousel2" className="carouselImg"/>
-                <img src={require('../resources/5.jpg')} alt="carousel2" className="carouselImg"/>
+                {/*<img src={require('../resources/5.jpg')} alt="carousel2" className="carouselImg"/>*/}
             </Carousel>
             </div>
         );

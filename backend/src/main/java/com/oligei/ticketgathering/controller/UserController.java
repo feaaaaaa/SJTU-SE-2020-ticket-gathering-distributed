@@ -6,15 +6,20 @@
  */
 
 package com.oligei.ticketgathering.controller;
-
+import com.oligei.ticketgathering.TicketGatheringApplication;
 import com.oligei.ticketgathering.entity.mysql.User;
 import com.oligei.ticketgathering.service.UserService;
 import com.oligei.ticketgathering.util.TokenUtil;
+import net.sf.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.Map;
+import com.oligei.ticketgathering.util.msgutils.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/User")
@@ -24,36 +29,108 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    private static final Logger logger = LoggerFactory.getLogger(TicketGatheringApplication.class);
+
     @RequestMapping("/Login")
-    public Map<String,Object> login(@RequestParam(name = "username") String username, @RequestParam(name = "password") String password,
-                                    HttpServletResponse response) {
+    /**
+     *check username and password
+     *@param username,password
+     *@return Msg(status,msg,data) 200 login success, 201 login failure, 202 exception
+     *@author ziliuziliu,Yang Yicheng
+     *@date 2020/8/18
+     */
+    public Msg<Map<String,Object>> login(@RequestParam(name = "username") String username,
+                                         @RequestParam(name = "password") String password) {
         Map<String,Object> map = new HashMap<>();
-        User existed_user = userService.login(username, password);
-        if (existed_user == null) {
-            map.put("message","login failure");
+        User existed_user = null;
+        try{
+            existed_user = userService.login(username, password);
         }
-        else {
+        catch(NullPointerException e){
+            logger.error("NullPointerException",e);
+            return new Msg<>(202, "空参数", null);
+        }
+        catch (InvalidDataAccessApiUsageException e){
+            logger.error("InvalidDataAccessApiUsageException",e);
+            return new Msg<>(202,"错误的参数属性",null);
+        }
+        if (existed_user != null) {
             String token = TokenUtil.sign(existed_user);
-            map.put("message","login success");
-            map.put("token",token);
-            map.put("user",existed_user);
+            map.put("token", token);
+            map.put("user", existed_user);
+            return new Msg<>(200,"登录成功",map);
         }
-        System.out.println(map);
-        return map;
+        else
+            return new Msg<>(201,"用户名或密码错误",null);
     }
 
+    /**
+     * register
+     * @param user user to be registered
+     * @return Msg(status,msg,data) 200 is OK, 201 is exception
+     * @author ziliuziliu
+     * @date 2020/8/18
+     */
     @RequestMapping("/Register")
-    public boolean register(@RequestBody User user) {
-        return userService.register(user);
+    public Msg<JSONObject> register(@RequestBody User user) {
+        try {
+            userService.register(user);
+        }catch (NullPointerException e){
+            logger.error("NullPointerException",e);
+            return MsgUtil.makeMsg(201,"空参数",null);
+        }catch (InvalidDataAccessApiUsageException e){
+            logger.error("InvalidDataAccessApiUsageException",e);
+            return MsgUtil.makeMsg(201,"错误的参数属性",null);
+        }
+        return MsgUtil.makeMsg(200,"注册成功",null);
     }
 
     @RequestMapping("/ExistsByUsername")
-    public boolean existsByUsername(@RequestParam(name = "username") String username) {
-        return userService.existsByUsername(username);
+    /**
+     *check whether the user is exsisted
+     *@param username
+     *@return Msg(status,msg,data) 200 username existed, 201 username not existed, 202 exception
+     *@author ziliuziliu,Yang Yicheng
+     *@date 2020/8/18
+     */
+    public Msg<Boolean> existsByUsername(@RequestParam(name = "username") String username) {
+        try {
+            boolean result = userService.existsByUsername(username);
+            if (result) return new Msg<>(200,"用户名已存在",null);
+            else return new Msg<>(201,"用户名不存在",null);
+        }
+        catch(NullPointerException e){
+            logger.error("NullPointerException",e);
+            return new Msg<>(202, "空参数", null);
+        }
+        catch (InvalidDataAccessApiUsageException e){
+            logger.error("InvalidDataAccessApiUsageException",e);
+            return new Msg<>(202,"错误的参数属性",null);
+        }
     }
 
     @RequestMapping("/FindByUserId")
-    public User findUserByUserId(Integer userId){
-        return userService.findUserByUserId(userId);
+    /**
+     *get userInfo by userId
+     *@param userId
+     *@return Msg(status,msg,data) 200 is exists, 201 is not exists, 202 is exception
+     *@author ziliuziliu,Yang Yicheng
+     *@date 2020/8/18
+     *@throws NullPointerException if userId is not exist
+     */
+    public Msg<User> findUserByUserId(@RequestParam(name = "userId") Integer userId){
+        try{
+            User user = userService.findUserByUserId(userId);
+            if (user != null) return new Msg<>(200,"用户编号存在",user);
+            else return new Msg<>(201,"用户编号不存在",null);
+        }
+        catch(NullPointerException e){
+            logger.error("NullPointerException",e);
+            return new Msg<>(202, "空参数", null);
+        }
+        catch (InvalidDataAccessApiUsageException e){
+            logger.error("InvalidDataAccessApiUsageException",e);
+            return new Msg<>(202,"错误的参数属性",null);
+        }
     }
 }

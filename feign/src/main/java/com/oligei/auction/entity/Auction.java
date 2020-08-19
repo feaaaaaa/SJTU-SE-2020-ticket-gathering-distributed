@@ -1,6 +1,9 @@
 package com.oligei.auction.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -12,13 +15,46 @@ public class Auction {
     private Integer auctionid;
     private Integer actitemid;
     private Integer userid;
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date ddl;
+
     private Integer initprice;
     private Integer orderprice;
     private Integer isover;
     private Date showtime;
     private Date ordertime;
     private Integer amount;
+
+    public Auction(){}
+
+    public Auction(Integer auctionid,Integer actitemid,Date ddl,Integer initprice
+            ,Integer orderprice, Date showtime,Integer amount)
+    {
+        this.auctionid = auctionid;
+        this.actitemid = actitemid;
+        this.userid = 0;
+        this.ddl = ddl;
+        this.initprice = initprice;
+        this.orderprice = orderprice;
+        this.isover = 0;
+        this.showtime = showtime;
+        this.amount = amount;
+    }
+
+    public Auction(Integer actitemid,Date ddl,Integer initprice
+                    ,Integer orderprice, Date showtime,Integer amount)
+    {
+        this.actitemid = actitemid;
+        this.userid = 0;
+        this.ddl = ddl;
+        this.initprice = initprice;
+        this.orderprice = orderprice;
+        this.isover = 0;
+        this.showtime = showtime;
+        this.amount = amount;
+    }
 
     @Id
     @Column(name = "auctionid")

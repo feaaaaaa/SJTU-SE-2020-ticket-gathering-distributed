@@ -38,14 +38,17 @@ export class DetailCard extends React.Component{
 
     renderDetail = async () => {
         const callback = res => {
-            if(res!=null&&res.message==="authentication failure") {
+            if(res.status===-100) {
                 message.error("请先登录");
                 localStorage.clear();
                 this.setState({authentication:true})
             }
+            else if(res.status!==200){
+                message.error(res.msg);
+            }
             else {
                 console.log("detail:"+JSON.stringify(res));
-                let data = res;
+                let data = res.data;
                 this.setState({
                     info: data,
                     tickets: data.prices

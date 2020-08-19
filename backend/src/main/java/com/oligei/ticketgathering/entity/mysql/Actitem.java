@@ -23,6 +23,13 @@ public class Actitem {
         this.activityId = activityId;
         this.website = website;
     }
+    public Actitem(Integer actitemId,Integer activityId,String website,List<JSONObject> price)
+    {
+        this.actitemId = actitemId;
+        this.activityId = activityId;
+        this.website = website;
+        this.price = price;
+    }
 
     @Id
     @Column(name = "actitemid")
