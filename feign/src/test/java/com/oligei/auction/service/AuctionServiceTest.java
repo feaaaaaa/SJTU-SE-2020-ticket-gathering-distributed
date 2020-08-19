@@ -13,7 +13,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-
+/*
+由于该层用到了静态变量cache，而无法mock掉cache，所以不得已和数据库相关，测试数据库为：
+ */
 @SpringBootTest
 class AuctionServiceTest {
 

@@ -39,6 +39,13 @@ public class AuctionServiceImpl implements AuctionService {
     private Cache<AuctionListItem> auctionListItemCache = new Cache<>();
 
     @PostConstruct
+    /**
+    *put all available auctions from database to cache
+    *@Param: []
+    *@return: boolean
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     public boolean initCache(){
         System.out.println("cache init...");
         flushActions();
@@ -65,6 +72,13 @@ public class AuctionServiceImpl implements AuctionService {
         return true;
     }
 
+    /**
+    *a private method called when an auction is over
+    *@Param: [auctionid]
+    *@return: boolean
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     private boolean whenSetOver(Integer auctionid){
         Auction auction = auctionDao.findOneById(auctionid);
         AuctionListItem auctionListItem = auctionListItemCache.getValue(auctionid);
@@ -85,6 +99,13 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    /**
+    *save an auction
+    *@Param: [actitemid, ddl, showtime, initprice, orderprice, amount]
+    *@return: java.lang.Boolean
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     public Boolean save(Integer actitemid, String ddl,String showtime, Integer initprice,Integer orderprice, Integer amount) {
         Objects.requireNonNull(actitemid,"null actitemdid --AuctionServiceImpl save");
         Objects.requireNonNull(ddl,"null ddl --AuctionServiceImpl save");
@@ -129,8 +150,15 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    /**
+    *get all available auctions
+    *@Param: []
+    *@return: java.util.List<com.oligei.auction.dto.AuctionListItem>
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     public List<AuctionListItem> getAvailableAuctions() {
-                System.out.println("flushing");
+        System.out.println("flushing");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss 'CST' yyyy",
                 java.util.Locale.ENGLISH);
@@ -166,11 +194,22 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    /**
+    *take part in an auction successfully
+    *@Param: [auctionid, userid, orderprice]
+    *@return: java.lang.Integer
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) {
         Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl joinAuction");
         Objects.requireNonNull(userid,"null userid --AuctionServiceImpl joinAuction");
         Objects.requireNonNull(orderprice,"null orderprice --AuctionServiceImpl joinAuction");
+
         Auction auction = auctionDao.findOneById(auctionid);
+
+        if(auction == null)
+            throw new NullPointerException("Auction Not Found");
 
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String dateNow = df.format(new Date());
@@ -200,6 +239,13 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
+    /**
+    *set over all unavailable
+    *@Param: []
+    *@return: void
+    *@Author: Cui Shaojie
+    *@date: 2020/8/18
+    */
     public void flushActions() {
         List<Auction> auctions = auctionDao.getAvailableAuctionsForNow();
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");

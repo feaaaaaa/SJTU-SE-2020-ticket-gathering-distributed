@@ -2,6 +2,10 @@ package com.oligei.ticketgathering.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.oligei.ticketgathering.dao.ActitemDao;
+import com.oligei.ticketgathering.dao.ActivityDao;
+import com.oligei.ticketgathering.dto.DetailInfo;
+import com.oligei.ticketgathering.entity.mysql.Actitem;
+import com.oligei.ticketgathering.entity.mysql.Activity;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,9 +29,29 @@ class ActitemServiceTest {
     @MockBean
     ActitemDao actitemDao;
 
+    @MockBean
+    ActivityDao activityDao;
+
     @Test
     @Rollback
     void findActivityAndActitemDetail() {
+        DetailInfo detailInfo = new DetailInfo(1,"title","actor","timescale","venue","icon","descrption","website",null);
+        Activity activity = new Activity(1,"title","actor","timescale","venue","icon");
+        Actitem actitem = new Actitem(2,1,"website",null);
+
+        when(actitemDao.findOneById(2)).thenReturn(actitem);
+        when(activityDao.findOneById(1)).thenReturn(activity);
+
+        when(actitemDao.findOneById(4)).thenReturn(null);
+
+        assertEquals(detailInfo.getKey(),actitemService.findActivityAndActitemDetail(2,1).getKey());
+
+        try {
+            actitemService.findActivityAndActitemDetail(4,1);
+        }
+        catch (NullPointerException e){
+            assertEquals("Actitem Not Found",e.getMessage());
+        }
 //        List<JSONObject> list = new ArrayList<>();
 //        JSONObject object = new JSONObject();
 //        object.put("test","T");
