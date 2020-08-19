@@ -32,6 +32,7 @@ import org.apache.lucene.util.Version;
 import org.apdplat.word.segmentation.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.stereotype.Service;
 import org.apdplat.word.WordSegmenter;
@@ -63,7 +64,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description initialize a search index (which only need to be done once)
+     *  initialize a search index (which only need to be done once)
      * @return true if initialize finished successfully
      * @author feaaaaaa
      * @date 2020.08.14
@@ -98,14 +99,16 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description use index to get search id, then get data from cache and return
+     *  use index to get search id, then get data from cache and return
      * @param value search value
      * @return true if initialize finished successfully
      * @author feaaaaaa
      * @date 2020.08.14
+     * @throws NullPointerException the param of activitySortpage is null or the mongo data of actitem is null
      * @throws IOException if open file fails
      * @throws ParseException if parse of value fails
      * @throws JpaObjectRetrievalFailureException if id is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> search(String value) throws IOException, ParseException {
         //null
@@ -155,13 +158,14 @@ public class ActivityServiceImpl implements ActivityService {
 
 //    @Override
     /**
-     *@description use id to find activity&actitems to make a activitySortpage
+     * use id to find activity and actitems to make a activitySortpage
      *@param id the activityId
      *@return ActivitySortpage that have the id
      *@author feaaaaaa
      *@date 2020.8.15
-     *@throws NullPointerException when id is null or the param of activitySortpage is null
+     *@throws NullPointerException when id is null or the param of activitySortpage is null or the mongo data of actitem is null
      *@throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
+     *@throws EmptyResultDataAccessException when activity is not found
      */
     public ActivitySortpage findActivityAndActitem(Integer id) {
 
@@ -191,7 +195,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     *@description parse the string info of activity and save it
+     * parse the string info of activity and save it
      *@param activity
      *@return save success or fail
      *@author feaaaaaa
@@ -264,15 +268,15 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     @Transactional
     /**
-     *@description use activityId to delete activity&all the actitem
+     * use activityId to delete activity&all the actitem
      *@param id the activityId of activity
      *@return delete success or fail
      *@author feaaaaaa
      *@date 2020.8.15
-     *@throws NullPointerException when id is null
+     *@throws NullPointerException when id is null or mongo data is null
      *@throws JpaObjectRetrievalFailureException when id is invalid
      *@throws EmptyResultDataAccessException when activity is not found
-     */// TODO: 2020/8/17 actitemDao
+     */
     public Boolean delete(Integer activityId) {
         Objects.requireNonNull(activityId,"null id --ActivityServiceImpl delete");
         List<Actitem> actitems=actitemDao.findAllByActivityId(activityId);
@@ -284,7 +288,24 @@ public class ActivityServiceImpl implements ActivityService {
 
 
     @Override
+    /**
+     *  use index to get search id, then get data from cache and return
+     * @param value search value
+     * @return true if initialize finished successfully
+     * @author ziliuziliu,feaaaaaa
+     * @date 2020.08.14
+     * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
+     * @throws InvalidDataAccessApiUsageException when type is invalid
+     */
     public List<ActivitySortpage> selectSearch(String type,String name,String city) throws IOException, ParseException {
+        Objects.requireNonNull(type,"null type --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(name,"null name --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(city,"null city --ActivityServiceImpl selectSearch");
+        if(!type.equals("category") && !type.equals("subcategory"))
+            throw new InvalidDataAccessApiUsageException("invalid category");
+
         if (name.equals("全部") && city.equals("全国")) return search("");
 
         String cacheName=name+city;
@@ -305,11 +326,13 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description call findActivityByOneCategoryHome 8 times to find a list of activitySortpage for homepage
+     *  call findActivityByOneCategoryHome 8 times to find a list of activitySortpage for homepage
      * @return total list of activitySortpage for homepage
      * @author feaaaaaa
      * @date 2020.08.14
-     * @throws // TODO: 2020/8/17
+     *@throws NullPointerException when the param of activitySortpage is null or the mongo data of actitem is null
+     *@throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> findActivityByCategoryHome() {
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>(findActivityByOneCategoryHome("儿童亲子"));
@@ -325,18 +348,22 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @Description use findActivityByCategoryAndCity("category", name, "全国")  to get one content of homepage from cache
+     *  use findActivityByCategoryAndCity("category", name, "全国")  to get one content of homepage from cache
      * @return a list of activitySortpage for homepage
      * @param name name of category
      * @author feaaaaaa
-     * @date 2020.08.14
-     * @throws // TODO: 2020/8/17
+     * @date 2020.08.18
+     *@throws NullPointerException when name is null or the param of activitySortpage is null or the mongo data of actitem is null
+     *@throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
      */
     private List<ActivitySortpage> findActivityByOneCategoryHome(String name){
+        Objects.requireNonNull(name,"null name --ActivityServiceImpl findActivityByOneCategoryHome");
+
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>();
         int i = 0;
         List<Integer> activities;
-        List<ActivitySortpage> cacheResult=new LinkedList<>();
+        List<ActivitySortpage> cacheResult;
 
         //get from cache
         cacheResult=cache.getValue(name);
@@ -358,7 +385,26 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
+    /**
+     * use userId and activityId to get ActivitySortpage that is the same kind of activity and haven't been seen by the user
+     *@param userId,activityId
+     *@return the list of recommend activity
+     *@author ziliuziliu, feaaaaaa
+     *@date 2020.8.18
+     *@throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     *@throws InvalidDataAccessApiUsageException when param is invalid
+     *@throws JpaObjectRetrievalFailureException when id found by neo4j and used to find activitySortpage is invalid
+     *@throws EmptyResultDataAccessException when activity is not found
+     */
     public List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId) {
+        //check param
+        Objects.requireNonNull(userId,"null userId --ActivityServiceImpl recommendOnContent");
+        Objects.requireNonNull(activityId,"null activityId --ActivityServiceImpl recommendOnContent");
+        if(userId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid userId --ActivityServiceImpl recommendOnContent");
+        if(activityId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid activityId --ActivityServiceImpl recommendOnContent");
+        //find activity
         List<Integer> activities = activityDao.recommendOnContent(userId, activityId);
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>();
         for (Integer activity : activities) {
@@ -370,7 +416,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     /**
-     * @Description add all the activitySortpage into cache
+     *  add all the activitySortpage into cache
      * @return true if initialize finished successfully
      * @author feaaaaaa
      * @date 2020.08.14
@@ -396,6 +442,9 @@ public class ActivityServiceImpl implements ActivityService {
         initActivityById(11000);
         initActivityById(12000);
 
+        //add home page to cache
+        findActivityByCategoryHome();
+
 
 //        String[] citys = {"北京","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","上海","江苏","浙江","安徽","福建","江西","山东","河南","湖北",
 //                "湖南","广东","广西", "海南","重庆","四川","贵州","云南","西藏","陕西","甘肃","青海","宁夏","新疆","台湾","澳门","香港",
@@ -408,7 +457,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @Description add 1000 activitySortpage into cache
+     *  add 1000 activitySortpage into cache
      * @param cnt the max id that add into cache
      * @author feaaaaaa
      * @date 2020.08.14
@@ -422,7 +471,7 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     * @Description clear cache which have home cache and select search
+     *   clear cache which have home cache and select search
      * @return true if clear clear successfully
      * @author feaaaaaa
      * @date 2020.08.14

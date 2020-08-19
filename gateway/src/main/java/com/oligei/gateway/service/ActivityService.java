@@ -29,14 +29,14 @@ public interface ActivityService {
     public Msg<Boolean> delete(@RequestParam(name = "activityId") String activityid);
 
     @RequestMapping(value = "/Activity/RecommendOnContent",method = RequestMethod.GET)
-    public List<ActivitySortpage> recommendOnContent(@RequestParam(name = "userId") Integer userId,
+    public Msg<List<ActivitySortpage>> recommendOnContent(@RequestParam(name = "userId") Integer userId,
                                                      @RequestParam(name = "activityId") Integer activityId);
 
     @RequestMapping(value = "/Activity/FindActivityByCategory",method = RequestMethod.GET)
-    public List<ActivitySortpage> selectSearch(@RequestParam(name = "type")String type,
+    public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
                                                          @RequestParam(name = "name")String name,
                                                          @RequestParam(name = "city")String city);
 
     @RequestMapping(value = "/Activity/FindActivityByCategoryHome",method = RequestMethod.GET)
-    public List<ActivitySortpage> findActivityByCategoryHome();
+    public Msg<List<ActivitySortpage>> findActivityByCategoryHome();
 }

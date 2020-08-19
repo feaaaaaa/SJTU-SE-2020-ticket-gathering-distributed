@@ -26,14 +26,14 @@ public class OrderController {
     private static final Logger logger = LoggerFactory.getLogger(TicketGatheringApplication.class);
 
     @RequestMapping("/GetOrderInfoByUser")
+    /**
+     *  get order using userId
+     * @param userId
+     * @return OrderInfo
+     * @author Yang Yicheng
+     * @date 2020/8/10
+     */
     public Msg getOrderInfoByUser(@RequestParam("userId")int userId){
-        /**
-        *@Description get Order using userId
-        *@Param [userId]
-        *@return java.util.List<com.oligei.ticketgathering.entity.info.OrderInfo>
-        *@Author Yang Yicheng
-        *@date 2020/8/10
-        */
         List<OrderInfo> result;
         try{
             result=orderService.getUserOrder(userId);
@@ -50,16 +50,16 @@ public class OrderController {
     }
 
     @RequestMapping("/addOrder")
+    /**
+     *  insert an order into database
+     * @param userId,actitemId,initPrice,orderPrice,amount,showtime,orderTime
+     * @return boolean
+     * @author Yang Yicheng
+     * @date 2020/8/12
+     */
     public Msg addOrder(@RequestParam("userId")int userId, @RequestParam("actitemId")int actitemId,
                             @RequestParam("initPrice")int initPrice, @RequestParam("orderPrice")int orderPrice, @RequestParam("amount")int amount,
                             @RequestParam("showtime")String showtime,@RequestParam("orderTime")String orderTime){
-        /**
-        *@Description insert an order into database
-        *@Param [userId, actitemId, initPrice, orderPrice, amount, showtime, orderTime]
-        *@return boolean
-        *@Author Yang Yicheng
-        *@date 2020/8/12
-        */
         try{
             orderService.addOrder(userId,actitemId,initPrice,orderPrice,amount,showtime,orderTime);
         }

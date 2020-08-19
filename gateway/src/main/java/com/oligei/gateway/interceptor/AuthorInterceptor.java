@@ -2,6 +2,7 @@ package com.oligei.gateway.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.oligei.gateway.util.TokenUtil;
+import com.oligei.gateway.util.msgutils.Msg;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -25,7 +26,9 @@ public class AuthorInterceptor implements HandlerInterceptor {
         response.setContentType("application/json; charset=utf-8");
         try{
             JSONObject json = new JSONObject();
-            json.put("message","authorization failure");
+            json.put("msg","无权限，请重新认证！");
+            json.put("status",-101);
+            json.put("data",null);
             response.getWriter().append(json.toJSONString());
             System.out.println("authorization failure");
         }catch (Exception e) {

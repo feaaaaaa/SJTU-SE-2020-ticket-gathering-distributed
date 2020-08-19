@@ -1,6 +1,8 @@
 package com.oligei.ticketgathering.dao;
 
 import com.oligei.ticketgathering.entity.mysql.Activity;
+import com.oligei.ticketgathering.entity.neo4j.ActivityNeo4j;
+import com.oligei.ticketgathering.repository.ActivityNeo4jRepository;
 import com.oligei.ticketgathering.repository.ActivityRepository;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -9,11 +11,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+
+import java.util.LinkedList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -28,6 +34,9 @@ class ActivityDaoTest {
     @MockBean
     private ActivityRepository activityRepository;
 
+    @MockBean
+    private ActivityNeo4jRepository activityNeo4jRepository;
+
 
     @BeforeEach
     void setUp() {
@@ -41,7 +50,7 @@ class ActivityDaoTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     * test delete
      * @author feaaaaaa
      * @date 2020.08.17
      */
@@ -77,7 +86,7 @@ class ActivityDaoTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     *  test delete
      * @author feaaaaaa
      * @date 2020.08.17
      */
@@ -94,7 +103,7 @@ class ActivityDaoTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     *  test delete
      * @author feaaaaaa
      * @date 2020.08.17
      */
@@ -119,7 +128,7 @@ class ActivityDaoTest {
     @Transactional
     @Rollback
     /**
-     * @Description test delete
+     *  test delete
      * @author feaaaaaa
      * @date 2020.08.17
      */
@@ -149,23 +158,54 @@ class ActivityDaoTest {
     @Transactional
     @Rollback
     void recommendOnContent() {
-        assertEquals(4, activityDao.recommendOnContent(1,10).size());
+
+        String SexistedUserId="1";
+        Integer IexistedUserId=1;
+        String SexistedActivityId="10";
+        Integer IexistedActivityId=10;
+        Integer IinvalidUSerId=-1;
+        Integer IinvalidActivityId=-10;
+        ActivityNeo4j activityNeo4j1=new ActivityNeo4j("1","舞蹈芭蕾","舞蹈","成都");
+        ActivityNeo4j activityNeo4j2=new ActivityNeo4j("2","舞蹈芭蕾","舞蹈","成都");
+        ActivityNeo4j activityNeo4j3=new ActivityNeo4j("3","舞蹈芭蕾","舞蹈","成都");
+        ActivityNeo4j activityNeo4j4=new ActivityNeo4j("4","舞蹈芭蕾","舞蹈","成都");
+        List<ActivityNeo4j> activityNeo4js=new LinkedList<>();
+        activityNeo4js.add(activityNeo4j1);
+        activityNeo4js.add(activityNeo4j2);
+        activityNeo4js.add(activityNeo4j3);
+        activityNeo4js.add(activityNeo4j4);
+        doReturn(activityNeo4js).when(activityNeo4jRepository).recommendOnContent(SexistedUserId,SexistedActivityId);
+
+        //valid
+        assertEquals(4, activityDao.recommendOnContent(IexistedUserId,IexistedActivityId).size());
+        //invalid
+        assertThrows(InvalidDataAccessApiUsageException.class,()->activityDao.recommendOnContent(IinvalidUSerId,IexistedActivityId));
+        assertThrows(InvalidDataAccessApiUsageException.class,()->activityDao.recommendOnContent(IexistedUserId,IinvalidActivityId));
+        //null
+        assertThrows(NullPointerException.class,()->activityDao.recommendOnContent(null,IexistedActivityId));
+        assertThrows(NullPointerException.class,()->activityDao.recommendOnContent(IexistedUserId,null));
     }
 
     @Test
     @Transactional
     @Rollback
     void findActivityByCategoryAndCity() {
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","成都")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","成都")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("123","全部","成都")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","全国")
-                .size());
-        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","全国")
-                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","成都")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","成都")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("123","全部","成都")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("category","话剧歌剧","全国")
+//                .size());
+//        assertNotEquals(0,activityDao.findActivityByCategoryAndCity("subcategory","音乐剧","全国")
+//                .size());
+        assertThrows(NullPointerException.class,()->activityDao.findActivityByCategoryAndCity(null,"name","city"));
+        assertThrows(NullPointerException.class,()->activityDao.findActivityByCategoryAndCity("type",null,"city"));
+        assertThrows(NullPointerException.class,()->activityDao.findActivityByCategoryAndCity("type","name",null));
+
+        assertThrows(InvalidDataAccessApiUsageException.class,()->activityDao.findActivityByCategoryAndCity("type","舞蹈","city"));
+
     }
 
     @Test

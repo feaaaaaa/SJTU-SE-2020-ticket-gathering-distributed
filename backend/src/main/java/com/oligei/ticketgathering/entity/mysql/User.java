@@ -29,12 +29,6 @@ public class User {
     public User(Integer userId, String username, String gender, String email, String phone, String password,
                       String type, String personIcon)
     {
-        Objects.requireNonNull(username,"null username in mysql User");
-        Objects.requireNonNull(gender,"null gender in mysql User");
-        Objects.requireNonNull(email,"null email in mysql User");
-        Objects.requireNonNull(phone,"null phone in mysql User");
-        Objects.requireNonNull(password,"null password in mysql User");
-        Objects.requireNonNull(type,"null type in mysql User");
         this.userId = userId;
         this.username = username;
         this.gender = gender;

@@ -23,8 +23,8 @@ public class ActivityDaoImpl implements ActivityDao {
     @Autowired
     private ActivityRepository activityRepository;
 
-    @Autowired
-    private ActivityMongoDBRepository activityMongoDBRepository;
+//    @Autowired
+//    private ActivityMongoDBRepository activityMongoDBRepository;
 
     @Autowired
     private ActivityNeo4jRepository activityNeo4jRepository;
@@ -43,7 +43,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     *@description use activityId to find activity(no data in mongo)
+     * use activityId to find activity(no data in mongo)
      *@param id the activityId of activity
      *@return the activity
      *@author feaaaaaa
@@ -62,21 +62,34 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
+    /**
+     * use activityId to find activity(no data in mongo)
+     *@param type,name,city
+     *@return the list of id of activity
+     *@author ziliuziliu, feaaaaaa
+     *@date 2020.8.18
+     *@throws NullPointerException when param is null
+     *@throws InvalidDataAccessApiUsageException when type is invalid
+     */
     public List<Integer> findActivityByCategoryAndCity(String type, String name, String city) {
+        Objects.requireNonNull(type,"null type --ActivityDaoImpl findActivityByCategoryAndCity");
+        Objects.requireNonNull(name,"null name --ActivityDaoImpl findActivityByCategoryAndCity");
+        Objects.requireNonNull(city,"null city --ActivityDaoImpl findActivityByCategoryAndCity");
+        if(!type.equals("category") && !type.equals("subcategory"))
+            throw new InvalidDataAccessApiUsageException("invalid category");
+
         List<ActivityNeo4j> activityNeo4js = new ArrayList<ActivityNeo4j>();
         if (name.equals("全部"))
             activityNeo4js = activityNeo4jRepository.findActivityByCity(city);
         else if (city.equals("全国")) {
             if (type.equals("category"))
                 activityNeo4js = activityNeo4jRepository.findActivityByCategory(name);
-            else if (type.equals("subcategory"))
-                activityNeo4js = activityNeo4jRepository.findActivityBySubcategory(name);
+            else activityNeo4js = activityNeo4jRepository.findActivityBySubcategory(name);
         }
         else {
             if (type.equals("category"))
                 activityNeo4js = activityNeo4jRepository.findActivityByCategoryAndCity(name,city);
-            else if (type.equals("subcategory"))
-                activityNeo4js = activityNeo4jRepository.findActivityBySubcategoryAndCity(name,city);
+            else activityNeo4js = activityNeo4jRepository.findActivityBySubcategoryAndCity(name,city);
         }
         List<Integer> activities = new ArrayList<Integer>();
         for (Object activityNeo4j: activityNeo4js) {
@@ -87,7 +100,24 @@ public class ActivityDaoImpl implements ActivityDao {
     }
 
     @Override
+    /**
+     * use userId and activityId to get id of activity that is the same kind of activity and haven't been seen by the user
+     *@param userId,activityId
+     *@return the list of id of recommend activity
+     *@author ziliuziliu, feaaaaaa
+     *@date 2020.8.18
+     *@throws NullPointerException when param is null
+     *@throws InvalidDataAccessApiUsageException when id is invalid
+     */
     public List<Integer> recommendOnContent(Integer userId, Integer activityId) {
+        //check params
+        Objects.requireNonNull(userId,"null userId --ActivityDaoImpl recommendOnContent");
+        Objects.requireNonNull(activityId,"null activityId --ActivityDaoImpl recommendOnContent");
+        if(userId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid userId --ActivityDaoImpl recommendOnContent");
+        if(activityId<=0)
+            throw new InvalidDataAccessApiUsageException("invalid activityId --ActivityDaoImpl recommendOnContent");
+        //get ids of recommend activities
         List<Integer> activities = new ArrayList<Integer>();
         List<ActivityNeo4j> activityNeo4js = activityNeo4jRepository.recommendOnContent(String.valueOf(userId), String.valueOf(activityId));
         for (Object activityNeo4j: activityNeo4js) {
@@ -99,7 +129,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     *@description save an activity with title,actor,timescale,venue,activityIcon
+     * save an activity with title,actor,timescale,venue,activityIcon
      *@param title,actor,timescale,venue,activityIcon
      *@return the saved activity
      *@author feaaaaaa
@@ -118,7 +148,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     * @description use activityId to delete the activity
+     *  use activityId to delete the activity
      * @param id the activityId of activity
      * @return delete success or fail
      * @author feaaaaaa
@@ -151,7 +181,7 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     *@description find max activityId
+     * find max activityId
      *@return max activityId
      *@author feaaaaaa
      *@date 2020.8.15
@@ -159,6 +189,8 @@ public class ActivityDaoImpl implements ActivityDao {
     public Integer findMaxActivityId(){
         return activityRepository.findMaxId();
     }
+
+
     //    @Override
 //    public List<Activity> findAllByTitleOrVenueOrActor(String title, String venue, String actor) {
 //        return activityRepository.findAllByTitleLikeOrVenueLikeOrActorLike(title, venue, actor);

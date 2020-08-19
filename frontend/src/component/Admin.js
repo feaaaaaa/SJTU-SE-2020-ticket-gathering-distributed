@@ -149,11 +149,21 @@ const Demo = () => {
         console.log("activity:"+JSON.stringify(arr));
         addActivity(JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
             // addActivity(0,JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
-                if(res===true)setSuccess(true);
-            else if(res.message==="authentication failure"){setAuthen(true);localStorage.clear();}
-            else if(res.message==="authorization failure")setAuthor(true);
-            else message.error("错误！请稍后重试");
-            console.log(JSON.stringify(res));
+            //     if(res===true)setSuccess(true);
+            // else if(res.message==="authentication failure"){setAuthen(true);localStorage.clear();}
+            // else if(res.message==="authorization failure")setAuthor(true);
+            // else message.error("错误！请稍后重试");
+            // console.log(JSON.stringify(res));
+            if(res.status===200&&res.data===true)
+                setSuccess(true);
+            else if(res.status===-100){
+                setAuthen(true);
+                localStorage.clear();
+            }
+            else if(res.status===-101)
+                setAuthor(true);
+            else message.error(res.msg);
+            console.log("add return:"+JSON.stringify(res));
         })
     };
 
@@ -491,7 +501,7 @@ export class Admin extends React.Component{
                 </div>
             );
          else {
-             message.error("无权限");
+             message.error("无权限，请登录");
              return <Redirect to={{pathname: "/login"}}/>;
          }
     }
