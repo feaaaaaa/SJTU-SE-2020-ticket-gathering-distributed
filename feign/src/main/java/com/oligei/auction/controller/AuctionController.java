@@ -27,8 +27,29 @@ public class AuctionController {
 
     private static final Logger logger = LoggerFactory.getLogger(FeignApplication.class);
 
+//    @RequestMapping("initCache")
+//    /**
+//    *put all available auctions from database to cache
+//    *@return: com.oligei.auction.util.msgutils.Msg<java.lang.Boolean>
+//    *@author: Cui Shaojie
+//    *@date: 2020/8/19
+//    */
+//    public Msg<Boolean> initCache()
+//    {
+//        auctionService.initCache();
+//
+//        return new Msg<>(200,"缓存初始化成功",true);
+//    }
+
 
     @RequestMapping("/add")
+    /**
+    *save a new auction
+    *@param: actitemid, ddl, showtime, initprice, orderprice, amount
+    *@return: com.oligei.auction.util.msgutils.Msg<java.lang.Boolean>
+    *@author: Cui Shaojie
+    *@date: 2020/8/19
+    */
     public Msg<Boolean> addAuction(@RequestParam("actitemid")Integer actitemid, @RequestParam("ddl")String ddl,
                           @RequestParam("showtime")String showtime, @RequestParam("initprice")Integer initprice,
                           @RequestParam("orderprice")Integer orderprice, @RequestParam("amount")Integer amount)
@@ -47,6 +68,12 @@ public class AuctionController {
 
 
     @RequestMapping("/get")
+    /**
+    *get all available auctions
+    *@return: com.oligei.auction.util.msgutils.Msg<java.util.List<com.oligei.auction.dto.AuctionListItem>>
+    *@author: Cui Shaojie
+    *@date: 2020/8/19
+    */
     public Msg<List<AuctionListItem>> getAuctions(){
         List<AuctionListItem> emptyAuctionListItems = new ArrayList<>();
         List<AuctionListItem> auctionListItems;
@@ -59,6 +86,13 @@ public class AuctionController {
     }
 
     @RequestMapping("/join")
+    /**
+    *take part in an auction successfully
+    *@param: auctionid, userid, price
+    *@return: com.oligei.auction.util.msgutils.Msg<java.lang.Integer>
+    *@author: Cui Shaojie
+    *@date: 2020/8/19
+    */
     public Msg<Integer> joinAuction(@RequestParam("auctionid")Integer auctionid,@RequestParam("userid")Integer userid,@RequestParam("price")Integer price)
     {
         Integer result;

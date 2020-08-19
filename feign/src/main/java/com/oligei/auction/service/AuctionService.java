@@ -13,5 +13,6 @@ public interface AuctionService {
     Integer joinAuction(Integer auctionid,Integer userid,Integer orderprice);
 
     void flushActions();
+
 }
 
