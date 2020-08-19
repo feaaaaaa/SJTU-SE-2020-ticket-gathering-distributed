@@ -120,13 +120,13 @@ class ActitemDaoTest {
 //        System.out.println(result);
 
         ActitemMongoDB actitemMongoDB=new ActitemMongoDB(1,tmp);
-        ActitemMongoDB nullActitemMongoDB=new ActitemMongoDB(1,null);
+//        ActitemMongoDB nullActitemMongoDB=new ActitemMongoDB(1,null);
 
         when(actitemRepository.getOne(validActitemId)).thenReturn(actitem);
         when(actitemMongoDBRepository.findByActitemId(validActitemId)).thenReturn(actitemMongoDB);
 
         when(actitemRepository.getOne(invalidActitemId)).thenReturn(null);
-        when(actitemMongoDBRepository.findByActitemId(invalidActitemId)).thenReturn(nullActitemMongoDB);
+        when(actitemMongoDBRepository.findByActitemId(invalidActitemId)).thenReturn(null);
 
         System.out.println("using invalid actitemId to test");
         try{
@@ -134,7 +134,7 @@ class ActitemDaoTest {
         }
         catch(NullPointerException e){
 //            e.printStackTrace();
-            assertEquals("invalid actiemId expected",e.getMessage());
+            assertEquals("null mongoDB data of id-1 --actitemDaoImpl findOneById",e.getMessage());
         }
 
         System.out.println("using invalid showtime to test");
@@ -143,7 +143,7 @@ class ActitemDaoTest {
         }
         catch(ArrayIndexOutOfBoundsException e){
 //            e.printStackTrace();
-            assertEquals("no actitem found",e.getMessage());
+            assertEquals("null actitem --ActitemDaoImpl modifyRepository",e.getMessage());
         }
 
         System.out.println("using invalid price to test");
@@ -152,7 +152,7 @@ class ActitemDaoTest {
         }
         catch(ArrayIndexOutOfBoundsException e){
 //            e.printStackTrace();
-            assertEquals("no actitem found",e.getMessage());
+            assertEquals("null actitem --ActitemDaoImpl modifyRepository",e.getMessage());
         }
 
         System.out.println("tickets sold out");
@@ -161,7 +161,7 @@ class ActitemDaoTest {
         }
         catch(ArithmeticException e){
 //            e.printStackTrace();
-            assertEquals("the repository is zero",e.getMessage());
+            assertEquals("repository is zero --ActitemDaoImpl modifyRepository",e.getMessage());
         }
     }
 

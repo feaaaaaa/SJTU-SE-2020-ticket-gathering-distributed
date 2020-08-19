@@ -35,12 +35,12 @@ public class OrderDaoImpl implements OrderDao {
      */
     public List<OrderInfo> getUserOrder(int userId) {
         if (userId<=0){
-          throw new InvalidDataAccessApiUsageException("using illegal userId");
+          throw new InvalidDataAccessApiUsageException("illegal userId --OrderDaoImpl getUserOrder");
         }
 
         List<OrderInfo> result=orderRepository.getUserOrder(userId);
         if(result==null){
-          throw new NullPointerException("Order not found");
+          throw new NullPointerException("null Order --OrderDaoImpl getUserOrder");
         }
         return result;
     }
