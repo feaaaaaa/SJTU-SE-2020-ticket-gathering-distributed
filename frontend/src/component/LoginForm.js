@@ -34,20 +34,25 @@ export class LoginForm extends React.Component {
             firstLogin:true,
             token:null,
             letters: [],
+            clickLogin:true
         };
     }
     onFinish = values => {
         const callback =  (data) => {
-            if (data.status===201){
-                this.setState({firstLogin:false});
+            if(data!=null) {
+                if (data.status === 201) {
+                    this.setState({firstLogin: false});
+                } else if (data.status === 200) {
+                    this.setState({user: data.data.user, firstLogin: false, token: data.data.token});
+                } else console.log("login error:"+data.msg);
             }
-            else if (data.status===200){
-                this.setState({user:data.data.user,firstLogin:false,token:data.data.token});
-            }
-            else console.log("error");
         };
         console.log(values);
-        login(values,callback);
+        if(this.state.clickLogin) {
+            this.setState({clickLogin:false});
+            login(values, callback);
+            setTimeout(()=>{this.setState({clickLogin:true})}, 2000);
+        }else message.info("点击太快了，休息一会吧")
         // console.log(values);
         // if(values.username===userInfo.username && values.password===userInfo.password){
         //      this.setState({firstLogin:false,user:userInfo});
