@@ -86,7 +86,7 @@ public class ActivityServiceImpl implements ActivityService {
             document.add(new TextField("title", content, Field.Store.YES));
             docs.add(document);
         }
-        Directory directory = FSDirectory.open(new File("d:\\indexDir"));
+        Directory directory = FSDirectory.open(new File("./indexDir"));
         Analyzer analyzer = new IKAnalyzer();
         IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
         conf.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
@@ -127,7 +127,7 @@ public class ActivityServiceImpl implements ActivityService {
             return activities;
         }
         //not null
-        Directory directory = FSDirectory.open(new File("d:\\indexDir"));
+        Directory directory = FSDirectory.open(new File("./indexDir"));
         // 索引读取工具
         IndexReader reader = DirectoryReader.open(directory);
         // 索引搜索工具
