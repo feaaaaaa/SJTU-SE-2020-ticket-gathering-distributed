@@ -10,7 +10,7 @@ export class RecommendList extends React.Component{
     constructor(props) {
         super(props);
         this.state={
-            activity:sports
+            activity:sports.slice(0,4)
         }
     }
     

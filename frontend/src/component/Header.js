@@ -136,7 +136,9 @@ export class HeaderInfo extends React.Component {
                     <img src={require('../resources/oligei.png')} width="200px" height="80px"/>
                 </div>
                 <div className="wow slideInLeft" id="bar" data-wow-delay=".5s">
-                    <Menu onClick={this.handleClick} mode="horizontal" style={{fontSize: 18, fontFamily: ""}}>
+                    <Menu
+                        // onClick={this.handleClick}
+                          mode="horizontal" style={{fontSize: 18, fontFamily: ""}}>
                         <Menu.Item key="mail" href="/">
                             <Link to="/" onClick={() => {this.setState({current: "-1"})}}><p> 首 页 </p></Link>
                         </Menu.Item>
@@ -148,9 +150,15 @@ export class HeaderInfo extends React.Component {
                         </Menu.Item>
                         <SubMenu onTitleClick={() => {this.setState({current: "1"})}}
                                  title={this.state.login ? this.state.username : "登 录"} style={{paddingBottom: 17}}>
-                            <Menu.Item key="1">个人信息</Menu.Item>
-                            <Menu.Item key="2">订单管理</Menu.Item>
-                            <Menu.Item key="3">登出</Menu.Item>
+                            <Menu.Item key="1">
+                                <a href={this.state.login?"/profile":"/login"}>个人信息</a>
+                                {/*个人信息*/}
+                            </Menu.Item>
+                            <Menu.Item key="2">
+                                <a href={this.state.login?"/order":"/login"}>订单管理</a>
+                                {/*订单管理*/}
+                            </Menu.Item>
+                            {this.state.login?<Menu.Item key="3">登出</Menu.Item>:null}
                         </SubMenu>
                     </Menu>
                 </div>

@@ -110,6 +110,8 @@ const Demo = () => {
 
     const [c, setC] = useState([]);
 
+    const [time,setTime]=useState(true);
+
     const [daycnt, setDaycnt] = useState(0);
 
     const [classcnt, setClasscnt] = useState(0);
@@ -123,48 +125,54 @@ const Demo = () => {
     };
 
     const onFinish = values => {
-        console.log('Finish:', values);
-        console.log('users:',u);
-        console.log('category:',c);
-        // let activity=[];
-        // activity.push(values);
-        // activity.push(u);
-        var arr = [];
-        arr.push(u.length);
-        arr.push(daycnt);
-        arr.push(classcnt);
-        for (let i in values) {
-            arr.push(values[i]); //属性
-            //arr.push(obj[i]); //值
-        }
-        for(let i in c){
-            arr.push(c[i])
-        }
-        for(let i in u){
-            for(let j in u[i]){
-                arr.push(u[i][j])
+        if (time) {
+            setTime(false);
+            setTimeout(()=>{setTime(true)}, 3000);
+            console.log('Finish:', values);
+            console.log('users:', u);
+            console.log('category:', c);
+            // let activity=[];
+            // activity.push(values);
+            // activity.push(u);
+            var arr = [];
+            arr.push(u.length);
+            arr.push(daycnt);
+            arr.push(classcnt);
+            for (let i in values) {
+                arr.push(values[i]); //属性
+                //arr.push(obj[i]); //值
             }
-        }
-        // arr=arr.concat(u);
-        console.log("activity:"+JSON.stringify(arr));
-        addActivity(JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
-            // addActivity(0,JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
-            //     if(res===true)setSuccess(true);
-            // else if(res.message==="authentication failure"){setAuthen(true);localStorage.clear();}
-            // else if(res.message==="authorization failure")setAuthor(true);
-            // else message.error("错误！请稍后重试");
-            // console.log(JSON.stringify(res));
-            if(res.status===200&&res.data===true)
-                setSuccess(true);
-            else if(res.status===-100){
-                setAuthen(true);
-                localStorage.clear();
+            for (let i in c) {
+                arr.push(c[i])
             }
-            else if(res.status===-101)
-                setAuthor(true);
-            else message.error(res.msg);
-            console.log("add return:"+JSON.stringify(res));
-        })
+            for (let i in u) {
+                for (let j in u[i]) {
+                    arr.push(u[i][j])
+                }
+            }
+            // arr=arr.concat(u);
+            console.log("activity:" + JSON.stringify(arr));
+            addActivity(JSON.stringify(arr), localStorage.getItem("token"), (res) => {
+                // addActivity(0,JSON.stringify(arr),localStorage.getItem("token"),(res)=>{
+                //     if(res===true)setSuccess(true);
+                // else if(res.message==="authentication failure"){setAuthen(true);localStorage.clear();}
+                // else if(res.message==="authorization failure")setAuthor(true);
+                // else message.error("错误！请稍后重试");
+                // console.log(JSON.stringify(res));
+                if (res != null) {
+                    if (res.status === 200 && res.data === true)
+                        setSuccess(true);
+                    else if (res.status === -100) {
+                        setAuthen(true);
+                        localStorage.clear();
+                    } else if (res.status === -101)
+                        setAuthor(true);
+                    else message.error(res.msg);
+                }
+                console.log("add return:" + JSON.stringify(res));
+            })
+        }
+        else message.info("点击太快了，休息一会吧")
     };
 
     const options = [
@@ -474,7 +482,7 @@ const Demo = () => {
                         </Form.Item>
 
                         <Form.Item {...tailLayout}>
-                            <Button htmlType="submit" type="primary">
+                            <Button htmlType="submit" type="primary" >
                                 Submit
                             </Button>
                             <Button htmlType="button" style={{margin: '0 8px'}} onClick={showUserModal}>

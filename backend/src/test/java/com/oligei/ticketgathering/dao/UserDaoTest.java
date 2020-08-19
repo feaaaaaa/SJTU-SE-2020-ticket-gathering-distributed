@@ -98,6 +98,7 @@ class UserDaoTest {
         verify(userRepository,times(1)).save(argThat(Objects::nonNull));
         verify(userMongoDBRepository,times(1)).save(argThat(Objects::nonNull));
         verify(userNeo4jRepository,times(1)).save(argThat(Objects::nonNull));
+
         System.out.println("User null");
         assertThrows(NullPointerException.class, ()-> userDao.register(null),
                 "null user --UserDaoImpl register");

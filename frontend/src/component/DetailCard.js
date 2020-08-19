@@ -33,42 +33,46 @@ export class DetailCard extends React.Component{
             success:false,
             chosenNum:1,
             authentication:false,
+            clickPurchase:true
         }
     }
 
     renderDetail = async () => {
         const callback = res => {
-            if(res!=null&&res.message==="authentication failure") {
-                message.error("请先登录");
-                localStorage.clear();
-                this.setState({authentication:true})
-            }
-            else {
-                console.log("detail:"+JSON.stringify(res));
-                let data = res.data;
-                this.setState({
-                    info: data,
-                    tickets: data.prices
-                });
-                let times = [];
-                this.state.tickets.map(function (value, key) {
-                    times.push(value.time);
-                })
-                let prices = [];
-                let numbers = [];
-                this.state.tickets[0].class.map(function (value, key) {
-                    prices.push(value.price.toString());
-                    numbers.push(value.num.toString());
-                })
-                this.setState({
-                    times: times,
-                    time: times[0],
-                    prices: prices,
-                    numbers: numbers,
-                    price: prices[0],
-                    number: numbers[0],
-                });
-                console.log(this.state);
+            if(res!=null) {
+                if (res.status === -100) {
+                    message.error("请先登录");
+                    localStorage.clear();
+                    this.setState({authentication: true})
+                } else if (res.status !== 200) {
+                    message.error(res.msg);
+                } else {
+                    console.log("detail:" + JSON.stringify(res));
+                    let data = res.data;
+                    this.setState({
+                        info: data,
+                        tickets: data.prices
+                    });
+                    let times = [];
+                    this.state.tickets.map(function (value, key) {
+                        times.push(value.time);
+                    })
+                    let prices = [];
+                    let numbers = [];
+                    this.state.tickets[0].class.map(function (value, key) {
+                        prices.push(value.price.toString());
+                        numbers.push(value.num.toString());
+                    })
+                    this.setState({
+                        times: times,
+                        time: times[0],
+                        prices: prices,
+                        numbers: numbers,
+                        price: prices[0],
+                        number: numbers[0],
+                    });
+                    console.log(this.state);
+                }
             }
         }
         let id = await window.localStorage.getItem("actitemid");
@@ -77,8 +81,7 @@ export class DetailCard extends React.Component{
         console.log(JSON.stringify(this.props));
         console.log(id);
         const token = localStorage.getItem("token");
-        console.log("token:" + token);
-        //getDetail(id,token,callback);
+        // console.log("token:" + token);
         getDetail(id, userid, token, callback);
     }
 
@@ -144,22 +147,30 @@ export class DetailCard extends React.Component{
 
     handlePurchase = () =>{
         if(window.localStorage.getItem("userId")===null)
-            this.openNotificationWithoutLogin("warning")
+            this.openNotificationWithoutLogin("warning");
         else if(this.state.chosenNum > this.state.number)
-            this.openNotificationBeyondStock('warning')
-        else{
+            this.openNotificationBeyondStock('warning');
+        else if(this.state.clickPurchase){
+            this.setState({clickPurchase:false});
             const callback = data => {
-                console.log("result:"+data);
-                if(data.message==="authentication failure") {
-                    message.error("请先登录");
-                    localStorage.clear();
-                    this.setState({authentication:true})
+                console.log("purchase return:"+data);
+                if(data!=null) {
+                    if (data.status===-100) {
+                        message.error("请先登录");
+                        localStorage.clear();
+                        this.setState({authentication: true})
+                    } else if(data.status===200)
+                        this.setState({success: true});
+                    else
+                        message.error(data.msg);
                 }
-                else this.setState({success:true});
             }
             console.log(parseInt(this.state.price));
             addOrder(parseInt(localStorage.getItem("userId")),parseInt(localStorage.getItem("actitemid")),parseInt(this.state.price),0,
                 parseInt(this.state.chosenNum),this.state.time,moment().format('YYYY-MM-DD HH:mm:ss'),localStorage.getItem("token"),callback);
+            setTimeout(()=>{this.setState({clickPurchase:true})}, 2500);
+        }else{
+            message.info("点击太快了，休息一会吧");
         }
     }
 

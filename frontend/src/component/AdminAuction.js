@@ -32,42 +32,46 @@ export class AdminAuction extends React.Component {
 
     async componentDidMount() {
         const callback = res => {
-            if(res!=null&&res.message==="authentication failure") {
-                message.error("请先登录");
-                localStorage.clear();
-                this.setState({authentication:true});
-            }
-            if(res!=null&&res.message==="authorization failure"){
-                message.error("没有权限");
-                localStorage.clear();
-                this.setState({authorization:true});
-            }
-            else {
-                console.log("detail:"+JSON.stringify(res));
-                let data = res.data;
-                this.setState({
-                    info: data,
-                    tickets: data.prices
-                });
-                let times = [];
-                this.state.tickets.map(function (value, key) {
-                    times.push(value.time);
-                })
-                let prices = [];
-                let numbers = [];
-                this.state.tickets[0].class.map(function (value, key) {
-                    prices.push(value.price.toString());
-                    numbers.push(value.num.toString());
-                })
-                this.setState({
-                    times: times,
-                    time: times[0],
-                    prices: prices,
-                    numbers: numbers,
-                    price: prices[0],
-                    number: numbers[0],
-                });
-                console.log(this.state);
+            if(res!=null) {
+                // if(res!=null&&res.message==="authentication failure") {
+                if (res.status === -100) {
+                    message.error("请先登录");
+                    localStorage.clear();
+                    this.setState({authentication: true});
+                }
+                // if(res!=null&&res.message==="authorization failure"){
+                else if (res.status === -101) {
+                    message.error("没有权限");
+                    localStorage.clear();
+                    this.setState({authorization: true});
+                } else if (res.status === 200) {
+                    console.log("detail:" + JSON.stringify(res));
+                    let data = res.data;
+                    this.setState({
+                        info: data,
+                        tickets: data.prices
+                    });
+                    let times = [];
+                    this.state.tickets.map(function (value, key) {
+                        times.push(value.time);
+                    })
+                    let prices = [];
+                    let numbers = [];
+                    this.state.tickets[0].class.map(function (value, key) {
+                        prices.push(value.price.toString());
+                        numbers.push(value.num.toString());
+                    })
+                    this.setState({
+                        times: times,
+                        time: times[0],
+                        prices: prices,
+                        numbers: numbers,
+                        price: prices[0],
+                        number: numbers[0],
+                    });
+                    console.log(this.state);
+                } else
+                    message.error(res.msg);
             }
         }
         let id = await window.localStorage.getItem("actitemid");
@@ -182,7 +186,7 @@ export class AdminAuction extends React.Component {
         if(this.state.authentication||this.state.authorization)
             return <Redirect to={{pathname: "/login"}}/>;
         return(
-            <div>
+            <div style={{width:"70%",margin:"auto",paddingTop:100}}>
                 <img id='Dimg' alt="example" src={this.state.info.activityicon} />
                 <p id="Dtitle">{this.state.info.title}</p>
                 <p id="Dinfo">地点：{this.state.info.venue}</p>

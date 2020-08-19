@@ -25,7 +25,8 @@ export class SortPageView extends React.Component{
             usertype:null,
             city:"全国",
             category:"全部",
-            type:"category"
+            type:"category",
+            clickSearch:true
         }
     }
 
@@ -81,12 +82,14 @@ export class SortPageView extends React.Component{
                 }
             });
         else search(value, (res) => {
-            console.log("search return:" + JSON.stringify(res));
-            // if(res!=null)
-            //     this.setState({activity: res})
-            if(res.status!==200)
-                message.error(res.msg);
-            this.setState({activity:res.data});
+                console.log("search return:" + JSON.stringify(res));
+                // if(res!=null)
+                //     this.setState({activity: res})
+                if (res != null) {
+                    if (res.status !== 200)
+                        message.error(res.msg);
+                    this.setState({activity: res.data});
+                }
         });
     }
 
@@ -94,18 +97,32 @@ export class SortPageView extends React.Component{
         if(this.state.search!==nextState.search&&nextState.search!==""){
             // console.log(this.state.search);
             // console.log(nextState.search==="");
-            this.setState({search: nextState.search});
-            search(nextState.search, (res) => {
-                console.log("search return:" + JSON.stringify(res));
-                if (res.status !== 200)
-                    message.error(res.msg);
+            if(this.state.clickSearch) {
                 this.setState({
-                    activity: res.data,
-                    type: "category",
-                    category: "全部",
-                    city: "全国"
+                    clickSearch:false
                 })
-            });
+                this.setState({search: nextState.search});
+                console.log("search value:"+nextState.search);
+                search(nextState.search, (res) => {
+                    console.log("search return:" + JSON.stringify(res));
+                    if(res!=null) {
+                        if (res.status !== 200)
+                            message.error(res.msg);
+                        this.setState({
+                            activity: res.data,
+                            type: "category",
+                            category: "全部",
+                            city: "全国"
+                        })
+                    }
+                });
+                setTimeout(()=>{
+                     this.setState({
+                         clickSearch:true
+                     })
+                }, 2000);
+            }else
+                message.info("点击太快了，休息一会吧");
         }
     }
 
