@@ -135,7 +135,7 @@ public class ActitemDaoImpl implements ActitemDao {
     public boolean modifyRepository(int actitemId, int price, int amount, String showtime) {
         Actitem actitem = findOneById(actitemId);
         if(actitem==null||actitem.getPrice()==null){
-            throw new NullPointerException("invalid actiemId expected");
+            throw new NullPointerException("invalid actiemId --ActitemDaoImpl modifyRepository");
         }
         List<JSONObject> prices = actitem.getPrice();
 //        System.out.println(showtime);
@@ -148,7 +148,7 @@ public class ActitemDaoImpl implements ActitemDao {
         }
         if(i==prices.size()){
 //            System.out.println(i);
-            throw new ArrayIndexOutOfBoundsException("no actitem found");
+            throw new ArrayIndexOutOfBoundsException("null actitem --ActitemDaoImpl modifyRepository");
         }
         JSONObject tmp = prices.get(i);
         JSONArray tickets = tmp.getJSONArray("class");
@@ -157,7 +157,7 @@ public class ActitemDaoImpl implements ActitemDao {
             if (Objects.equals(price, Integer.parseInt(ticket.getString("price")))) {
                 repository = Integer.parseInt(ticket.getString("num"));
                 if (Objects.equals(0, repository) || repository<amount) {
-                    throw new ArithmeticException("the repository is zero");
+                    throw new ArithmeticException("repository is zero --ActitemDaoImpl modifyRepository");
                 } else {
                     repository = repository +amount;
                     ticket.put("num", repository);
@@ -167,7 +167,7 @@ public class ActitemDaoImpl implements ActitemDao {
             }
         }
         if(j==tickets.size()){
-            throw new ArrayIndexOutOfBoundsException("no actitem found");
+            throw new ArrayIndexOutOfBoundsException("null actitem --ActitemDaoImpl modifyRepository");
         }
         tmp.put("class", tickets);
         prices.set(i, tmp);

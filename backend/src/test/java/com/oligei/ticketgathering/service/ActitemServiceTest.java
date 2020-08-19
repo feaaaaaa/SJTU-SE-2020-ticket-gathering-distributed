@@ -3,10 +3,12 @@ package com.oligei.ticketgathering.service;
 import com.alibaba.fastjson.JSONObject;
 import com.oligei.ticketgathering.dao.ActitemDao;
 import com.oligei.ticketgathering.dao.ActivityDao;
+import com.oligei.ticketgathering.dao.VisitedRelationshipDao;
 import com.oligei.ticketgathering.dto.DetailInfo;
 import com.oligei.ticketgathering.entity.mysql.Actitem;
 import com.oligei.ticketgathering.entity.mysql.Activity;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -32,6 +34,9 @@ class ActitemServiceTest {
     @MockBean
     ActivityDao activityDao;
 
+    @MockBean
+    VisitedRelationshipDao visitedRelationshipDao;
+
     @Test
     @Rollback
     void findActivityAndActitemDetail() {
@@ -41,8 +46,8 @@ class ActitemServiceTest {
 
         when(actitemDao.findOneById(2)).thenReturn(actitem);
         when(activityDao.findOneById(1)).thenReturn(activity);
-
         when(actitemDao.findOneById(4)).thenReturn(null);
+        when(visitedRelationshipDao.saveVisitedHistory(1,2)).thenReturn(null);
 
         assertEquals(detailInfo.getKey(),actitemService.findActivityAndActitemDetail(2,1).getKey());
 
