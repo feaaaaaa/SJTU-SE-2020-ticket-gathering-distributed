@@ -1,4 +1,4 @@
-import { Card,Collapse,Menu, Dropdown, Button,Radio, notification, Space,InputNumber,Modal } from 'antd';
+import {Card, Collapse, Menu, Dropdown, Button, Radio, notification, Space, InputNumber, Modal, message} from 'antd';
 import React from "react";
 import "../css/Auction.css"
 import {addOrder} from "../service/orderServcie";
@@ -12,6 +12,7 @@ export class AuctionCard extends React.Component{
         this.state={
             visible:false,
             price:this.props.info.price,
+            clickAuction:true
         }
     }
 
@@ -24,20 +25,24 @@ export class AuctionCard extends React.Component{
     handleOk = e => {
         if(this.props.info.price >= this.state.price)
             this.openNotificationLowerPrice('warning')
-        else{
+        else if(this.state.clickAuction){
+            this.setState({clickAuction:false});
             const callback = data => {
-                if(data === -1)
-                    this.openNotificationIsOver("warning");
-                else if(data === -2)
-                    this.openNotificationLowerPrice("warning");
-                else {
-                    this.openNotificationPurchase("success");
+                if (data != null) {
+                    if (data.data === -1)
+                        this.openNotificationIsOver("warning");
+                    else if (data.data === -2)
+                        this.openNotificationLowerPrice("warning");
+                    else if(data.status===200){
+                        this.openNotificationPurchase("success");
+                    }else message.error(data.msg);
+                    this.setState({visible: false});
+                    this.props.getRenderCallback(1);
                 }
-                this.setState({visible: false});
-                this.props.getRenderCallback(1);
             }
             joinAuctions(this.props.info.auctionid,parseInt(localStorage.getItem("userId")),this.state.price,localStorage.getItem("token"),callback);
-        }
+            setTimeout(()=>{this.setState({clickAuction:true})}, 2000);
+        }else message.error("点击太快了，休息一会吧")
     };
 
     handleCancel = e => {

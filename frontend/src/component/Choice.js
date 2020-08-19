@@ -17,49 +17,68 @@ export class Choice extends React.Component{
         this.state={
             city:"全国",
             category:"全部",
-            type:"category"
+            type:"category",
+            clickCity:true,
+            clickCategory:true
         }
     }
     onChange=(e)=> {
-        this.setState({city:e.target.value});
-        category_search(this.state.type,this.state.category,e.target.value,(res) => {
-            console.log(res);
-            if (res != null)
-                // this.setState({activity: res})
-                this.props.onChoose(res);
-        })
+        if(this.state.clickCity) {
+            this.setState({clickCity:false});
+            this.setState({city: e.target.value});
+            category_search(this.state.type, this.state.category, e.target.value, (res) => {
+                console.log(res);
+                if (res != null)
+                    // this.setState({activity: res})
+                    this.props.onChoose(res);
+            })
+            setTimeout(()=>{this.setState({clickCity:true})}, 2000);
+        }
+        else message.info("点击太快了，休息一会吧")
     };
 
-    clear1=(e)=>{
+    clearCategory=(e)=>{
         e.stopPropagation();
-        this.setState({category:"全部",type:"category"});
-        category_search("category","全部",this.state.city,(res) => {
-            console.log(res);
-            if (res != null)
-                // this.setState({activity: res})
-                this.props.onChoose(res);
-        })
+        if(this.state.clickCategory) {
+            this.setState({category: "全部", type: "category",clickCategory:false});
+            category_search("category", "全部", this.state.city, (res) => {
+                console.log(res);
+                if (res != null)
+                    // this.setState({activity: res})
+                    this.props.onChoose(res);
+            })
+            setTimeout(()=>{this.setState({clickCategory:true})}, 2000);
+        }
+        else message.info("点击太快了，休息一会吧");
     };
 
-    clear2=(e)=>{
+    clearCity=(e)=>{
         e.stopPropagation();
-        this.setState({city:"全国"});
-        category_search(this.state.type,this.state.category,"全国",(res) => {
-            console.log(res);
-            if (res != null)
-                // this.setState({activity: res})
-                this.props.onChoose(res);
-        })
+        if(this.state.clickCity) {
+            this.setState({city: "全国",clickCity:false});
+            category_search(this.state.type, this.state.category, "全国", (res) => {
+                console.log(res);
+                if (res != null)
+                    // this.setState({activity: res})
+                    this.props.onChoose(res);
+            })
+            setTimeout(()=>{this.setState({clickCity:true})}, 2000);
+        }
+        else message.info("点击太快了，休息一会吧");
     };
 
     handleCategoryClick = (key) => {
-            this.setState({category:key,type:"category"});
-            category_search("category",key,this.state.city,(res) => {
+        if(this.state.clickCategory) {
+            this.setState({category: key, type: "category",clickCategory:false});
+            category_search("category", key, this.state.city, (res) => {
                 console.log(res);
                 if (res != null)
                     this.props.onChoose(res);
-                    // this.setState({activity: res})
+                // this.setState({activity: res})
             })
+            setTimeout(()=>{this.setState({clickCategory:true})}, 2000);
+        }
+        else message.info("点击太快了，休息一会吧");
     };
 
     handleSubcategoryClick = (e) => {
@@ -132,10 +151,10 @@ export class Choice extends React.Component{
             </Menu>
         );
         const genExtra1 = () => (
-            <a onClick={this.clear1}>清除</a>
+            <a onClick={this.clearCategory}>清除</a>
         );
         const genExtra2 = () => (
-            <a onClick={this.clear2}>清除</a>
+            <a onClick={this.clearCity}>清除</a>
         );
         function callback(key) {
             console.log(key);
