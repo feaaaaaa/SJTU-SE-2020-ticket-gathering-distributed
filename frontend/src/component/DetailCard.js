@@ -45,7 +45,7 @@ export class DetailCard extends React.Component{
             }
             else {
                 console.log("detail:"+JSON.stringify(res));
-                let data = res;
+                let data = res.data;
                 this.setState({
                     info: data,
                     tickets: data.prices

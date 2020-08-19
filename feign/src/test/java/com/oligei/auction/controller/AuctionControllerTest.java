@@ -70,10 +70,8 @@ class AuctionControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         String resultContent = result.getResponse().getContentAsString();
-        System.out.println("result content"+resultContent);
         JSONObject jsonObject = om.readValue(resultContent, new TypeReference<JSONObject>() {});
         assertTrue(jsonObject.getBooleanValue("data"));
-//        assertEquals(true,resultContent);
     }
 
     @Test
@@ -100,7 +98,6 @@ class AuctionControllerTest {
         MvcResult result = mockMvc.perform(get("/Auction/get").contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn();
         String resultContent = result.getResponse().getContentAsString();
-        System.out.println(resultContent);
         JSONObject jsonObject = om.readValue(resultContent, new TypeReference<JSONObject>() {});
         assertEquals(auctionListItems.size(),jsonObject.getJSONArray("data").size());
     }

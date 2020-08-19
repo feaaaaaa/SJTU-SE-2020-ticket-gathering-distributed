@@ -43,9 +43,16 @@ class AuctionDaoTest {
         Auction auction = new Auction(1,1,Ddl,500,501,Showtime,5);
 
         when(auctionRepository.save(any(Auction.class))).thenReturn(auction);
+        when(auctionRepository.save(null)).thenReturn(null);
 
         assertEquals(auction,auctionDao.save(auction));
         verify(auctionRepository,times(1)).save(any(Auction.class));
+        try {
+            auctionRepository.save(null);
+        }
+        catch (NullPointerException e){
+            assertEquals("null auction",e.getMessage());
+        }
 
     }
     @Test
