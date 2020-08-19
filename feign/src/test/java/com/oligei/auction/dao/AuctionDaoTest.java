@@ -2,6 +2,8 @@ package com.oligei.auction.dao;
 
 import com.oligei.auction.entity.Auction;
 import com.oligei.auction.repository.AuctionRepository;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

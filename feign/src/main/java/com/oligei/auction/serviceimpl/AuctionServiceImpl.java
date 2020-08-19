@@ -41,14 +41,13 @@ public class AuctionServiceImpl implements AuctionService {
     @PostConstruct
     /**
     *put all available auctions from database to cache
-    *@Param: []
     *@return: boolean
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public boolean initCache(){
         System.out.println("cache init...");
-        flushActions();
+//        flushActions();
         List<Auction> auctions = auctionDao.getAvailableAuctionsForNow();
         DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
         DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -74,19 +73,23 @@ public class AuctionServiceImpl implements AuctionService {
 
     /**
     *a private method called when an auction is over
-    *@Param: [auctionid]
+    *@param: auctionid
     *@return: boolean
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     private boolean whenSetOver(Integer auctionid){
         Auction auction = auctionDao.findOneById(auctionid);
         AuctionListItem auctionListItem = auctionListItemCache.getValue(auctionid);
+        if(auctionListItem == null)
+            System.out.println("this is null");
+
+        System.out.println("auctionid"+auctionListItem.getAuctionid());
 
         auction.setIsover(1);
         auction.setUserid(auctionListItem.getUserid());
         auction.setOrderprice(auctionListItem.getPrice());
-        auction.setOrdertime(new Date());//不是真实下单时间
+        auction.setOrdertime(new Date());
         auctionDao.save(auction);
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -101,9 +104,9 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     /**
     *save an auction
-    *@Param: [actitemid, ddl, showtime, initprice, orderprice, amount]
+    *@param: actitemid, ddl, showtime, initprice, orderprice, amount
     *@return: java.lang.Boolean
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public Boolean save(Integer actitemid, String ddl,String showtime, Integer initprice,Integer orderprice, Integer amount) {
@@ -152,9 +155,8 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     /**
     *get all available auctions
-    *@Param: []
     *@return: java.util.List<com.oligei.auction.dto.AuctionListItem>
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public List<AuctionListItem> getAvailableAuctions() {
@@ -185,8 +187,7 @@ public class AuctionServiceImpl implements AuctionService {
         }
         List<AuctionListItem> auctionListItems = new ArrayList<>();
         for (Map.Entry<Integer,AuctionListItem> entry : auctionListItemCache.getCacheEntrySet()){
-            System.out.println(entry.getKey());
-            System.out.println(entry.getValue().getDdl());
+            System.out.println("key:"+entry.getKey());
             auctionListItems.add(entry.getValue());
         }
         System.out.println(auctionListItems.size());
@@ -196,9 +197,9 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     /**
     *take part in an auction successfully
-    *@Param: [auctionid, userid, orderprice]
+    *@param: auctionid, userid, orderprice
     *@return: java.lang.Integer
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) {
@@ -229,7 +230,7 @@ public class AuctionServiceImpl implements AuctionService {
         }
         AuctionListItem oldAuctionListItem = auctionListItemCache.getValue(auctionid);
         System.out.println("old price:"+oldAuctionListItem.getPrice());
-        if(oldAuctionListItem.getPrice() > orderprice)
+        if(oldAuctionListItem.getPrice() >= orderprice)
             return -2; //出价低
         AuctionListItem auctionListItem = auctionListItemCache.getValue(auctionid);
         AuctionListItem auctionListItem1 = new AuctionListItem(auctionListItem.getAuctionid(),auctionListItem.getDdl(),orderprice,new Date(),auctionListItem.getAmount(),
@@ -241,9 +242,8 @@ public class AuctionServiceImpl implements AuctionService {
     @Override
     /**
     *set over all unavailable
-    *@Param: []
     *@return: void
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public void flushActions() {
@@ -255,6 +255,7 @@ public class AuctionServiceImpl implements AuctionService {
         for(Auction auction : auctions)
         {
             String dateDdl = auction.getDdl().toString();
+            System.out.println(dateDdl);
             try {
                 d1 = df.parse(dateNow);
                 d2 = df.parse(dateDdl);

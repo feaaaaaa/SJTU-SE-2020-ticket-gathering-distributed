@@ -31,5 +31,7 @@ public class Cache<T> {
         return cache.size();
     }
 
-    public Set<Map.Entry<Integer,T>> getCacheEntrySet(){ return cache.entrySet();}
+    public Set<Map.Entry<Integer,T>> getCacheEntrySet(){
+        return cache.entrySet();
+    }
 }

@@ -18,9 +18,9 @@ public class AuctionDaoImpl implements AuctionDao {
     @Override
     /**
     *save an auction
-    *@Param: [auction]
+    *@param: auction
     *@return: com.oligei.auction.entity.Auction
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public Auction save(Auction auction) {
@@ -32,9 +32,8 @@ public class AuctionDaoImpl implements AuctionDao {
     @Override
     /**
     *get all available auctions
-    *@Param: []
     *@return: java.util.List<com.oligei.auction.entity.Auction>
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public List<Auction> getAvailableAuctionsForNow() {
@@ -44,9 +43,9 @@ public class AuctionDaoImpl implements AuctionDao {
     @Override
     /**
     *find an auction by id
-    *@Param: [auctionid]
+    *@param: auctionid
     *@return: com.oligei.auction.entity.Auction
-    *@Author: Cui Shaojie
+    *@author: Cui Shaojie
     *@date: 2020/8/18
     */
     public Auction findOneById(Integer auctionid) {

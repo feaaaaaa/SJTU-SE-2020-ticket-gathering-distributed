@@ -1,7 +1,10 @@
 import React from 'react';
 import {HeaderInfo} from "../component/Header";
+import {FooterInfo} from "../component/Footer";
 import {AdminAuction} from "../component/AdminAuction";
 import {Redirect} from "react-router-dom";
+import "../css/Detail.css";
+import {RecommendList} from "../component/RecommendList";
 
 
 export class AdminAuctionView extends React.Component{
@@ -31,8 +34,11 @@ export class AdminAuctionView extends React.Component{
         return (
             <div>
                 <HeaderInfo search={this.onSearch}/>
-                <div style={{paddingTop:40}}>
+                <div id="Detail" style={{paddingTop:150,float:"left",marginLeft:-100,width:"80%"}}>
                     <AdminAuction />
+                </div>
+                <div style={{paddingTop:1000}}>
+                    <FooterInfo />
                 </div>
             </div>
         );
