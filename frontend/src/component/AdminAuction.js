@@ -32,19 +32,21 @@ export class AdminAuction extends React.Component {
 
     async componentDidMount() {
         const callback = res => {
-            if(res!=null&&res.message==="authentication failure") {
+            // if(res!=null&&res.message==="authentication failure") {
+            if(res.status===-100){
                 message.error("请先登录");
                 localStorage.clear();
                 this.setState({authentication:true});
             }
-            if(res!=null&&res.message==="authorization failure"){
+            // if(res!=null&&res.message==="authorization failure"){
+            else if(res.status===-101){
                 message.error("没有权限");
                 localStorage.clear();
                 this.setState({authorization:true});
             }
-            else {
+            else if(res.status===200){
                 console.log("detail:"+JSON.stringify(res));
-                let data = res;
+                let data = res.data;
                 this.setState({
                     info: data,
                     tickets: data.prices
@@ -69,6 +71,8 @@ export class AdminAuction extends React.Component {
                 });
                 console.log(this.state);
             }
+            else
+                message.error(res.msg);
         }
         let id = await window.localStorage.getItem("actitemid");
         let userid = await window.localStorage.getItem("userId");
