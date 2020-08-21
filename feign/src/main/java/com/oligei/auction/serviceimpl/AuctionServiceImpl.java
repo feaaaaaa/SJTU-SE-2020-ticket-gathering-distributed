@@ -13,11 +13,16 @@ import com.oligei.auction.util.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.annotation.PostConstruct;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @Service
 @EnableScheduling
@@ -38,7 +43,64 @@ public class AuctionServiceImpl implements AuctionService {
     @Autowired
     private UserFeign userFeign;
 
+//    private AtomicInteger testPrice=new AtomicInteger();
+    private int testPrice=500;
+    Lock lock = new ReentrantLock();
+
     private Cache<AuctionListItem> auctionListItemCache = new Cache<>();
+
+
+
+//    @Override
+    @Transactional
+    /**
+     *take part in an auction successfully
+     *@param: auctionid, userid, orderprice
+     *@return: java.lang.Integer
+     *@author: Cui Shaojie
+     *@date: 2020/8/18
+     */
+    public Integer joinAuction2(Integer auctionid, Integer userid, Integer orderprice) {
+        Objects.requireNonNull(auctionid, "null auctionid --AuctionServiceImpl joinAuction");
+        Objects.requireNonNull(userid, "null userid --AuctionServiceImpl joinAuction");
+        Objects.requireNonNull(orderprice, "null orderprice --AuctionServiceImpl joinAuction");
+
+//        Auction auction = auctionDao.findOneById(auctionid);
+//
+//        if (auction == null)
+//            throw new NullPointerException("Auction Not Found");
+//
+//        SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        String dateNow = df.format(new Date());
+//        Date d1 = null, d2 = null;
+//        String dateDdl = auction.getDdl().toString();
+//        try {
+//            d1 = df.parse(dateNow);
+//            d2 = df.parse(dateDdl);
+//        }catch (Exception e){
+//            e.printStackTrace();;
+//        }
+//        if(d1.getTime()>d2.getTime())
+//        {
+//            whenSetOver(auction.getAuctionid());
+//            auctionListItemCache.evictCache(auctionid);
+//            return -1; //超时
+//        }
+//        AuctionListItem oldAuctionListItem = auctionListItemCache.getValue(auctionid);
+        lock.lock();
+        if (testPrice >= orderprice) {
+            lock.unlock();
+            return -2; //出价低
+        }
+//        System.out.println("old price:" + testPrice+"new price"+orderprice);
+        testPrice=orderprice;
+        lock.unlock();
+//        AuctionListItem auctionListItem = auctionListItemCache.getValue(auctionid);
+//        AuctionListItem auctionListItem1 = new AuctionListItem(auctionListItem.getAuctionid(), auctionListItem.getDdl(), orderprice, new Date(), auctionListItem.getAmount(),
+//                auctionListItem.getTitle(), auctionListItem.getActor(), auctionListItem.getVenue(), userid, auctionListItem.getActivityIcon());
+//        auctionListItemCache.addOrUpdateCache(auctionListItem.getAuctionid(), auctionListItem1);
+        return 1;
+    }
 
     @PostConstruct
     /**
@@ -231,9 +293,9 @@ public class AuctionServiceImpl implements AuctionService {
             return -1; //超时
         }
         AuctionListItem oldAuctionListItem = auctionListItemCache.getValue(auctionid);
-        System.out.println("old price:" + oldAuctionListItem.getPrice());
         if (oldAuctionListItem.getPrice() >= orderprice)
             return -2; //出价低
+        System.out.println("old price:" + oldAuctionListItem.getPrice()+"new price"+orderprice);
         AuctionListItem auctionListItem = auctionListItemCache.getValue(auctionid);
         AuctionListItem auctionListItem1 = new AuctionListItem(auctionListItem.getAuctionid(), auctionListItem.getDdl(), orderprice, new Date(), auctionListItem.getAmount(),
                 auctionListItem.getTitle(), auctionListItem.getActor(), auctionListItem.getVenue(), userid, auctionListItem.getActivityIcon());
