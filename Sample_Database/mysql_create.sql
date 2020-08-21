@@ -13,6 +13,7 @@ create table tg_users
     phone VARCHAR(255),
     password VARCHAR(255),
     type VARCHAR(255),
+    balance int,
 
     PRIMARY KEY(userid)
 );

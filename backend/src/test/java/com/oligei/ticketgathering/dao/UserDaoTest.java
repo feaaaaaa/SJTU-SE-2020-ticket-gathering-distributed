@@ -142,5 +142,17 @@ class UserDaoTest {
         assertThrows(NullPointerException.class, ()-> userDao.existsByUsername(null),
                 "null userId --UserDaoImpl findUserByUserId");
     }
+
+    @Test
+    @Rollback
+    void save(){
+        User tmp = new User(userId1,"test","123","123","123",encoder.encode(password1),
+                String.valueOf(userId1),null);
+        when(userRepository.save(tmp)).thenReturn(tmp);
+        assertEquals(tmp,userDao.save(tmp));
+        verify(userRepository,times(1)).save(argThat(Objects::nonNull));
+        assertThrows(NullPointerException.class,()-> userDao.save(null),
+                "null user --UserDaoImpl save");
+    }
 }
 

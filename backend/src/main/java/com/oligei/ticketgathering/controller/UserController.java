@@ -133,4 +133,30 @@ public class UserController {
             return new Msg<>(202,"错误的参数属性",null);
         }
     }
+
+    @RequestMapping("/rechargeOrDeduct")
+    /**
+    *recharge one's balance
+    *@param: userid, increment
+    *@return: com.oligei.ticketgathering.util.msgutils.Msg<java.lang.Integer>
+    *@author: Cui Shaojie
+    *@date: 2020/8/20
+    */
+    public Msg<Integer> rechargeOrDeduct(@RequestParam(name = "userid")Integer userid,@RequestParam(name = "increment")Integer increment){
+        int result;
+        try {
+            result = userService.rechargeOrDeduct(userid,increment);
+        }
+        catch(NullPointerException e){
+            logger.error("NullPointerException",e);
+            return new Msg<>(202, "空参数", -2);
+        }
+        catch (InvalidDataAccessApiUsageException e){
+            logger.error("InvalidDataAccessApiUsageException",e);
+            return new Msg<>(202,"错误的参数属性",-3);
+        }
+        if(result == -1)
+            return new Msg<>(201,"余额不能为负数",result);
+        return new Msg<>(201,"充值或支付成功",result);
+    }
 }
