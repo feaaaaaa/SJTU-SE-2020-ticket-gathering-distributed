@@ -18,6 +18,6 @@ public interface ActivityService {
     List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId);
     Boolean initActivity();
     Boolean clear();
-    Boolean initSearchIndex() throws IOException;
+//    Boolean initSearchIndex() throws IOException;
 
 }

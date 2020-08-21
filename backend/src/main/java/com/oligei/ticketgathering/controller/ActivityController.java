@@ -30,33 +30,33 @@ public class ActivityController {
     private static final Logger logger = LoggerFactory.getLogger(TicketGatheringApplication.class);
 
 
-    @RequestMapping("/initSearchIndex")
-    /**
-     *  initialize search index
-     * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
-     * @author feaaaaaa
-     * @date 2020.8.17
-     */
-    public Msg<Boolean> initSearchIndex() {
-        Boolean flag;
-        try{
-            flag=activityService.initSearchIndex();
-        }catch (IOException e){
-            logger.error("索引文件无法打开",e);
-            return new Msg<>(201, "索引文件无法打开", false);
-        }catch (JpaObjectRetrievalFailureException e) {
-            logger.error("查找最大activityId错误", e);
-            return new Msg<>(201, "查找最大activityId错误", false);
-        }catch (Exception e){
-            logger.error("其他错误",e);
-            return new Msg<>(202,"其他错误",false);
-        }
-        if(!flag) {
-            logger.error("错误 --/Activity/initSearchIndex");
-            return new Msg<>(203, "错误", false);
-        }
-        return new Msg<>(200,"搜索索引初始化成功", true);
-    }
+//    @RequestMapping("/initSearchIndex")
+//    /**
+//     *  initialize search index
+//     * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
+//     * @author feaaaaaa
+//     * @date 2020.8.17
+//     */
+//    public Msg<Boolean> initSearchIndex() {
+//        Boolean flag;
+//        try{
+//            flag=activityService.initSearchIndex();
+//        }catch (IOException e){
+//            logger.error("索引文件无法打开",e);
+//            return new Msg<>(201, "索引文件无法打开", false);
+//        }catch (JpaObjectRetrievalFailureException e) {
+//            logger.error("查找最大activityId错误", e);
+//            return new Msg<>(201, "查找最大activityId错误", false);
+//        }catch (Exception e){
+//            logger.error("其他错误",e);
+//            return new Msg<>(202,"其他错误",false);
+//        }
+//        if(!flag) {
+//            logger.error("错误 --/Activity/initSearchIndex");
+//            return new Msg<>(203, "错误", false);
+//        }
+//        return new Msg<>(200,"搜索索引初始化成功", true);
+//    }
 
     @RequestMapping("/search")
     /**

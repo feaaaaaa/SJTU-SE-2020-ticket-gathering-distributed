@@ -28,6 +28,7 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.apdplat.word.segmentation.Word;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,7 @@ import org.apdplat.word.WordSegmenter;
 import org.springframework.transaction.annotation.Transactional;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -61,8 +63,10 @@ public class ActivityServiceImpl implements ActivityService {
 
     private  int searchResultMax=30;
 
+    Directory directoryRandom=new RAMDirectory();
 
-    @Override
+
+    @PostConstruct
     /**
      *  initialize a search index (which only need to be done once)
      * @return true if initialize finished successfully
@@ -86,14 +90,19 @@ public class ActivityServiceImpl implements ActivityService {
             document.add(new TextField("title", content, Field.Store.YES));
             docs.add(document);
         }
-        Directory directory = FSDirectory.open(new File("./indexDir"));
+//        Directory directory = FSDirectory.open(new File("./indexDir"));
         Analyzer analyzer = new IKAnalyzer();
         IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
         conf.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-        IndexWriter indexWriter = new IndexWriter(directory, conf);
-        indexWriter.addDocuments(docs);
-        indexWriter.commit();
-        indexWriter.close();
+//        IndexWriter indexWriter = new IndexWriter(directory, conf);
+        IndexWriter indexWriter1=new IndexWriter(directoryRandom,conf);
+//        indexWriter.addDocuments(docs);
+//        indexWriter.commit();
+//        indexWriter.close();
+        indexWriter1.addDocuments(docs);
+        indexWriter1.commit();
+        indexWriter1.close();
+        System.out.println("Initialize search index successfully!");
         return true;
     }
 
@@ -127,9 +136,10 @@ public class ActivityServiceImpl implements ActivityService {
             return activities;
         }
         //not null
-        Directory directory = FSDirectory.open(new File("./indexDir"));
+//        Directory directory = FSDirectory.open(new File("./indexDir"));
         // 索引读取工具
-        IndexReader reader = DirectoryReader.open(directory);
+//        IndexReader reader = DirectoryReader.open(directory);
+        IndexReader reader = DirectoryReader.open(directoryRandom);
         // 索引搜索工具
         IndexSearcher searcher = new IndexSearcher(reader);
 
@@ -423,10 +433,6 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
      */
     public Boolean initActivity() {
-
-//        String init="初始化分词";
-//        List<Word> words=WordSegmenter.seg(init);
-//        System.out.println(words.toString());
 
         //add all the activitySortpage into cache
         initActivityById(1000);
