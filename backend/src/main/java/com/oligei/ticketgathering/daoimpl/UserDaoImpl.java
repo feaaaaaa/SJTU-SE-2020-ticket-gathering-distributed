@@ -106,4 +106,17 @@ public class UserDaoImpl implements UserDao {
             return user;
         }
     }
+
+    @Override
+    /**
+    *save a user to increment or decrement balance
+    *@param: user
+    *@return: com.oligei.ticketgathering.entity.mysql.User
+    *@author: Cui Shaojie
+    *@date: 2020/8/20
+    */
+    public User save(User user) {
+        Objects.requireNonNull(user,"null user --UserDaoImpl save");
+        return userRepository.save(user);
+    }
 }

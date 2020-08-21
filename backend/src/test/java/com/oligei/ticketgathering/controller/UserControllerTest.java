@@ -208,4 +208,21 @@ class UserControllerTest {
         }
         catch (Exception e) {e.printStackTrace();}
     }
+
+    @Test
+    @Rollback
+    void rechargeOrDeduct() throws Exception {
+        when(userService.rechargeOrDeduct(1,100)).thenReturn(600);
+        MvcResult result = mockMvc.perform(
+                post("/User/rechargeOrDeduct")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .param("userid","1")
+                        .param("increment","100")
+        )
+                .andExpect(status().isOk())
+                .andReturn();
+        String resultContent = result.getResponse().getContentAsString();
+        JSONObject jsonObject = om.readValue(resultContent, new TypeReference<JSONObject>() {});
+        assertEquals(600,jsonObject.get("data"));
+    }
 }

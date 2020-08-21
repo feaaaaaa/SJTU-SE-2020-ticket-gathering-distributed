@@ -6,7 +6,7 @@ import org.hibernate.annotations.Proxy;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "TG_ACTIVITIES")
+@Table(name = "tg_activities")
 @Proxy(lazy = false)
 public class Activity {
     private Integer activityId;

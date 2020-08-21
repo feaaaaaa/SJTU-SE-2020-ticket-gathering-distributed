@@ -21,6 +21,7 @@ public class User {
     private String phone;
     private String password;
     private String type;
+    private Integer balance;
 
     public User() {
 
@@ -36,6 +37,7 @@ public class User {
         this.phone = phone;
         this.password = password;
         this.type = type;
+        this.balance = 500;
         this.personIcon = personIcon;
     }
 
@@ -69,6 +71,10 @@ public class User {
     @Column(name = "type")
     public String getType() {return type;}
     public void setType(String type) {this.type=type;}
+
+    @Column(name = "balance")
+    public Integer getBalance(){return balance;}
+    public void setBalance(Integer balance){this.balance=balance;}
 
     private String personIcon;
     @Transient
