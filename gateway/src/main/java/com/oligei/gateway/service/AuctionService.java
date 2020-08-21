@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@FeignClient(value = "auction-feign")
+@FeignClient(value = "auction")
 public interface AuctionService {
 
     @RequestMapping(value = "/Auction/add",method = RequestMethod.POST)
