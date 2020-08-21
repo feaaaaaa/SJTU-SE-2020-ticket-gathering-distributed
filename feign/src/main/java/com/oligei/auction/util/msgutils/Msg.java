@@ -12,6 +12,14 @@ public class Msg<T> {
     private String msg;
     private T data;
 
+    Msg(){}
+
+    Msg(Msg<T> Msg){
+        this.status = Msg.status;
+        this.msg = Msg.msg;
+        this.data = Msg.data;
+    }
+
     Msg(MsgCode msg, T data){
         this.status = msg.getStatus();
         this.msg = msg.getMsg();

@@ -142,10 +142,10 @@ public class UserController {
     *@author: Cui Shaojie
     *@date: 2020/8/20
     */
-    public Msg<Integer> rechargeOrDeduct(@RequestParam(name = "userid")Integer userid,@RequestParam(name = "increment")Integer increment){
+    public Msg<Integer> rechargeOrDeduct(@RequestParam(name = "userId")Integer userId,@RequestParam(name = "increment")Integer increment){
         int result;
         try {
-            result = userService.rechargeOrDeduct(userid,increment);
+            result = userService.rechargeOrDeduct(userId,increment);
         }
         catch(NullPointerException e){
             logger.error("NullPointerException",e);
@@ -157,6 +157,6 @@ public class UserController {
         }
         if(result == -1)
             return new Msg<>(201,"余额不能为负数",result);
-        return new Msg<>(201,"充值或支付成功",result);
+        return new Msg<>(200,"充值或支付成功",result);
     }
 }

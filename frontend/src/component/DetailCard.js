@@ -141,6 +141,14 @@ export class DetailCard extends React.Component{
         });
     };
 
+    openNotificationWithoutEnoughMoney = type => {
+        notification[type]({
+            message: 'Notification Title',
+            description:
+                '余额不足，请充值',
+        });
+    };
+
     handleNumberChange = value =>{
         this.setState({chosenNum:value});
     }
@@ -159,7 +167,9 @@ export class DetailCard extends React.Component{
                         message.error("请先登录");
                         localStorage.clear();
                         this.setState({authentication: true})
-                    } else if(data.status===200)
+                    } else if(data.status === 202)
+                        this.openNotificationWithoutEnoughMoney("warning");
+                    else if(data.status===200)
                         this.setState({success: true});
                     else
                         message.error(data.msg);

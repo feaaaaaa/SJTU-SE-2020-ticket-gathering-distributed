@@ -100,10 +100,10 @@ public class AuctionController {
             result = auctionService.joinAuction(auctionid,userid,price);
         }catch (NullPointerException e){
             logger.error("NullPointerException",e);
-            return new Msg<Integer>(201,"空参数",-3);
+            return new Msg<Integer>(201,"空参数",-4);
         }catch (InvalidDataAccessApiUsageException e){
             logger.error("InvalidDataAccessApiUsageException",e);
-            return new Msg<Integer>(201,"错误的参数属性",-4);
+            return new Msg<Integer>(201,"错误的参数属性",-5);
         }
         return new Msg<Integer>(200,"竞价成功",result);
     }
