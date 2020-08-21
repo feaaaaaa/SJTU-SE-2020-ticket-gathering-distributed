@@ -30,40 +30,68 @@ public class ActivityController {
     private static final Logger logger = LoggerFactory.getLogger(TicketGatheringApplication.class);
 
 
-    @RequestMapping("/initSearchIndex")
+//    @RequestMapping("/initSearchIndex")
+//    /**
+//     *  initialize search index
+//     * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
+//     * @author feaaaaaa
+//     * @date 2020.8.17
+//     */
+//    public Msg<Boolean> initSearchIndex() {
+//        Boolean flag;
+//        try{
+//            flag=activityService.initSearchIndex();
+//        }catch (IOException e){
+//            logger.error("索引文件无法打开",e);
+//            return new Msg<>(201, "索引文件无法打开", false);
+//        }catch (JpaObjectRetrievalFailureException e) {
+//            logger.error("查找最大activityId错误", e);
+//            return new Msg<>(201, "查找最大activityId错误", false);
+//        }catch (Exception e){
+//            logger.error("其他错误",e);
+//            return new Msg<>(202,"其他错误",false);
+//        }
+//        if(!flag) {
+//            logger.error("错误 --/Activity/initSearchIndex");
+//            return new Msg<>(203, "错误", false);
+//        }
+//        return new Msg<>(200,"搜索索引初始化成功", true);
+//    }
+
+    @RequestMapping("/searchPageNum")
     /**
-     *  initialize search index
-     * @return Msg(status,msg,Boolean) 200 is OK, 201 is predicted exception, 202 is unpredicted exception, 203 is no exception but wrong
-     * @author feaaaaaa
-     * @date 2020.8.17
+     *  how many pages?
+     * @param value
+     * @return Msg(status,msg,ListA of ActivitySortpage) 200 is OK, 201 is predicted exception, 202 is unpredicted exception
+     * @author ziliuziliu
+     * @date 2020/8/21
      */
-    public Msg<Boolean> initSearchIndex() {
-        Boolean flag;
+    public Msg<Integer> searchPageNum(@RequestParam(name = "search") String value) {
+        Integer pageNum;
         try{
-            flag=activityService.initSearchIndex();
+            pageNum = activityService.searchPageNum(value);
         }catch (IOException e){
             logger.error("索引文件无法打开",e);
-            return new Msg<>(201, "索引文件无法打开", false);
-        }catch (JpaObjectRetrievalFailureException e) {
-            logger.error("查找最大activityId错误", e);
-            return new Msg<>(201, "查找最大activityId错误", false);
-        }catch (Exception e){
-            logger.error("其他错误",e);
-            return new Msg<>(202,"其他错误",false);
+            return new Msg<>(201, "索引文件无法打开", 0);
+        }catch (ParseException e){
+            logger.error("关键词解析失败",e);
+            return new Msg<>(201,"关键词解析失败", 0);
+        }catch (JpaObjectRetrievalFailureException e){
+            logger.error("使用非法id进行查询",e);
+            return new Msg<>(201,"使用非法id进行查询", 0);
+        } catch (EmptyResultDataAccessException e){
+            logger.error("activity查找失败",e);
+            return new Msg<>(201,"activity查找失败", 0);
         }
-        if(!flag) {
-            logger.error("错误 --/Activity/initSearchIndex");
-            return new Msg<>(203, "错误", false);
-        }
-        return new Msg<>(200,"搜索索引初始化成功", true);
+        return new Msg<>(200,"搜索成功",pageNum);
     }
 
     @RequestMapping("/search")
     /**
      *  use value to search
-     * @param value search value
+     * @param value,page
      * @return Msg(status,msg,ListA of ActivitySortpage) 200 is OK, 201 is predicted exception, 202 is unpredicted exception
-     * @author feaaaaaa
+     * @author feaaaaaa,ziliuizliu
      * @date 2020.8.17
      */
     public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value,
@@ -84,6 +112,9 @@ public class ActivityController {
         } catch (EmptyResultDataAccessException e){
             logger.error("activity查找失败",e);
             return new Msg<>(201,"activity查找失败",new LinkedList<>());
+        } catch (IndexOutOfBoundsException e) {
+            logger.error("页码越界",e);
+            return new Msg<>(201,"页码越界",new LinkedList<>());
         }
         return new Msg<>(200,"搜索成功",activitySortpages);
     }
@@ -178,11 +209,10 @@ public class ActivityController {
     @RequestMapping("/FindActivityByCategory")
     /**
      *  find activitySorpage of select search
-     * @return
+     * @return result
      * @author ziliuziliu, feaaaaaa
      * @date 2020.8.17
      */
-//    @RequestBody CategoryQuery categoryQuery
     public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
                                                     @RequestParam(name = "name")String name,
                                                     @RequestParam(name = "city")String city,
@@ -204,7 +234,42 @@ public class ActivityController {
         } catch(InvalidDataAccessApiUsageException e){
             logger.error("非法type",e);
             return new Msg<>(201,"非法type",new LinkedList<>());
+        } catch(IndexOutOfBoundsException e) {
+            logger.error("页码越界",e);
+            return new Msg<>(201,"页码越界",new LinkedList<>());
         }
+    }
+
+    @RequestMapping("/FindActivityByCategoryPageNum")
+    /**
+     *  how many pages?
+     * @return 200 OK, 201 Exception
+     * @author ziliuziliu
+     * @date 2020/8/21
+     */
+    public Msg<Integer> selectSearchPageNum(@RequestParam(name = "type")String type,
+                                                           @RequestParam(name = "name")String name,
+                                                           @RequestParam(name = "city")String city) {
+        Integer pageNum;
+        try{
+            pageNum = activityService.selectSearchPageNum(type,name,city);
+        }catch (IOException e){
+            logger.error("索引文件无法打开",e);
+            return new Msg<>(201, "索引文件无法打开", 0);
+        }catch (ParseException e){
+            logger.error("关键词解析失败",e);
+            return new Msg<>(201,"关键词解析失败",0);
+        }catch (JpaObjectRetrievalFailureException e){
+            logger.error("使用非法id进行查询",e);
+            return new Msg<>(201,"使用非法id进行查询",0);
+        } catch (EmptyResultDataAccessException e){
+            logger.error("activity查找失败",e);
+            return new Msg<>(201,"activity查找失败",0);
+        } catch(InvalidDataAccessApiUsageException e){
+            logger.error("非法type",e);
+            return new Msg<>(201,"非法type",0);
+        }
+        return new Msg<>(200,"成功",pageNum);
     }
 
     @RequestMapping("/FindActivityByCategoryHome")
