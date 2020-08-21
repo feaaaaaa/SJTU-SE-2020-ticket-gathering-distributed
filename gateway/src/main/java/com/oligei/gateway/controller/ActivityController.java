@@ -31,14 +31,28 @@ public class ActivityController {
     public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value,
                                               @RequestParam(name = "page") Integer page) {
         System.out.println("value:" + value);
-        try{
-            return activityService.search(value,page);
-        }catch (feign.RetryableException e){
-            logger.error("请求超时",e);
-            return new Msg<>(504,"请求超时，请重试",new LinkedList<>());
-        }catch ( FeignException.InternalServerError e){
-            logger.error("出错了",e);
-            return new Msg<>(500,"出错了",new LinkedList<>());
+        try {
+            return activityService.search(value, page);
+        } catch (feign.RetryableException e) {
+            logger.error("请求超时", e);
+            return new Msg<>(504, "请求超时，请重试", new LinkedList<>());
+        } catch (FeignException.InternalServerError e) {
+            logger.error("出错了", e);
+            return new Msg<>(500, "出错了", new LinkedList<>());
+        }
+    }
+
+    @RequestMapping("/searchPageNum")
+    public Msg<Integer> searchPageNum(@RequestParam(name = "search") String value) {
+        System.out.println("value:" + value);
+        try {
+            return activityService.searchPageNum(value);
+        } catch (feign.RetryableException e) {
+            logger.error("请求超时", e);
+            return new Msg<>(504, "请求超时，请重试", null);
+        } catch (FeignException.InternalServerError e) {
+            logger.error("出错了", e);
+            return new Msg<>(500, "出错了", null);
         }
     }
 
@@ -135,6 +149,22 @@ public class ActivityController {
         }catch ( FeignException.InternalServerError e){
             logger.error("出错了",e);
             return new Msg<>(500,"出错了",new LinkedList<>());
+        }
+    }
+
+    @RequestMapping("/FindActivityByCategoryPageNum")
+//    @RequestBody CategoryQuery categoryQuery
+    public Msg<Integer> selectSearchPageNum(@RequestParam(name = "type")String type,
+                                            @RequestParam(name = "name")String name,
+                                            @RequestParam(name = "city")String city) {
+        try{
+            return activityService.selectSearchPageNum(type,name,city);
+        }catch (feign.RetryableException e){
+            System.out.println(e);
+            return new Msg<>(504,"超时，请重试",null);
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",null);
         }
     }
 
