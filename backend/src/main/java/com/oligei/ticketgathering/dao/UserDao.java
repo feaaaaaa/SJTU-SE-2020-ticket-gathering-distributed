@@ -14,4 +14,5 @@ public interface UserDao {
     boolean register(User user);
     boolean existsByUsername(String username);
     User findUserByUserId(Integer userId);
+    User save(User user);
 }

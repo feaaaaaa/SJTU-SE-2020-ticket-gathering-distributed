@@ -119,4 +119,17 @@ class UserServiceTest {
         assertThrows(NullPointerException.class, ()-> userService.existsByUsername(null),
                 "null userId --UserServiceImpl findUserByUserId");
     }
+
+    @Test
+    @Rollback
+    void rechargeOrDeduct(){
+        User tmp1 = new User(userId1,"test","123","123","123",encoder.encode(password1),
+                String.valueOf(userId1),"123");
+        when(userDao.findUserByUserId(userId1)).thenReturn(tmp1);
+        when(userDao.findUserByUserId(userId2)).thenReturn(null);
+
+        assertEquals(550,userService.rechargeOrDeduct(userId1,50));
+        assertThrows(NullPointerException.class,()->userService.rechargeOrDeduct(userId2,50),
+                "null user --UserServiceImpl rechargeOrDeduct");
+    }
 }

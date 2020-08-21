@@ -4,15 +4,14 @@ import com.oligei.auction.dao.ActitemDao;
 import com.oligei.auction.dao.ActivityDao;
 import com.oligei.auction.dao.AuctionDao;
 import com.oligei.auction.dto.AuctionListItem;
-import com.oligei.auction.entity.Actitem;
 import com.oligei.auction.entity.Activity;
 import com.oligei.auction.entity.Auction;
+import com.oligei.auction.feign.UserFeign;
 import com.oligei.auction.service.AuctionService;
-import com.oligei.auction.service.OrderService;
+import com.oligei.auction.feign.OrderFeign;
 import com.oligei.auction.util.Cache;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import javax.annotation.PostConstruct;
 import java.text.DateFormat;
@@ -34,7 +33,10 @@ public class AuctionServiceImpl implements AuctionService {
     private ActivityDao activityDao;
 
     @Autowired
-    private OrderService orderService;
+    private OrderFeign orderFeign;
+
+    @Autowired
+    private UserFeign userFeign;
 
     private Cache<AuctionListItem> auctionListItemCache = new Cache<>();
 
@@ -96,7 +98,7 @@ public class AuctionServiceImpl implements AuctionService {
         if(auction.getInitprice().equals(auction.getOrderprice()))
             actitemDao.modifyRepository(auction.getActitemid(),auction.getInitprice(),auction.getAmount(),sdf.format(auction.getShowtime()));
         else
-            orderService.addOrder(auction.getUserid(),auction.getActitemid(),auction.getInitprice(),auction.getOrderprice(),
+            orderFeign.addOrder(auction.getUserid(),auction.getActitemid(),auction.getInitprice(),auction.getOrderprice(),
                     auction.getAmount(),sdf.format(auction.getShowtime()),df.format(auction.getOrdertime()));
         return true;
     }

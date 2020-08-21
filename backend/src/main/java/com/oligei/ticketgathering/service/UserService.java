@@ -14,4 +14,5 @@ public interface UserService {
     boolean register(User user);
     boolean existsByUsername(String username);
     User findUserByUserId(Integer userId);
+    Integer rechargeOrDeduct(Integer userid,Integer increment);
 }

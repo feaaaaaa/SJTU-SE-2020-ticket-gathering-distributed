@@ -76,4 +76,29 @@ public class UserServiceImpl implements UserService {
         Objects.requireNonNull(userId,"null userId --UserServiceImpl findUserByUserId");
         return userDao.findUserByUserId(userId);
     }
+
+    @Override
+    /**
+    *recharge one's balance
+    *@param: userid,increment
+    *@return: java.lang.Integer
+    *@author: Cui Shaojie
+    *@date: 2020/8/20
+    *@throws NullPointerException userid null
+    */
+    public Integer rechargeOrDeduct(Integer userid, Integer increment) {
+        Objects.requireNonNull(userid,"null userid --UserServiceImpl rechargeOrDeduct");
+        Objects.requireNonNull(increment,"null increment --UserServiceImpl rechargeOrDeduct");
+        User user = userDao.findUserByUserId(userid);
+        Objects.requireNonNull(user,"null user --UserServiceImpl rechargeOrDeduct");
+        int result = user.getBalance()+increment;
+        if(result < 0)
+            return -1;
+
+        user.setBalance(result);
+
+        userDao.save(user);
+
+        return result;
+    }
 }
