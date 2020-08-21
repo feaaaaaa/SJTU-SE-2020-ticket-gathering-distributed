@@ -20,7 +20,8 @@ public interface ActivityService {
     Msg<Boolean> clear();
 
     @RequestMapping(value = "/Activity/search",method = RequestMethod.GET)
-    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value);
+    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value,
+                                              @RequestParam(name = "page")Integer page);
 
     @RequestMapping(value = "/Activity/add",method = RequestMethod.POST)
     public Msg<Boolean> add(@RequestParam(name = "activity") String activity);
@@ -34,8 +35,9 @@ public interface ActivityService {
 
     @RequestMapping(value = "/Activity/FindActivityByCategory",method = RequestMethod.GET)
     public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
-                                                         @RequestParam(name = "name")String name,
-                                                         @RequestParam(name = "city")String city);
+                                                    @RequestParam(name = "name")String name,
+                                                    @RequestParam(name = "city")String city,
+                                                    @RequestParam(name = "page")Integer page);
 
     @RequestMapping(value = "/Activity/FindActivityByCategoryHome",method = RequestMethod.GET)
     public Msg<List<ActivitySortpage>> findActivityByCategoryHome();
