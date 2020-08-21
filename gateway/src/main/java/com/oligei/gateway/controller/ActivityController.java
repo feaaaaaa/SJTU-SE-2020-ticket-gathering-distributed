@@ -28,10 +28,11 @@ public class ActivityController {
 
 
     @RequestMapping("/search")
-    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value) {
+    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value,
+                                              @RequestParam(name = "page") Integer page) {
         System.out.println("value:" + value);
         try{
-            return activityService.search(value);
+            return activityService.search(value,page);
         }catch (feign.RetryableException e){
             logger.error("请求超时",e);
             return new Msg<>(504,"请求超时，请重试",new LinkedList<>());
@@ -123,10 +124,11 @@ public class ActivityController {
     @RequestMapping("/FindActivityByCategory")
 //    @RequestBody CategoryQuery categoryQuery
     public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
-                                               @RequestParam(name = "name")String name,
-                                               @RequestParam(name = "city")String city) {
+                                                    @RequestParam(name = "name")String name,
+                                                    @RequestParam(name = "city")String city,
+                                                    @RequestParam(name = "page")Integer page) {
         try{
-            return activityService.selectSearch(type,name,city);
+            return activityService.selectSearch(type,name,city,page);
         }catch (feign.RetryableException e){
             System.out.println(e);
             return new Msg<>(504,"超时，请重试",new LinkedList<>());

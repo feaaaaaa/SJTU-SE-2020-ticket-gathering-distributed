@@ -295,11 +295,24 @@ public class AuctionServiceImpl implements AuctionService {
         AuctionListItem oldAuctionListItem = auctionListItemCache.getValue(auctionid);
         if (oldAuctionListItem.getPrice() >= orderprice)
             return -2; //出价低
+        if(oldAuctionListItem.getUserid().equals(userid)) {
+            System.out.println("A "+userid+" : "+(orderprice-oldAuctionListItem.getPrice()));
+            if (userFeign.rechargeOrDeduct(userid, -(orderprice - oldAuctionListItem.getPrice())).getData() == -1) {
+                return -3; //余额不足
+            }
+        }
+        else {
+            System.out.println("B "+userid+" : "+orderprice);
+            if (userFeign.rechargeOrDeduct(userid, -orderprice).getData() == -1) {
+                return -3; //余额不足
+            }
+            userFeign.rechargeOrDeduct(oldAuctionListItem.getUserid(), oldAuctionListItem.getPrice());
+            System.out.println("C"+oldAuctionListItem.getUserid()+" : "+oldAuctionListItem.getPrice());
+        }
         System.out.println("old price:" + oldAuctionListItem.getPrice()+"new price"+orderprice);
-        AuctionListItem auctionListItem = auctionListItemCache.getValue(auctionid);
-        AuctionListItem auctionListItem1 = new AuctionListItem(auctionListItem.getAuctionid(), auctionListItem.getDdl(), orderprice, new Date(), auctionListItem.getAmount(),
-                auctionListItem.getTitle(), auctionListItem.getActor(), auctionListItem.getVenue(), userid, auctionListItem.getActivityIcon());
-        auctionListItemCache.addOrUpdateCache(auctionListItem.getAuctionid(), auctionListItem1);
+        AuctionListItem auctionListItem1 = new AuctionListItem(oldAuctionListItem.getAuctionid(),oldAuctionListItem.getDdl(),orderprice,new Date(),oldAuctionListItem.getAmount(),
+                oldAuctionListItem.getTitle(),oldAuctionListItem.getActor(),oldAuctionListItem.getVenue(),userid,oldAuctionListItem.getActivityIcon());
+        auctionListItemCache.addOrUpdateCache(oldAuctionListItem.getAuctionid(),auctionListItem1);
         return 1;
     }
 

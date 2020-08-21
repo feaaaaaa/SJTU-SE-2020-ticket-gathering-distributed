@@ -89,4 +89,17 @@ public class UserController {
             return new Msg<>(500,"出错了",null);
         }
     }
-}
+
+    @RequestMapping("/rechargeOrDeduct")
+    public Msg<Integer> rechargeOrDeduct(@RequestParam(name = "userId")Integer userId,@RequestParam(name = "increment")Integer increment) {
+        try{
+            return userService.rechargeOrDeduct(userId,increment);
+        }catch (feign.RetryableException e){
+            logger.error("请求超时",e);
+            return new Msg<>(504,"请求超时，请重试",null);
+        }catch ( FeignException.InternalServerError e){
+            logger.error("出错了",e);
+            return new Msg<>(500,"出错了",null);
+        }
+    }
+    }

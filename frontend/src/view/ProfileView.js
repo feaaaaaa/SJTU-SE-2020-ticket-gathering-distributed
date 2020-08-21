@@ -1,19 +1,28 @@
+/**
+ *@param this.state.userInfo.balance {number}
+ */
 import React from 'react';
-import {Descriptions, Badge, message} from "antd";
+import {Descriptions, Badge, message,Button,InputNumber, Modal} from "antd";
 import "../css/profile.css"
 import {HeaderInfo} from "../component/Header";
 import {getPersonInfo} from "../service/userService";
 import {Redirect} from "react-router-dom";
+import {joinAuctions} from "../service/AuctionService";
+import {recharge} from "../service/userService";
 
 export class ProfileView extends React.Component{
     constructor(props) {
         super(props);
         this.state={
+            increment:0,
+            visible:false,
             userInfo:null,
             ifauthen:false,
             logOut:false,
             isSearch:false,
-            search:null
+            search:null,
+            clickAuction:true,
+            balance:0,
         }
         this.onSearch=this.onSearch.bind(this);
         this.logOut=this.logOut.bind(this);
@@ -29,15 +38,52 @@ export class ProfileView extends React.Component{
 
     async componentDidMount() {
         const callback = async (data) => {
-            // if (data.message === "authentication failure") {
             if(data.status===-100 ||data.status===201){
                 await this.setState({ifauthen: true});
                 localStorage.clear();
-            } else await this.setState({userInfo: data.data})
+            } else await this.setState({
+                userInfo: data.data,
+                balance:data.data.balance
+            })
         };
         let userId = localStorage.getItem("userId");
         await getPersonInfo(userId, localStorage.getItem("token"), callback);
     }
+
+    showModal = () => {
+        this.setState({
+            visible: true,
+        });
+    };
+
+    handleOk = e => {
+        if(this.state.clickAuction){
+            this.setState({clickAuction:false});
+            const callback = data => {
+                if (data != null) {
+                    if(data.status!==200)
+                         message.error(data.msg);
+                    this.setState({visible: false});
+                    this.setState({balance:data.data});
+                }
+            }
+            recharge(parseInt(localStorage.getItem("userId")),this.state.increment,localStorage.getItem("token"),callback);
+            setTimeout(()=>{this.setState({clickAuction:true})}, 2000);
+        }else message.error("点击太快了，休息一会吧")
+    };
+
+    handleCancel = e => {
+        console.log(e);
+        this.setState({
+            visible: false,
+        });
+    };
+
+    onChange = value => {
+        this.setState({increment:value});
+        console.log('changed', value);
+    }
+
 
     render() {
         if(this.state.isSearch){
@@ -79,10 +125,26 @@ export class ProfileView extends React.Component{
                                     {/*<Descriptions.Item label="Status" span={3}>*/}
                                     {/*    <Badge status="processing" text="Running" />*/}
                                     {/*</Descriptions.Item>*/}
-                                    <Descriptions.Item label="账户余额">$80.00</Descriptions.Item>
+                                    <Descriptions.Item label="账户余额">
+                                        ${this.state.balance}
+                                        <Button onClick={this.showModal}>充值</Button>
+                                        <Modal
+                                            title="充值"
+                                            visible={this.state.visible}
+                                            onOk={this.handleOk}
+                                            onCancel={this.handleCancel}
+                                        >
+                                            <InputNumber
+                                                defaultValue={this.state.increment}
+                                                formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
+                                                parser={value => value.replace(/\$\s?|(,*)/g, '')}
+                                                onChange={this.onChange}
+                                            />
+                                        </Modal>
+                                    </Descriptions.Item>
                                     {/*<Descriptions.Item label="Discount">$20.00</Descriptions.Item>*/}
                                     {/*<Descriptions.Item label="Official Receipts">$60.00</Descriptions.Item>*/}
-                                    <Descriptions.Item label="Config Info">
+                                    <Descriptions.Item label="头像">
                                         <img alt="userIcon" style={{height:100}} src={this.state.userInfo.personIcon}/>
                                     </Descriptions.Item>
                                 </Descriptions>
