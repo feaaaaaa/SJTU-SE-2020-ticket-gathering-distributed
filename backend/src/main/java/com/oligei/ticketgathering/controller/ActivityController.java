@@ -66,11 +66,12 @@ public class ActivityController {
      * @author feaaaaaa
      * @date 2020.8.17
      */
-    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value) {
+    public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value,
+                                              @RequestParam(name = "page") Integer page) {
         System.out.println("value:" + value);
         List<ActivitySortpage> activitySortpages;
         try{
-            activitySortpages=activityService.search(value);
+            activitySortpages=activityService.search(value,page);
         }catch (IOException e){
             logger.error("索引文件无法打开",e);
             return new Msg<>(201, "索引文件无法打开", new LinkedList<>());
@@ -183,10 +184,11 @@ public class ActivityController {
      */
 //    @RequestBody CategoryQuery categoryQuery
     public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
-                                                         @RequestParam(name = "name")String name,
-                                                         @RequestParam(name = "city")String city){
+                                                    @RequestParam(name = "name")String name,
+                                                    @RequestParam(name = "city")String city,
+                                                    @RequestParam(name = "page")Integer page) {
         try{
-            return new Msg<>(200,"成功",activityService.selectSearch(type,name,city));
+            return new Msg<>(200,"成功",activityService.selectSearch(type,name,city,page));
         }catch (IOException e){
             logger.error("索引文件无法打开",e);
             return new Msg<>(201, "索引文件无法打开", new LinkedList<>());
@@ -208,7 +210,7 @@ public class ActivityController {
     @RequestMapping("/FindActivityByCategoryHome")
     /**
      *  find activitySorpage of home
-     * @return 
+     * @return
      * @author feaaaaaa
      * @date 2020.8.17
      */
@@ -227,7 +229,7 @@ public class ActivityController {
         }
     }
 
-    
+
     @RequestMapping("/initActivity")
     /**
      *  add all the activity into cache

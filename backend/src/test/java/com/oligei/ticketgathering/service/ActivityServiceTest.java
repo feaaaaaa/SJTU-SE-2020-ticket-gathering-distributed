@@ -53,8 +53,8 @@ class ActivityServiceTest {
             doReturn(existedAcitivity).when(activityDao).findOneById(i);
             doReturn(existedActitems).when(actitemDao).findAllByActivityId(i);
         }
-        activityService.search(null);
-        activityService.search("周杰伦演唱会螺蛳粉肉丸子");
+        activityService.search(null,1);
+        activityService.search("周杰伦演唱会螺蛳粉肉丸子",1);
 //        System.out.println("Reasonable Value");
 //        assertTrue(activityService.search("周杰伦").size()>0);
 //        assertTrue(activityService.search("周杰伦演唱会").size()>0);
@@ -138,11 +138,11 @@ class ActivityServiceTest {
     @Transactional
     @Rollback
     void selectSearch() {
-        assertThrows(NullPointerException.class,()->activityService.selectSearch(null,"name","city"));
-        assertThrows(NullPointerException.class,()->activityService.selectSearch("type",null,"city"));
-        assertThrows(NullPointerException.class,()->activityService.selectSearch("type","name",null));
+        assertThrows(NullPointerException.class,()->activityService.selectSearch(null,"name","city",1));
+        assertThrows(NullPointerException.class,()->activityService.selectSearch("type",null,"city",1));
+        assertThrows(NullPointerException.class,()->activityService.selectSearch("type","name",null,1));
 
-        assertThrows(InvalidDataAccessApiUsageException.class,()->activityService.selectSearch("type","name","city"));
+        assertThrows(InvalidDataAccessApiUsageException.class,()->activityService.selectSearch("type","name","city",1));
 
 
 //        assertNotEquals(0,activityService.selectSearch("category","话剧歌剧","成都")

@@ -8,7 +8,7 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "TG_ACTITEMS")
+@Table(name = "tg_actitems")
 public class Actitem {
     private Integer actitemId;
     private Integer activityId;
