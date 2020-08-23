@@ -129,10 +129,13 @@ exports[`test register test initialized state 1`] = `
   <div
     id="regDiv"
   >
-    <p>
+    <p
+      className="regp"
+    >
       请输入用户名:
     </p>
     <Input
+      className="input"
       onBlur={[Function]}
       placeholder="Enter your username"
       prefix={
@@ -143,11 +146,14 @@ exports[`test register test initialized state 1`] = `
       type="text"
     />
     <div />
-    <p>
+    <p
+      className="regp"
+    >
       请输入密码:
     </p>
     <Password
       action="click"
+      className="input"
       iconRender={[Function]}
       onBlur={[Function]}
       placeholder="Enter your password"
@@ -158,11 +164,14 @@ exports[`test register test initialized state 1`] = `
       }
       visibilityToggle={true}
     />
-    <p>
+    <p
+      className="regp"
+    >
       请再次输入密码:
     </p>
     <Password
       action="click"
+      className="input"
       iconRender={[Function]}
       onBlur={[Function]}
       placeholder="Enter your password again"
@@ -175,7 +184,9 @@ exports[`test register test initialized state 1`] = `
     />
     <div />
     <div>
-      <p>
+      <p
+        className="regp"
+      >
         性别：
       </p>
       <Memo([object Object])
@@ -183,12 +194,22 @@ exports[`test register test initialized state 1`] = `
         value={0}
       >
         <Radio
+          style={
+            Object {
+              "color": "white",
+            }
+          }
           type="radio"
           value="Male"
         >
           男
         </Radio>
         <Radio
+          style={
+            Object {
+              "color": "white",
+            }
+          }
           type="radio"
           value="Female"
         >
@@ -196,10 +217,13 @@ exports[`test register test initialized state 1`] = `
         </Radio>
       </Memo([object Object])>
     </div>
-    <p>
+    <p
+      className="regp"
+    >
       请输入手机号:
     </p>
     <Input
+      className="input"
       onBlur={[Function]}
       placeholder="Enter your phone number"
       prefix={
@@ -209,12 +233,15 @@ exports[`test register test initialized state 1`] = `
       }
       type="text"
     />
-    <p>
+    <p
+      className="regp"
+    >
       请输入邮箱:
     </p>
     <Input
+      className="input"
       onBlur={[Function]}
-      placeholder="Enter your address"
+      placeholder="Enter your email"
       prefix={
         <ForwardRef(UserOutlined)
           className="site-form-item-icon"
@@ -223,7 +250,9 @@ exports[`test register test initialized state 1`] = `
       type="text"
     />
     <div />
-    <p>
+    <p
+      className="regp"
+    >
       上传头像：
     </p>
     <UploadImage
