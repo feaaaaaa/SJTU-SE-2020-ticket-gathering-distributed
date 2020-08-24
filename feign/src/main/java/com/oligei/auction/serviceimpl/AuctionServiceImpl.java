@@ -91,10 +91,11 @@ public class AuctionServiceImpl implements AuctionService {
     public Boolean deposit(Integer userid, Integer auctionid) throws NullPointerException{
         Objects.requireNonNull(userid,"null userid --AuctionServiceImpl deposit");
         Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl deposit");
-        Integer deposit = auctionDao.findOneById(auctionid).getInitprice() * 3;
+//        Integer deposit = auctionDao.findOneById(auctionid).getInitprice() * 3;
+        AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
+        Integer deposit=-1*auctionListItem.getDeposit();
         Msg<Integer> msg = userFeign.rechargeOrDeduct(userid,deposit);
         if (msg.getStatus() != 200) return false;
-        AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
         auctionListItem.addUser(userid);
         return true;
     }
@@ -167,20 +168,20 @@ public class AuctionServiceImpl implements AuctionService {
         String venue = activity.getVenue();
         String activityIcon = activity.getActivityIcon();
         AuctionListItem auctionListItem = new AuctionListItem(auctionid,timeFormatter.strToTimestamp(ddl),orderprice,
-                timeFormatter.strToDate(showtime),amount,title,actor,venue,0,activityIcon);
+                timeFormatter.strToDate(showtime),amount,title,actor,venue,0,activityIcon,3*initprice);
         modifyAuctionList(auctionListItem);
     }
-//
-//    @PostConstruct
-//    public void tmpInit(){
-////        Auction auction=auctionDao.findOneById(1);
-////        System.out.println(auction.getInitprice()+"???");
-////        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
-//        String Ddl="2020-08-26 06:00:00";
-//        String showTime="2020-08-22";
-////        String showTime=timeFormatter.dateToStr(auction.getShowtime());
-//        addAuction(30616,Ddl,showTime,80,80,2);
-//    }
+
+    @PostConstruct
+    public void tmpInit(){
+//        Auction auction=auctionDao.findOneById(1);
+//        System.out.println(auction.getInitprice()+"???");
+//        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
+        String Ddl="2020-08-26 06:00:00";
+        String showTime="2020-08-22";
+//        String showTime=timeFormatter.dateToStr(auction.getShowtime());
+        addAuction(30616,Ddl,showTime,80,80,2);
+    }
 
 
     /**

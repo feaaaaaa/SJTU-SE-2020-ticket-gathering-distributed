@@ -20,6 +20,7 @@ public class AuctionListItem {
     private String venue;
     private Integer userid;
     private String activityIcon;
+    private Integer deposit;
     private Set<Integer> users = new HashSet<>();
 
     public AuctionListItem(){}
@@ -33,7 +34,8 @@ public class AuctionListItem {
             String actor,
             String venue,
             Integer userid,
-            String activityIcon
+            String activityIcon,
+            Integer deposit
     )
     {
         this.auctionid = auctionid;
@@ -46,6 +48,7 @@ public class AuctionListItem {
         this.venue = venue;
         this.userid = userid;
         this.activityIcon = activityIcon;
+        this.deposit=deposit;
     }
 
     public Integer getAuctionid(){return auctionid;}
@@ -77,6 +80,13 @@ public class AuctionListItem {
 
     public String getActivityIcon(){return activityIcon;}
     public void setActivityIcon(String activityIcon){this.activityIcon = activityIcon;}
+
+    public Integer getDeposit() {
+        return deposit;
+    }
+    public void setDeposit(Integer deposit) {
+        this.deposit = deposit;
+    }
 
     public boolean userExists(Integer userid) {return users.contains(userid);}
     public void addUser(Integer userid) {users.add(userid);}

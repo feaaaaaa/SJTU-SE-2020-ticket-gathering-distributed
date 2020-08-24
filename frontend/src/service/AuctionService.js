@@ -24,3 +24,15 @@ export const enterAuction=(userId,auctionId,token,callback)=>{
     const url = `/auction/canEnter`;
     authRequest(url,data,token,callback);
 }
+
+export const deposit=(userId,auctionId,token,callback)=>{
+    const data={userid:userId,auctionid:auctionId};
+    const url = `/auction/deposit`;
+    authRequest(url,data,token,callback);
+}
+
+export const getPriceById=(auctionId,token,callback)=>{
+    const data={auctionid:auctionId};
+    const url = `/auction/getPrice`;
+    authRequest(url,data,token,callback);
+}
