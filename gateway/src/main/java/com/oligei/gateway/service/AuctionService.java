@@ -6,19 +6,34 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @FeignClient(value = "auction")
 public interface AuctionService {
 
     @RequestMapping(value = "/Auction/add",method = RequestMethod.POST)
-    Msg<Boolean> addAuction(@RequestParam("actitemid")Integer actitemid, @RequestParam("ddl")String ddl,
-                            @RequestParam("showtime")String showtime, @RequestParam("initprice")Integer initprice,
-                            @RequestParam("orderprice")Integer orderprice, @RequestParam("amount")Integer amount);
+    Msg<Boolean> addAuction(@RequestParam("actitemid")Integer actitemid,
+                                   @RequestParam("ddl")String ddl,
+                                   @RequestParam("showtime")String showtime,
+                                   @RequestParam("initprice")Integer initprice,
+                                   @RequestParam("orderprice")Integer orderprice,
+                                   @RequestParam("amount")Integer amount);
 
 
     @RequestMapping(value = "/Auction/get",method = RequestMethod.GET)
-    Msg<List<AuctionListItem>> getAuctions();
+    Msg<Map<Integer,AuctionListItem>> getAuctions();
 
     @RequestMapping(value = "/Auction/join",method = RequestMethod.POST)
-    Msg<Integer> joinAuction(@RequestParam("auctionid")Integer auctionid,@RequestParam("userid")Integer userid,@RequestParam("price")Integer price);
+    Msg<Integer> joinAuction(@RequestParam("auctionid") java.lang.Integer auctionid,
+                                          @RequestParam("userid") java.lang.Integer userid,
+                                          @RequestParam("price") java.lang.Integer price);
+
+    @RequestMapping("/canEnter")
+    Msg<Boolean> canEnter(@RequestParam("userid") Integer userid, @RequestParam("auctionid") Integer auctionid);
+
+    @RequestMapping("/deposit")
+    Msg<Boolean> deposit(@RequestParam("userid") Integer userid, @RequestParam("auctionid") Integer auctionid);
+
+    @RequestMapping("/getPrice")
+    Msg<Integer> getPrice(@RequestParam("auctionid") Integer auctionid);
 }
