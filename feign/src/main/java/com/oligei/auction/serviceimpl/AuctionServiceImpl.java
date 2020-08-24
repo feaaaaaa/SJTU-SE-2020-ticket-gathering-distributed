@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -40,7 +41,7 @@ public class AuctionServiceImpl implements AuctionService {
     @Autowired
     private UserFeign userFeign;
 
-    private TimeFormatter timeFormatter;
+    private TimeFormatter timeFormatter=new TimeFormatter();
 
     private HashMap<Integer,AuctionListItem> map0 = new HashMap<Integer, AuctionListItem>() {};
     private HashMap<Integer,AuctionListItem> map1 = new HashMap<Integer, AuctionListItem>() {};
@@ -169,6 +170,17 @@ public class AuctionServiceImpl implements AuctionService {
                 timeFormatter.strToDate(showtime),amount,title,actor,venue,0,activityIcon);
         modifyAuctionList(auctionListItem);
     }
+//
+//    @PostConstruct
+//    public void tmpInit(){
+////        Auction auction=auctionDao.findOneById(1);
+////        System.out.println(auction.getInitprice()+"???");
+////        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
+//        String Ddl="2020-08-26 06:00:00";
+//        String showTime="2020-08-22";
+////        String showTime=timeFormatter.dateToStr(auction.getShowtime());
+//        addAuction(30616,Ddl,showTime,80,80,2);
+//    }
 
 
     /**

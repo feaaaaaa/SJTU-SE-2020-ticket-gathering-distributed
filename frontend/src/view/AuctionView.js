@@ -1,6 +1,6 @@
 import React from 'react';
 import { sports} from "../const/activity";
-import {Avatar, Button, Divider, Dropdown, Input, Layout, List, Menu} from "antd";
+import {Avatar, Button, Divider, Dropdown, Input, Layout, List, Menu, message} from "antd";
 import "../css/sortPage.css"
 import "../css/headerInfo.css"
 import {RecommendList} from "../component/RecommendList";
@@ -40,10 +40,13 @@ export class AuctionView extends React.Component{
 
     handleRender = () =>{
         const callback = data =>{
-            let trueData = data.data;
-            console.log("rendering");
-            console.log("数据："+data);
-            this.setState({auctions:trueData});
+            if(data!=null) {
+                let trueData = data.data;
+                console.log("auctionView return:");
+                console.log("数据：" + data);
+                if (data.status === 200) this.setState({auctions: trueData});
+                else message.error(data.msg);
+            }
         }
         getAuctions(localStorage.getItem("token"),callback);
     }

@@ -166,6 +166,9 @@ export class AdminAuction extends React.Component {
             this.openNotificationFailure("warning")
         else
             addAuction(parseInt(localStorage.getItem("actitemid")),this.state.ddl,this.state.time,parseInt(this.state.price),this.state.targetprice,this.state.chosenNum,localStorage.getItem("token"),callback);
+        // {
+        //     console.log("add!!!"+localStorage.getItem("actitemid"),this.state.ddl,this.state.time,parseInt(this.state.price),this.state.targetprice,this.state.chosenNum);
+        // }
     }
 
     disabledDate = current => {
@@ -186,7 +189,7 @@ export class AdminAuction extends React.Component {
         if(this.state.authentication||this.state.authorization)
             return <Redirect to={{pathname: "/login"}}/>;
         return(
-            <div style={{width:"70%",margin:"auto",paddingTop:100}}>
+            <div >
                 <img id='Dimg' alt="example" src={this.state.info.activityicon} />
                 <p id="Dtitle">{this.state.info.title}</p>
                 <p id="Dinfo">地点：{this.state.info.venue}</p>
