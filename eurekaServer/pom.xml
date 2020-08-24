@@ -74,7 +74,7 @@
                         <imageTag>${maven.build.timestamp}</imageTag>
                     </imageTags>
                     <baseImage>java</baseImage>
-                    <entryPoint>["java", "-jar", "/${project.build.finalName}.jar"]</entryPoint>
+                    <entryPoint>["java","-Djava.security.egd=file:/dev/./urandom","-javaagent:/home/ubuntu/skywalking-agent.jar","-Dskywalking.agent.service_name=eureka","-Dskywalking.collector.backend_service=34.207.156.185:11800","-jar","/eureka-0.0.1-SNAPSHOT.jar"]</entryPoint>
                     <!-- dockerfile文件路径-->
                     <dockerDirectory>${project.basedir}/src/main/docker</dockerDirectory>
                     <resources>
