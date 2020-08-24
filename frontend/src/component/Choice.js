@@ -26,12 +26,14 @@ export class Choice extends React.Component{
         if(this.state.clickCity) {
             this.setState({clickCity:false});
             this.setState({city: e.target.value});
-            category_search(this.state.type, this.state.category, e.target.value, (res) => {
-                console.log(res);
-                if (res != null)
-                    // this.setState({activity: res})
-                    this.props.onChoose(res);
-            })
+            this.props.onChoose(this.state.type,this.state.category,e.target.value);
+            // this.setState({city: e.target.value});
+            // category_search(this.state.type, this.state.category, e.target.value, 1,(res) => {
+            //     console.log(res);
+            //     if (res != null)
+            //         // this.setState({activity: res})
+            //         this.props.onChoose(res);
+            // })
             setTimeout(()=>{this.setState({clickCity:true})}, 2000);
         }
         else message.info("点击太快了，休息一会吧")
@@ -41,12 +43,13 @@ export class Choice extends React.Component{
         e.stopPropagation();
         if(this.state.clickCategory) {
             this.setState({category: "全部", type: "category",clickCategory:false});
-            category_search("category", "全部", this.state.city, (res) => {
-                console.log(res);
-                if (res != null)
-                    // this.setState({activity: res})
-                    this.props.onChoose(res);
-            })
+            this.props.onChoose("category","全部",this.state.city);
+            // category_search("category", "全部", this.state.city, (res) => {
+            //     console.log(res);
+            //     if (res != null)
+            //         // this.setState({activity: res})
+            //         this.props.onChoose(res);
+            // })
             setTimeout(()=>{this.setState({clickCategory:true})}, 2000);
         }
         else message.info("点击太快了，休息一会吧");
@@ -56,12 +59,13 @@ export class Choice extends React.Component{
         e.stopPropagation();
         if(this.state.clickCity) {
             this.setState({city: "全国",clickCity:false});
-            category_search(this.state.type, this.state.category, "全国", (res) => {
-                console.log(res);
-                if (res != null)
-                    // this.setState({activity: res})
-                    this.props.onChoose(res);
-            })
+            this.props.onChoose(this.state.type,this.state.category,"全国");
+            // category_search(this.state.type, this.state.category, "全国", (res) => {
+            //     console.log(res);
+            //     if (res != null)
+            //         // this.setState({activity: res})
+            //         this.props.onChoose(res);
+            // })
             setTimeout(()=>{this.setState({clickCity:true})}, 2000);
         }
         else message.info("点击太快了，休息一会吧");
@@ -70,12 +74,13 @@ export class Choice extends React.Component{
     handleCategoryClick = (key) => {
         if(this.state.clickCategory) {
             this.setState({category: key, type: "category",clickCategory:false});
-            category_search("category", key, this.state.city, (res) => {
-                console.log(res);
-                if (res != null)
-                    this.props.onChoose(res);
-                // this.setState({activity: res})
-            })
+            this.props.onChoose("category",key,this.state.city);
+            // category_search("category", key, this.state.city, (res) => {
+            //     console.log(res);
+            //     if (res != null)
+            //         this.props.onChoose(res);
+            //     // this.setState({activity: res})
+            // })
             setTimeout(()=>{this.setState({clickCategory:true})}, 2000);
         }
         else message.info("点击太快了，休息一会吧");
@@ -83,12 +88,13 @@ export class Choice extends React.Component{
 
     handleSubcategoryClick = (e) => {
         this.setState({category:e.key,type:"subcategory"});
-        category_search("subcategory",e.key,this.state.city,(res) => {
-            console.log(res);
-            if (res != null)
-                this.props.onChoose(res);
-                // this.setState({activity: res})
-        })
+        this.props.onChoose("subcategory",e.key,this.state.city);
+        // category_search("subcategory",e.key,this.state.city,(res) => {
+        //     console.log(res);
+        //     if (res != null)
+        //         this.props.onChoose(res);
+        //         // this.setState({activity: res})
+        // })
     };
 
     render(){

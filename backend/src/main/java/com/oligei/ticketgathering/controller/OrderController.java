@@ -60,8 +60,9 @@ public class OrderController {
     public Msg addOrder(@RequestParam("userId")int userId, @RequestParam("actitemId")int actitemId,
                             @RequestParam("initPrice")int initPrice, @RequestParam("orderPrice")int orderPrice, @RequestParam("amount")int amount,
                             @RequestParam("showtime")String showtime,@RequestParam("orderTime")String orderTime){
+        boolean result;
         try{
-            orderService.addOrder(userId,actitemId,initPrice,orderPrice,amount,showtime,orderTime);
+            result = orderService.addOrder(userId,actitemId,initPrice,orderPrice,amount,showtime,orderTime);
         }
         catch(ArrayIndexOutOfBoundsException e){
             logger.error("ArrayIndexOutOfBoundsException",e);
@@ -75,6 +76,8 @@ public class OrderController {
             logger.error("NullPointerException",e);
             return new Msg<Boolean>(201,"该商品id不存在",false);
         }
+        if(!result)
+            return new Msg<>(202,"余额不足",false);
         return new Msg<Boolean>(200,"下单成功",true);
     }
 }

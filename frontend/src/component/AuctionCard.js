@@ -33,6 +33,8 @@ export class AuctionCard extends React.Component{
                         this.openNotificationIsOver("warning");
                     else if (data.data === -2)
                         this.openNotificationLowerPrice("warning");
+                    else if (data.data === -3)
+                        this.openNotificationWithoutEnoughMoney("warning");
                     else if(data.status===200){
                         this.openNotificationPurchase("success");
                     }else message.error(data.msg);
@@ -70,6 +72,14 @@ export class AuctionCard extends React.Component{
             message: 'Notification Title',
             description:
                 '出价必须高于当前价格',
+        });
+    };
+
+    openNotificationWithoutEnoughMoney = type => {
+        notification[type]({
+            message: 'Notification Title',
+            description:
+                '余额不足，请充值',
         });
     };
 

@@ -46,6 +46,7 @@ public class UserServiceImpl implements UserService {
      */
     public boolean register(User user) {
         Objects.requireNonNull(user,"null user --UserServiceImpl register");
+        user.setBalance(500);
         return userDao.register(user);
     }
 

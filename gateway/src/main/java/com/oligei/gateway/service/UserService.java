@@ -29,4 +29,7 @@ public interface UserService {
 
     @RequestMapping(value = "/User/FindByUserId",method = RequestMethod.GET)
     public Msg<User> findUserByUserId(@RequestParam(name = "userId")Integer userId);
-}
+
+    @RequestMapping(value = "/User/rechargeOrDeduct",method = RequestMethod.POST)
+    public Msg<Integer> rechargeOrDeduct(@RequestParam(name = "userId")Integer userId,@RequestParam(name = "increment")Integer increment);
+    }

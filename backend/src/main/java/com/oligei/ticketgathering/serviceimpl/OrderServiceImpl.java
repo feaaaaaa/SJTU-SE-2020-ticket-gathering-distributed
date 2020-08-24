@@ -8,6 +8,7 @@ import com.oligei.ticketgathering.entity.mysql.Actitem;
 import com.oligei.ticketgathering.entity.mysql.Activity;
 import com.oligei.ticketgathering.entity.mysql.Order;
 import com.oligei.ticketgathering.service.OrderService;
+import com.oligei.ticketgathering.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.stereotype.Service;
@@ -28,6 +29,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Autowired
     private ActivityDao activityDao;
+
+    @Autowired
+    private UserService userService;
 
 //    @Override
 //    public List<OrderInfo> getOrderInfoByUser(int userId){
@@ -84,6 +88,8 @@ public class OrderServiceImpl implements OrderService {
             }
             if (orderPrice == 0) {
                 System.out.println("normal addOrder");
+                if(userService.rechargeOrDeduct(userId,-initPrice)==-1)
+                    return false;//余额不足
                 return orderDao.addOrder(userId, actitemId, initPrice, amount, Showtime, OrderTime);
             } else {
                 System.out.println("Auction");

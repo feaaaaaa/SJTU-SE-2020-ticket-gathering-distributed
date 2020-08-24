@@ -39,4 +39,11 @@ export const getRecommend= async(userId,activityId,token,callback)=>{
     await authRequest(url,data,token,callback);
 }
 
+export const recharge= async(userId,increment,token,callback)=>{
+    const url='/user/rechargeOrDeduct';
+    const data={userId:userId,increment:increment};
+    await authRequest(url,data,token,callback);
+}
+
+
 

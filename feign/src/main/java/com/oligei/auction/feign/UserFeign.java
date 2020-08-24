@@ -6,9 +6,9 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(value = "ticketGathering",configuration = FeignConfig.class)
+@FeignClient(value = "ticketgathering",configuration = FeignConfig.class)
 public interface UserFeign {
 
     @RequestMapping(value = "/User/rechargeOrDeduct")
-    Msg rechargeOrDeduct(@RequestParam(name = "userid")Integer userid, @RequestParam(name = "increment")Integer increment);
+    Msg<Integer> rechargeOrDeduct(@RequestParam(name = "userId")Integer userId, @RequestParam(name = "increment")Integer increment);
     }

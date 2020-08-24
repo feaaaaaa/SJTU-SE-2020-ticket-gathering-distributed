@@ -3,6 +3,7 @@ package com.oligei.ticketgathering.serviceimpl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.google.inject.internal.cglib.proxy.$InvocationHandler;
 import com.oligei.ticketgathering.dao.ActitemDao;
 import com.oligei.ticketgathering.dao.ActivityDao;
 import com.oligei.ticketgathering.dao.UserDao;
@@ -28,17 +29,21 @@ import org.apache.lucene.search.ScoreDoc;
 import org.apache.lucene.search.TopDocs;
 import org.apache.lucene.store.Directory;
 import org.apache.lucene.store.FSDirectory;
+import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.Version;
 import org.apdplat.word.segmentation.Word;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
+import org.springframework.data.repository.query.Param;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import org.apdplat.word.WordSegmenter;
 import org.springframework.transaction.annotation.Transactional;
 import org.wltea.analyzer.lucene.IKAnalyzer;
 
+import javax.annotation.PostConstruct;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
@@ -52,17 +57,20 @@ public class ActivityServiceImpl implements ActivityService {
     @Autowired
     private ActitemDao actitemDao;
 
-
+    //used when search null/
     private Cache<List<ActivitySortpage>> cache=new Cache<>();
 
     private Cache<ActivitySortpage> oneCache=new Cache<>();
 
 //    private Cache<List<Integer>> idSetCache=new Cache<>();
 
-    private  int searchResultMax=30;
+    private int searchResultMax=30;
+    private int pageSize = 10;
+
+    Directory directoryRandom=new RAMDirectory();
 
 
-    @Override
+    @PostConstruct
     /**
      *  initialize a search index (which only need to be done once)
      * @return true if initialize finished successfully
@@ -86,74 +94,153 @@ public class ActivityServiceImpl implements ActivityService {
             document.add(new TextField("title", content, Field.Store.YES));
             docs.add(document);
         }
-        Directory directory = FSDirectory.open(new File("./indexDir"));
+//        Directory directory = FSDirectory.open(new File("./indexDir"));
         Analyzer analyzer = new IKAnalyzer();
         IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
         conf.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
-        IndexWriter indexWriter = new IndexWriter(directory, conf);
-        indexWriter.addDocuments(docs);
-        indexWriter.commit();
-        indexWriter.close();
+//        IndexWriter indexWriter = new IndexWriter(directory, conf);
+        IndexWriter indexWriter1=new IndexWriter(directoryRandom,conf);
+//        indexWriter.addDocuments(docs);
+//        indexWriter.commit();
+//        indexWriter.close();
+        indexWriter1.addDocuments(docs);
+        indexWriter1.commit();
+        indexWriter1.close();
+        System.out.println("Initialize search index successfully!");
         return true;
     }
 
-    @Override
     /**
-     *  use index to get search id, then get data from cache and return
+     *  calculate search score, generate result
      * @param value search value
-     * @return true if initialize finished successfully
-     * @author feaaaaaa
-     * @date 2020.08.14
+     * @return search result
+     * @author feaaaaaa,ziliuziliu
+     * @date 2020/8/21
      * @throws NullPointerException the param of activitySortpage is null or the mongo data of actitem is null
      * @throws IOException if open file fails
      * @throws ParseException if parse of value fails
      * @throws JpaObjectRetrievalFailureException if id is invalid
      * @throws EmptyResultDataAccessException when activity is not found
      */
-    public List<ActivitySortpage> search(String value) throws IOException, ParseException {
-        //null
-        if (value == null || value.equals("") || value.equals("null")) {
-            List<ActivitySortpage> cacheResult = cache.getValue("searchNull");
-            if (cacheResult != null) {
-                System.out.println("search null get from cache");
-                return cacheResult;
-            }
-            List<ActivitySortpage> activities = new LinkedList<>();
-            for (int i = 10; i <= 451; i += 9) {
-                activities.add(findActivityAndActitem(i));
-            }
-            cache.addOrUpdateCache("searchNull", activities);
-            System.out.println("search null add into cache");
-            return activities;
-        }
-        //not null
-        Directory directory = FSDirectory.open(new File("./indexDir"));
-        // 索引读取工具
-        IndexReader reader = DirectoryReader.open(directory);
-        // 索引搜索工具
-        IndexSearcher searcher = new IndexSearcher(reader);
+    private List<ActivitySortpage> searchResult(String value) throws IOException, ParseException {
+        List<ActivitySortpage> result = cache.getValue(value);
+        //not in cache
+        if (result == null) {
+            result = new ArrayList<>();
+            //not null
+//        Directory directory = FSDirectory.open(new File("./indexDir"));
+            // 索引读取工具
+//        IndexReader reader = DirectoryReader.open(directory);
+            IndexReader reader = DirectoryReader.open(directoryRandom);
+            // 索引搜索工具
+            IndexSearcher searcher = new IndexSearcher(reader);
 
-        // 创建查询解析器,两个参数：默认要查询的字段的名称，分词器
-        QueryParser parser = new QueryParser("title", new IKAnalyzer());
-        // 创建查询对象
-        Query query = parser.parse(value);
+            // 创建查询解析器,两个参数：默认要查询的字段的名称，分词器
+            QueryParser parser = new QueryParser("title", new IKAnalyzer());
+            // 创建查询对象
+            Query query = parser.parse(value);
 
-        // 搜索数据,两个参数：查询条件对象要查询的最大结果条数, 返回的结果是 按照匹配度排名得分前N名的文档信息（包含查询到的总条数信息、所有符合条件的文档的编号信息）。
-        TopDocs topDocs = searcher.search(query, searchResultMax);
-        // 获取总条数
-        System.out.println("本次搜索共找到" + topDocs.totalHits + "条数据");
-        // 获取得分文档对象（ScoreDoc）数组.SocreDoc中包含：文档的编号、文档的得分
-        ScoreDoc[] scoreDocs = topDocs.scoreDocs;
-        List<ActivitySortpage> activitySortpages = new LinkedList<>();
-        for (ScoreDoc scoreDoc : scoreDocs) {
-            Document doc = reader.document(scoreDoc.doc);
+            // 搜索数据,两个参数：查询条件对象要查询的最大结果条数, 返回的结果是 按照匹配度排名得分前N名的文档信息（包含查询到的总条数信息、所有符合条件的文档的编号信息）。
+            TopDocs topDocs = searcher.search(query, searchResultMax);
+            // 获取总条数
+            System.out.println("本次搜索共找到" + topDocs.totalHits + "条数据");
+            // 获取得分文档对象（ScoreDoc）数组.SocreDoc中包含：文档的编号、文档的得分
+            ScoreDoc[] scoreDocs = topDocs.scoreDocs;
+
+            for (ScoreDoc scoreDoc : scoreDocs) {
+                Document doc = reader.document(scoreDoc.doc);
 //            System.out.println("id: " + doc.get("id"));
 //            System.out.println(activityDao.findOneById(Integer.parseInt(doc.get("id"))).getTitle());
 //            System.out.println("title: " + doc.get("title"));
 //            System.out.println("得分： " + scoreDoc.score);
-            activitySortpages.add(findActivityAndActitem(Integer.parseInt(doc.get("id"))));
+                result.add(findActivityAndActitem(Integer.parseInt(doc.get("id"))));
+            }
+            cache.addOrUpdateCache(value,result);
         }
+        return result;
+    }
+
+    @Override
+    /**
+     *  use index to get search id, then get data from cache and return
+     * @param value,page
+     * @return search result for certain page
+     * @author feaaaaaa,ziliuziliu
+     * @date 2020.08.21
+     * @throws NullPointerException the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws IOException if open file fails
+     * @throws ParseException if parse of value fails
+     * @throws JpaObjectRetrievalFailureException if id is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
+     */
+    public List<ActivitySortpage> search(String value, Integer page) throws IOException, ParseException, IndexOutOfBoundsException {
+        List<ActivitySortpage> result;//every item
+        List<ActivitySortpage> activitySortpages = new ArrayList<>();//item this page should display
+
+        //null
+        if (value == null || value.equals("") || value.equals("null")) {
+            result = cache.getValue("searchNull");
+            if (result != null) {
+                System.out.println("search null get from cache");
+                for (int i=(page-1)*pageSize;i<page*pageSize;i++)
+                    activitySortpages.add(result.get(i));
+                return activitySortpages;
+            }
+            else {
+                // should not be used
+                result = new ArrayList<>();
+                for (int i = 10; i <= 451; i += 9) {
+                    ActivitySortpage activitySortpage = findActivityAndActitem(i);
+                    if (activitySortpage != null)
+                        result.add(activitySortpage);
+                }
+                cache.addOrUpdateCache("searchNull", result);
+                System.out.println("search null add into cache");
+                return result;
+            }
+        }
+        result = searchResult(value);
+        for (int i = (page - 1) * pageSize; i < page * pageSize; i++) {
+            if (i >= result.size()) break;
+            ActivitySortpage activitySortpage = result.get(i);
+            activitySortpages.add(activitySortpage);
+        }
+        if (activitySortpages.size() == 0) throw new IndexOutOfBoundsException("页码越界");
         return activitySortpages;
+    }
+
+    @Override
+    /**
+     *  how many pages?
+     * @param value,page
+     * @return pagenum
+     * @author ziliuziliu
+     * @date 2020/8/21
+     * @throws NullPointerException the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws IOException if open file fails
+     * @throws ParseException if parse of value fails
+     * @throws JpaObjectRetrievalFailureException if id is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
+     */
+    public Integer searchPageNum(String value) throws IOException, ParseException {
+        List<ActivitySortpage> result;
+        if (value == null || value.equals("") || value.equals("null")) {
+            result = cache.getValue("searchNull");
+            if (result == null) {
+                // should not be used
+                result = new ArrayList<>();
+                for (int i = 123; i <= 456; i += 9) {
+                    ActivitySortpage activitySortpage = findActivityAndActitem(i);
+                    if (activitySortpage != null)
+                        result.add(activitySortpage);
+                }
+                cache.addOrUpdateCache("searchNull", result);
+                System.out.println("search null add into cache");
+            }
+            return result.size()/pageSize;
+        }
+        result = searchResult(value);
+        return result.size()/pageSize;
     }
 
 //    @Override
@@ -286,42 +373,87 @@ public class ActivityServiceImpl implements ActivityService {
         return true;
     }
 
-
-    @Override
     /**
-     *  use index to get search id, then get data from cache and return
-     * @param value search value
+     *  selectSearch result
+     * @param type,name,city
      * @return true if initialize finished successfully
-     * @author ziliuziliu,feaaaaaa
-     * @date 2020.08.14
+     * @author ziliuziliu
+     * @date 2020/8/21
      * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
      * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
      * @throws EmptyResultDataAccessException when activity is not found
      * @throws InvalidDataAccessApiUsageException when type is invalid
      */
-    public List<ActivitySortpage> selectSearch(String type,String name,String city) throws IOException, ParseException {
+    public List<ActivitySortpage> selectSearchResult(String type,String name,String city) throws IOException, ParseException {
+        List<ActivitySortpage> result;
+        List<Integer> activities;
+        String cacheName=name+city;
+        result = cache.getValue(cacheName);
+        if (result == null) {
+            result = new ArrayList<>();
+            activities = activityDao.findActivityByCategoryAndCity(type, name, city);
+            for (Integer activity : activities)
+                result.add(findActivityAndActitem(activity));
+            cache.addOrUpdateCache(cacheName, result);
+        }
+        return result;
+    }
+
+    @Override
+    /**
+     *  use index to get search id, then get data from cache and return
+     * @param type,name,city,page
+     * @return true if initialize finished successfully
+     * @author ziliuziliu,feaaaaaa
+     * @date 2020.08.21
+     * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
+     * @throws InvalidDataAccessApiUsageException when type is invalid
+     */
+    public List<ActivitySortpage> selectSearch(String type,String name,String city,Integer page) throws IOException,
+            ParseException, IndexOutOfBoundsException {
         Objects.requireNonNull(type,"null type --ActivityServiceImpl selectSearch");
         Objects.requireNonNull(name,"null name --ActivityServiceImpl selectSearch");
         Objects.requireNonNull(city,"null city --ActivityServiceImpl selectSearch");
+
+        List<ActivitySortpage> result;//every item
+        List<ActivitySortpage> activitySortpages = new ArrayList<>(); //item this page should display
+
         if(!type.equals("category") && !type.equals("subcategory"))
             throw new InvalidDataAccessApiUsageException("invalid category");
-
-        if (name.equals("全部") && city.equals("全国")) return search("");
-
-        String cacheName=name+city;
-        List<Integer> activities ;
-        List<ActivitySortpage> activitySortpages = cache.getValue(cacheName);
-        if(activitySortpages!=null){
-            System.out.println(cacheName+"get from cache");
-            return activitySortpages;
+        if (name.equals("全部") && city.equals("全国")) return search("",page);
+        result = selectSearchResult(type,name,city);
+        for (int i=(page-1)*10;i<page*10;i++) {
+            if (i >= result.size()) break;
+            activitySortpages.add(result.get(i));
         }
-        activitySortpages = new ArrayList<ActivitySortpage>();
-        activities = activityDao.findActivityByCategoryAndCity(type,name,city);
-        for (Integer activity : activities)
-                activitySortpages.add(findActivityAndActitem(activity));
-        cache.addOrUpdateCache(cacheName,activitySortpages);
-        System.out.println(cacheName+"add into cache");
+        if (activitySortpages.size() == 0) throw new IndexOutOfBoundsException("页码越界");
         return activitySortpages;
+    }
+
+    @Override
+    /**
+     *  how many pages?
+     * @param type,name,city
+     * @return pagenum
+     * @author ziliuziliu
+     * @date 2020/8/21
+     * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
+     * @throws InvalidDataAccessApiUsageException when type is invalid
+     */
+    public Integer selectSearchPageNum(String type,String name,String city) throws IOException, ParseException {
+        Objects.requireNonNull(type,"null type --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(name,"null name --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(city,"null city --ActivityServiceImpl selectSearch");
+        List<ActivitySortpage> result;//every item
+        if(!type.equals("category") && !type.equals("subcategory"))
+            throw new InvalidDataAccessApiUsageException("invalid category");
+        if (name.equals("全部") && city.equals("全国")) return searchPageNum("");
+        result = selectSearchResult(type,name,city);
+        return result.size()/pageSize;
     }
 
     @Override
@@ -335,7 +467,8 @@ public class ActivityServiceImpl implements ActivityService {
      *@throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> findActivityByCategoryHome() {
-        List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>(findActivityByOneCategoryHome("儿童亲子"));
+        List<ActivitySortpage> activitySortpages = new ArrayList<>();
+        activitySortpages.addAll(findActivityByOneCategoryHome("儿童亲子"));
         activitySortpages.addAll(findActivityByOneCategoryHome("话剧歌剧"));
         activitySortpages.addAll(findActivityByOneCategoryHome("展览休闲"));
         activitySortpages.addAll(findActivityByOneCategoryHome("曲苑杂坛"));
@@ -343,7 +476,6 @@ public class ActivityServiceImpl implements ActivityService {
         activitySortpages.addAll(findActivityByOneCategoryHome("舞蹈芭蕾"));
         activitySortpages.addAll(findActivityByOneCategoryHome("音乐会"));
         activitySortpages.addAll(findActivityByOneCategoryHome("演唱会"));
-
         return activitySortpages;
     }
 
@@ -424,35 +556,24 @@ public class ActivityServiceImpl implements ActivityService {
      */
     public Boolean initActivity() {
 
-//        String init="初始化分词";
-//        List<Word> words=WordSegmenter.seg(init);
-//        System.out.println(words.toString());
-
+        List<ActivitySortpage> activitySortpages = new ArrayList<>();
         //add all the activitySortpage into cache
-        initActivityById(1000);
-        initActivityById(2000);
-        initActivityById(3000);
-        initActivityById(4000);
-        initActivityById(5000);
-        initActivityById(6000);
-        initActivityById(7000);
-        initActivityById(8000);
-        initActivityById(9000);
-        initActivityById(10000);
-        initActivityById(11000);
-        initActivityById(12000);
-
+        initActivityById(1000,activitySortpages);
+        initActivityById(2000,activitySortpages);
+        initActivityById(3000,activitySortpages);
+        initActivityById(4000,activitySortpages);
+        initActivityById(5000,activitySortpages);
+        initActivityById(6000,activitySortpages);
+        initActivityById(7000,activitySortpages);
+        initActivityById(8000,activitySortpages);
+        initActivityById(9000,activitySortpages);
+        initActivityById(10000,activitySortpages);
+        initActivityById(11000,activitySortpages);
+        initActivityById(12000,activitySortpages);
+        //add to searchNull
+        cache.addOrUpdateCache("searchNull", activitySortpages);
         //add home page to cache
         findActivityByCategoryHome();
-
-
-//        String[] citys = {"北京","天津","河北","山西","内蒙古","辽宁","吉林","黑龙江","上海","江苏","浙江","安徽","福建","江西","山东","河南","湖北",
-//                "湖南","广东","广西", "海南","重庆","四川","贵州","云南","西藏","陕西","甘肃","青海","宁夏","新疆","台湾","澳门","香港",
-//                "北京","成都","重庆","长春","长沙","大连","东莞","佛山","福州","广州","贵阳","哈尔滨","海口","杭州","合肥","呼和浩特","济南",
-//                "昆明","南昌","南京","南宁","宁波","青岛","厦门","上海","深圳","沈阳","石家庄","苏州","太原","天津","无锡","武汉","西安","郑州", "珠海"
-//        };
-//        for(String s :citys)
-//            initActivityByCity(s);
         return true;
     }
 
@@ -463,10 +584,10 @@ public class ActivityServiceImpl implements ActivityService {
      * @date 2020.08.14
      * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
      */
-    public void initActivityById(int cnt) {
+    public void initActivityById(int cnt, List<ActivitySortpage> activitySortpages) {
         int basic=Math.max(1,cnt-1000);
         for(int i=basic;i<cnt;++i){
-            findActivityAndActitem(i);
+            activitySortpages.add(findActivityAndActitem(i));
         }
     }
 

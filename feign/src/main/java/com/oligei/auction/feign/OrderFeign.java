@@ -8,11 +8,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 
-@FeignClient(value = "ticketGathering",configuration = FeignConfig.class)
+@FeignClient(value = "ticketgathering",configuration = FeignConfig.class)
 public interface OrderFeign {
 
     @RequestMapping(value = "/Order/addOrder",method = RequestMethod.POST)
-    Msg addOrder(@RequestParam("userId")int userId, @RequestParam("actitemId")int actitemId,
-                 @RequestParam("initPrice")int initPrice, @RequestParam("orderPrice")int orderPrice, @RequestParam("amount")int amount,
-                 @RequestParam("showtime")String showtime, @RequestParam("orderTime")String orderTime);
+    Msg<Boolean> addOrder(@RequestParam("userId")int userId, @RequestParam("actitemId")int actitemId,
+                          @RequestParam("initPrice")int initPrice, @RequestParam("orderPrice")int orderPrice,
+                          @RequestParam("amount")int amount,@RequestParam("showtime")String showtime,
+                          @RequestParam("orderTime")String orderTime);
 }

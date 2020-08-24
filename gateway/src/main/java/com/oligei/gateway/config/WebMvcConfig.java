@@ -28,6 +28,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
         excludePath.add("/activity/initActivity");
         excludePath.add("/activity/initSearchIndex");
         excludePath.add("/activity/clear");
+        excludePath.add("/activity/searchPageNum");
+        excludePath.add("/activity/FindActivityByCategoryPageNum");
 
         excludePath.add("/swagger-ui.html");
         excludePath.add("/webjars/**");
