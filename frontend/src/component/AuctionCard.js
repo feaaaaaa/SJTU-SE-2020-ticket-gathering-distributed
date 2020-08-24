@@ -3,7 +3,7 @@ import React from "react";
 import "../css/Auction.css"
 import {addOrder} from "../service/orderServcie";
 import moment from "moment";
-import {joinAuctions} from "../service/AuctionService";
+import {enterAuction, joinAuctions} from "../service/AuctionService";
 
 export class AuctionCard extends React.Component{
 
@@ -99,6 +99,14 @@ export class AuctionCard extends React.Component{
         });
     };
 
+    enterAuction=()=>{
+        enterAuction(localStorage.getItem("userId"),this.props.info.auctionid,localStorage.getItem("token"),(res)=>{
+            if(res!=null){
+
+            }
+        });
+    }
+
     // AuctionButton = () => {
     //     if(localStorage.getItem("userId") === null)
     //         return <Button type="primary" onClick={this.openNotificationWithoutLogin("warning")}>未登录</Button>
@@ -116,6 +124,9 @@ export class AuctionCard extends React.Component{
         ):(this.props.info.userid === parseInt(localStorage.getItem("userId"))?(
         <Button type="primary" danger onClick={this.showModal}>当前最高，可继续加价</Button>
             ):(<Button type="primary" onClick={this.showModal}>竞价</Button>));
+        const EnterButton = localStorage.getItem("userId") === null ? (
+            <Button type="primary" onClick={this.openNotificationWithoutLogin("warning")}>未登录</Button>
+        ):(<Button type="primary" onClick={this.enterAuction}>参与竞价</Button>);
         return(
             <div>
                 <img className='A-image' alt="example" src={this.props.info.activityIcon} />

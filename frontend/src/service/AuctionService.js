@@ -18,3 +18,9 @@ export const joinAuctions = (auctionid,userid,price,token,callback) => {
     const url = `/auction/join`;
     authRequest(url, data,token, callback);
 };
+
+export const enterAuction=(userId,auctionId,token,callback)=>{
+    const data={userid:userId,auctionid:auctionId};
+    const url = `/auction/canEnter`;
+    authRequest(url,data,token,callback);
+}
