@@ -16,7 +16,7 @@ export class HeaderInfo extends React.Component {
             login:false,
             username:null,
             usertype:null,
-            current:"-1"
+            // current:"-1"
         }
     }
 
@@ -53,21 +53,21 @@ export class HeaderInfo extends React.Component {
         }
     }
 
-    handleClick = e => {
-        console.log(e.key);
-        this.setState({ current: e.key });
-    };
+    // handleClick = e => {
+    //     console.log(e.key);
+    //     this.setState({ current: e.key });
+    // };
 
 
     render() {
-        if(this.state.current!=="-1"&&!this.state.login)
-            return <Redirect to={{pathname: "/login"}}/>;
-        if(this.state.current==="1"&&this.state.login)
-            return <Redirect to={{pathname: "/profile"}}/>;
-        if(this.state.current==="2"&&this.state.login)
-            return <Redirect to={{pathname: "/order"}}/>;
-        if(this.state.current==="3")
-            this.logOut();
+        // if(this.state.current!=="-1"&&!this.state.login)
+        //     return <Redirect to={{pathname: "/login"}}/>;
+        // if(this.state.current==="1"&&this.state.login)
+        //     return <Redirect to={{pathname: "/profile"}}/>;
+        // if(this.state.current==="2"&&this.state.login)
+        //     return <Redirect to={{pathname: "/order"}}/>;
+        // if(this.state.current==="3")
+        //     this.logOut();
         return (
             // <Header className="site-layout-background" style={{padding: 0}}>
             //     <div id="header-content">
@@ -158,7 +158,7 @@ export class HeaderInfo extends React.Component {
                                 <a href={this.state.login?"/order":"/login"}>订单管理</a>
                                 {/*订单管理*/}
                             </Menu.Item>
-                            {this.state.login?<Menu.Item key="3">登出</Menu.Item>:null}
+                            {this.state.login?<Menu.Item key="3" onClick={this.logOut.bind(this) }>登出</Menu.Item>:null}
                         </SubMenu>
                     </Menu>
                 </div>

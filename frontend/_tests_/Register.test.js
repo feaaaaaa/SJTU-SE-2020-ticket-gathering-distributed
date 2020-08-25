@@ -22,9 +22,9 @@ describe("test register",()=>{
         expect(wrapper.state().password).toEqual('123456');
         wrapper.find('[placeholder="Enter your password again"]').at(0).simulate('blur',{target:{value: '12345'}});
         expect(wrapper.state().passwordErrorVisible).toBeTruthy();
-        wrapper.find('[placeholder="Enter your address"]').at(0).simulate('blur',{target:{value: '123456'}});
+        wrapper.find('[placeholder="Enter your email"]').at(0).simulate('blur',{target:{value: '123456'}});
         expect(wrapper.state().emailErrorVisible).toBeTruthy();
-        wrapper.find('[placeholder="Enter your address"]').at(0).simulate('blur',{target:{value: 'oligei@gmail.com'}});
+        wrapper.find('[placeholder="Enter your email"]').at(0).simulate('blur',{target:{value: 'oligei@gmail.com'}});
         expect(wrapper.state().emailErrorVisible).toBeFalsy();
         expect(wrapper.state().email).toEqual('oligei@gmail.com');
         // expect(wrapper).toMatchSnapshot();
