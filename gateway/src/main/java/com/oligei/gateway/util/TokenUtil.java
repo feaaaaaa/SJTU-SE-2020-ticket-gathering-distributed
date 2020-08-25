@@ -5,6 +5,7 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.oligei.gateway.entity.User;
+import com.oligei.gateway.util.msgutils.Msg;
 
 import java.util.Date;
 
@@ -32,7 +33,13 @@ public class TokenUtil {
     public static boolean authenverify(String token) {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer("auth0").build();
-            DecodedJWT jwt = verifier.verify(token);
+            DecodedJWT jwt;
+            try{
+                jwt = verifier.verify(token);
+            }catch (com.auth0.jwt.exceptions.TokenExpiredException e){
+                System.out.println("认证失败，已过期");
+                return false;
+            }
             System.out.println("认证通过：");
             System.out.println("issuer: " + jwt.getIssuer());
             System.out.println("username: " + jwt.getClaim("username").asString());
@@ -47,7 +54,13 @@ public class TokenUtil {
     public static boolean adminverify(String token) {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer("auth0").build();
-            DecodedJWT jwt = verifier.verify(token);
+            DecodedJWT jwt;
+            try{
+                jwt = verifier.verify(token);
+            }catch (com.auth0.jwt.exceptions.TokenExpiredException e){
+                System.out.println("认证失败，已过期");
+                return false;
+            }
             String type = jwt.getClaim("type").asString();
             if (!type.equals("Admin")) return false;
             System.out.println("认证通过：");

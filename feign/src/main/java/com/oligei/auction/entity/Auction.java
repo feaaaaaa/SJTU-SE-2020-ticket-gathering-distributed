@@ -6,7 +6,8 @@ import org.springframework.data.mongodb.core.mapping.Field;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.sql.Date;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "tg_auctions")
@@ -15,44 +16,25 @@ public class Auction {
     private Integer auctionid;
     private Integer actitemid;
     private Integer userid;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date ddl;
-
+    private Timestamp ddl;
     private Integer initprice;
     private Integer orderprice;
     private Integer isover;
     private Date showtime;
-    private Date ordertime;
+    private Timestamp ordertime;
     private Integer amount;
 
     public Auction(){}
-
-    public Auction(Integer auctionid,Integer actitemid,Date ddl,Integer initprice
-            ,Integer orderprice, Date showtime,Integer amount)
-    {
-        this.auctionid = auctionid;
+    public Auction(Integer actitemid, Integer userid, Timestamp ddl, Integer initprice,
+                   Integer orderprice, Integer isover, Date showtime, Timestamp ordertime, Integer amount) {
         this.actitemid = actitemid;
-        this.userid = 0;
+        this.userid = userid;
         this.ddl = ddl;
         this.initprice = initprice;
         this.orderprice = orderprice;
-        this.isover = 0;
+        this.isover = isover;
         this.showtime = showtime;
-        this.amount = amount;
-    }
-
-    public Auction(Integer actitemid,Date ddl,Integer initprice
-                    ,Integer orderprice, Date showtime,Integer amount)
-    {
-        this.actitemid = actitemid;
-        this.userid = 0;
-        this.ddl = ddl;
-        this.initprice = initprice;
-        this.orderprice = orderprice;
-        this.isover = 0;
-        this.showtime = showtime;
+        this.ordertime = ordertime;
         this.amount = amount;
     }
 
@@ -72,8 +54,8 @@ public class Auction {
     public void setUserid(Integer userid){this.userid = userid;}
 
     @Column(name = "ddl")
-    public Date getDdl(){return ddl;}
-    public void setDdl(Date ddl){this.ddl = ddl;}
+    public Timestamp getDdl(){return ddl;}
+    public void setDdl(Timestamp ddl) {this.ddl = ddl;}
 
     @Column(name = "initprice")
     public Integer getInitprice(){return initprice;}
@@ -92,8 +74,8 @@ public class Auction {
     public void setShowtime(Date showtime){this.showtime = showtime;}
 
     @Column(name = "ordertime")
-    public Date getOrdertime(){return ordertime;}
-    public void setOrdertime(Date ordertime){this.ordertime = ordertime;}
+    public Timestamp getOrdertime(){return ordertime;}
+    public void setOrdertime(Timestamp ordertime){this.ordertime = ordertime;}
 
     @Column(name = "amount")
     public Integer getAmount(){return amount;}

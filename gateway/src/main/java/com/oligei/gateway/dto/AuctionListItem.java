@@ -17,6 +17,7 @@ public class AuctionListItem {
     String venue;
     Integer userid;
     String activityIcon;
+    Integer deposit;
 
     public AuctionListItem(){}
     public AuctionListItem(
@@ -64,4 +65,10 @@ public class AuctionListItem {
     public void setUserid(Integer userid){this.userid = userid;}
     public String getActivityIcon(){return activityIcon;}
     public void setActivityIcon(String activityIcon){this.activityIcon = activityIcon;}
+    public Integer getDeposit() {
+        return deposit;
+    }
+    public void setDeposit(Integer deposit) {
+        this.deposit = deposit;
+    }
 }

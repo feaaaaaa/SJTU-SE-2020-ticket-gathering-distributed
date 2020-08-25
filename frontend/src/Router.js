@@ -12,6 +12,7 @@ import {AdminView} from "./view/AdminView";
 import {AuctionView} from "./view/AuctionView";
 import {AdminAuctionView} from "./view/AdminAuctionView";
 import {AdminModifyView} from "./view/AdminModifyView";
+import {AuctionDetailView} from "./view/AuctionDetailView";
 
 class BasicRoute extends React.Component{
 
@@ -20,6 +21,7 @@ class BasicRoute extends React.Component{
         return(
             <Router>
                 <Switch>
+                    <Route path="/auctionDetail" component={AuctionDetailView}/>
                     <Route path="/adminModify" component={AdminModifyView}/>
                     <Route path="/adminAuction" component={AdminAuctionView}/>
                     <Route path="/admin" component={AdminView}/>

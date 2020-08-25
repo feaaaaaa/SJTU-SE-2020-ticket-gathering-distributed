@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/auction")
@@ -28,35 +30,67 @@ public class AuctionController {
 
 
     @RequestMapping("/add")
-    public Msg<Boolean> addAuction(@RequestParam("actitemid")Integer actitemid, @RequestParam("ddl")String ddl,
-                                   @RequestParam("showtime")String showtime, @RequestParam("initprice")Integer initprice,
-                                   @RequestParam("orderprice")Integer orderprice, @RequestParam("amount")Integer amount)
+    public Msg<Boolean> addAuction(@RequestParam("actitemid")Integer actitemid,
+                                    @RequestParam("ddl")String ddl,
+                                    @RequestParam("showtime")String showtime,
+                                    @RequestParam("initprice")Integer initprice,
+                                    @RequestParam("orderprice")Integer orderprice,
+                                    @RequestParam("amount")Integer amount)
     {
         try {
             return auctionService.addAuction(actitemid, ddl, showtime, initprice, orderprice, amount);
         }catch (feign.RetryableException e){
             logger.error("请求超时",e);
-            return new Msg<>(-101,"请求超时",false);
+            return new Msg<>(504,"请求超时",false);
         }
     }
 
 
     @RequestMapping("/get")
-    public Msg<List<AuctionListItem>> getAuctions(){
+    public Msg<Map<Integer,AuctionListItem>> getAuctions(){
         try {
             return auctionService.getAuctions();
         }catch (feign.RetryableException e){
-            return new Msg<>(-100, "请求超时", new LinkedList<>());
+            return new Msg<>(504, "请求超时", null);
         }
     }
 
     @RequestMapping("/join")
-    public Msg<Integer> joinAuction(@RequestParam("auctionid")Integer auctionid,@RequestParam("userid")Integer userid,@RequestParam("price")Integer price)
+    public Msg<Integer> joinAuction(@RequestParam("auctionid") java.lang.Integer auctionid,
+                                    @RequestParam("userid") java.lang.Integer userid,
+                                    @RequestParam("price") java.lang.Integer price)
     {
         try {
             return auctionService.joinAuction(auctionid, userid, price);
         }catch (feign.RetryableException e){
-            return new Msg<>(-100,"请求超时",-4);
+            return new Msg<>(504,"请求超时",-4);
+        }
+    }
+
+    @RequestMapping("/canEnter")
+    Msg<Boolean> canEnter(@RequestParam("userid") Integer userid, @RequestParam("auctionid") Integer auctionid) {
+        try {
+            return auctionService.canEnter(userid,auctionid);
+        }catch (feign.RetryableException e){
+            return new Msg<>(504,"请求超时",false);
+        }
+    }
+
+    @RequestMapping("/deposit")
+    public Msg<Boolean> deposit(@RequestParam("userid") Integer userid, @RequestParam("auctionid") Integer auctionid) {
+        try {
+            return auctionService.deposit(userid,auctionid);
+        }catch (feign.RetryableException e){
+            return new Msg<>(504,"请求超时",false);
+        }
+    }
+
+    @RequestMapping("/getPrice")
+    public Msg<Integer> getPrice(@RequestParam("auctionid") Integer auctionid) {
+        try {
+            return auctionService.getPrice(auctionid);
+        }catch (feign.RetryableException e){
+            return new Msg<>(504,"请求超时",-4);
         }
     }
 }

@@ -39,3 +39,10 @@
     font-size: 16px;
     padding-left: 500px;
 }
+
+.price{
+    padding-left: 500px;
+    font-size: 20px;
+    color: #fb385f;
+    font-weight: bold;
+}
