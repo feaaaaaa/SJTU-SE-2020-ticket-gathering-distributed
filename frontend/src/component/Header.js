@@ -16,7 +16,7 @@ export class HeaderInfo extends React.Component {
             login:false,
             username:null,
             usertype:null,
-            // current:"-1"
+            current:"-1"
         }
     }
 
@@ -60,8 +60,8 @@ export class HeaderInfo extends React.Component {
 
 
     render() {
-        // if(this.state.current!=="-1"&&!this.state.login)
-        //     return <Redirect to={{pathname: "/login"}}/>;
+        if(this.state.current!=="-1"&&!this.state.login)
+            return <Redirect to={{pathname: "/login"}}/>;
         // if(this.state.current==="1"&&this.state.login)
         //     return <Redirect to={{pathname: "/profile"}}/>;
         // if(this.state.current==="2"&&this.state.login)
@@ -137,7 +137,7 @@ export class HeaderInfo extends React.Component {
                 </div>
                 <div className="wow slideInLeft" id="bar" data-wow-delay=".5s">
                     <Menu
-                        onClick={this.handleClick}
+                        // onClick={this.handleClick}
                           mode="horizontal" style={{fontSize: 18, fontFamily: ""}}>
                         <Menu.Item key="mail" href="/">
                             <Link to="/" onClick={() => {this.setState({current: "-1"})}}><p> 首 页 </p></Link>
@@ -158,7 +158,9 @@ export class HeaderInfo extends React.Component {
                                 <a href={this.state.login?"/order":"/login"}>订单管理</a>
                                 {/*订单管理*/}
                             </Menu.Item>
-                            {this.state.login?<Menu.Item key="3" onClick={this.logOut.bind(this) }>登出</Menu.Item>:null}
+                            {this.state.login?<Menu.Item key="3"
+                                                         onClick={this.logOut.bind(this) }
+                            >登出</Menu.Item>:null}
                         </SubMenu>
                     </Menu>
                 </div>
