@@ -137,7 +137,7 @@ export class HeaderInfo extends React.Component {
                 </div>
                 <div className="wow slideInLeft" id="bar" data-wow-delay=".5s">
                     <Menu
-                        // onClick={this.handleClick}
+                        onClick={this.handleClick}
                           mode="horizontal" style={{fontSize: 18, fontFamily: ""}}>
                         <Menu.Item key="mail" href="/">
                             <Link to="/" onClick={() => {this.setState({current: "-1"})}}><p> 首 页 </p></Link>
