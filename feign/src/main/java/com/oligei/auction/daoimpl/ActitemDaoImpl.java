@@ -44,7 +44,7 @@ public class ActitemDaoImpl implements ActitemDao {
 //        System.out.println(showtime);
         int i, j, repository = 0;
         for (i = 0; i < prices.size(); i++) {
-//            System.out.println(prices.get(i).getString("time"));
+            System.out.println(prices.get(i).getString("time"));
             if (Objects.equals(showtime, prices.get(i).getString("time"))) {
                 break;
             }

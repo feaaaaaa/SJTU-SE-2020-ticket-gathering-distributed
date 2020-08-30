@@ -16,6 +16,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.*;
 import java.util.concurrent.locks.Lock;
@@ -40,7 +42,7 @@ public class AuctionServiceImpl implements AuctionService {
     @Autowired
     private UserFeign userFeign;
 
-    private TimeFormatter timeFormatter;
+    private TimeFormatter timeFormatter=new TimeFormatter();
 
     private HashMap<Integer,AuctionListItem> map0 = new HashMap<Integer, AuctionListItem>() {};
     private HashMap<Integer,AuctionListItem> map1 = new HashMap<Integer, AuctionListItem>() {};
@@ -75,6 +77,7 @@ public class AuctionServiceImpl implements AuctionService {
         Objects.requireNonNull(userid,"null userid --AuctionServiceImpl canEnter");
         Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl canEnter");
         AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
+        if (auctionListItem == null) throw new NullPointerException("auctionid not available");
         return auctionListItem.userExists(userid);
     }
 
@@ -90,10 +93,12 @@ public class AuctionServiceImpl implements AuctionService {
     public Boolean deposit(Integer userid, Integer auctionid) throws NullPointerException{
         Objects.requireNonNull(userid,"null userid --AuctionServiceImpl deposit");
         Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl deposit");
-        Integer deposit = auctionDao.findOneById(auctionid).getInitprice() * 3;
+//        Integer deposit = auctionDao.findOneById(auctionid).getInitprice() * 3;
+        AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
+        if (auctionListItem == null) throw new NullPointerException("auctionid not available");
+        Integer deposit=-1*auctionListItem.getDeposit();
         Msg<Integer> msg = userFeign.rechargeOrDeduct(userid,deposit);
         if (msg.getStatus() != 200) return false;
-        AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
         auctionListItem.addUser(userid);
         return true;
     }
@@ -140,7 +145,7 @@ public class AuctionServiceImpl implements AuctionService {
      */
     public void addAuction(Integer actitemid, String ddl, String showtime,
                            Integer initprice, Integer orderprice, Integer amount)
-                                throws ArithmeticException, NullPointerException{
+                                throws ArithmeticException, NullPointerException, IllegalArgumentException{
         Objects.requireNonNull(actitemid, "null actitemdid --AuctionServiceImpl addAuction");
         Objects.requireNonNull(ddl, "null ddl --AuctionServiceImpl addAuction");
         Objects.requireNonNull(showtime, "null showtime --AuctionServiceImpl addAuction");
@@ -148,13 +153,16 @@ public class AuctionServiceImpl implements AuctionService {
         Objects.requireNonNull(orderprice, "null orderprice --AuctionServiceImpl addAuction");
         Objects.requireNonNull(amount, "null amount --AuctionServiceImpl addAuction");
 
+        Date showtimeDate = timeFormatter.strToDate(showtime);
+        Timestamp ddlTimestamp = timeFormatter.strToTimestamp(ddl);
+
         //enough stock?
         actitemDao.modifyRepository(actitemid,initprice,-amount,showtime);
 
         //save auction to database
         Timestamp ordertime = timeFormatter.currectTimestamp();
-        Auction auction = new Auction(actitemid,0,timeFormatter.strToTimestamp(ddl),initprice,orderprice,0,
-                timeFormatter.strToDate(showtime),ordertime,amount);
+        Auction auction = new Auction(actitemid,0,ddlTimestamp,initprice,orderprice,0,
+                showtimeDate,ordertime,amount);
         Auction saved_auction = auctionDao.save(auction);
 
         //save auctionlistitem to list
@@ -166,8 +174,19 @@ public class AuctionServiceImpl implements AuctionService {
         String venue = activity.getVenue();
         String activityIcon = activity.getActivityIcon();
         AuctionListItem auctionListItem = new AuctionListItem(auctionid,timeFormatter.strToTimestamp(ddl),orderprice,
-                timeFormatter.strToDate(showtime),amount,title,actor,venue,0,activityIcon);
+                timeFormatter.strToDate(showtime),amount,title,actor,venue,0,activityIcon,3*initprice);
         modifyAuctionList(auctionListItem);
+    }
+
+    @PostConstruct
+    public void tmpInit(){
+//        Auction auction=auctionDao.findOneById(1);
+//        System.out.println(auction.getInitprice()+"???");
+//        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
+        String Ddl="2020-08-26 06:00:00";
+        String showTime="2020-08-22";
+//        String showTime=timeFormatter.dateToStr(auction.getShowtime());
+        addAuction(30616,Ddl,showTime,80,80,2);
     }
 
 
@@ -249,9 +268,10 @@ public class AuctionServiceImpl implements AuctionService {
      *@throws NullPointerException if parameter is null
      *@date 2020/8/22
      */
-    public Integer getPrice(Integer auctionid) {
+    public Integer getPrice(Integer auctionid) throws NullPointerException{
         Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl getPrice");
         AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
+        if (auctionListItem == null) throw new NullPointerException("auctionid not available");
         return auctionListItem.getPrice();
     }
 
@@ -263,13 +283,17 @@ public class AuctionServiceImpl implements AuctionService {
     *@author ziliuziliu,Cui Shaojie
     *@date 2020/8/18
     */
-    public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) {
+    public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) throws NullPointerException{
         Objects.requireNonNull(auctionid, "null auctionid --AuctionServiceImpl joinAuction");
         Objects.requireNonNull(userid, "null userid --AuctionServiceImpl joinAuction");
         Objects.requireNonNull(orderprice, "null orderprice --AuctionServiceImpl joinAuction");
 
         lock.lock();
         AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
+        if (auctionListItem == null) {
+            lock.unlock();
+            throw new NullPointerException("auctionid not available");
+        }
         Timestamp currentTime = timeFormatter.currectTimestamp();
         if (currentTime.after(auctionListItem.getDdl())) {
             lock.unlock();

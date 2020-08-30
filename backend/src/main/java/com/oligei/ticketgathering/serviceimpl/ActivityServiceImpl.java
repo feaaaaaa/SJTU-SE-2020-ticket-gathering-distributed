@@ -64,7 +64,7 @@ public class ActivityServiceImpl implements ActivityService {
 
 //    private Cache<List<Integer>> idSetCache=new Cache<>();
 
-    private int searchResultMax=30;
+    private int searchResultMax = 200;
     private int pageSize = 10;
 
     Directory directoryRandom=new RAMDirectory();

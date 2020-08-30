@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
-@FeignClient(value = "auction")
+@FeignClient(value = "auction-feign")
 public interface AuctionService {
 
     @RequestMapping(value = "/Auction/add",method = RequestMethod.POST)
@@ -28,12 +28,12 @@ public interface AuctionService {
                                           @RequestParam("userid") java.lang.Integer userid,
                                           @RequestParam("price") java.lang.Integer price);
 
-    @RequestMapping("/canEnter")
+    @RequestMapping("/Auction/canEnter")
     Msg<Boolean> canEnter(@RequestParam("userid") Integer userid, @RequestParam("auctionid") Integer auctionid);
 
-    @RequestMapping("/deposit")
+    @RequestMapping("/Auction/deposit")
     Msg<Boolean> deposit(@RequestParam("userid") Integer userid, @RequestParam("auctionid") Integer auctionid);
 
-    @RequestMapping("/getPrice")
+    @RequestMapping("/Auction/getPrice")
     Msg<Integer> getPrice(@RequestParam("auctionid") Integer auctionid);
 }

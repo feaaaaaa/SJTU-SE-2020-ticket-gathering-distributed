@@ -34,7 +34,7 @@ export class AdminAuctionView extends React.Component{
         return (
             <div>
                 <HeaderInfo search={this.onSearch}/>
-                <div id="Detail" style={{paddingTop:150,float:"left",marginLeft:-100,width:"80%"}}>
+                <div id="Detail" style={{paddingTop:120,float:"left",marginLeft:-100,width:"80%"}}>
                     <AdminAuction />
                 </div>
                 <div style={{paddingTop:1000}}>

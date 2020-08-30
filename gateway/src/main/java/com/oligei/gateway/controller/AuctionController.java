@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.lang.reflect.Array;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +41,7 @@ public class AuctionController {
             return auctionService.addAuction(actitemid, ddl, showtime, initprice, orderprice, amount);
         }catch (feign.RetryableException e){
             logger.error("请求超时",e);
-            return new Msg<>(-101,"请求超时",false);
+            return new Msg<>(504,"请求超时",false);
         }
     }
 
@@ -50,7 +51,7 @@ public class AuctionController {
         try {
             return auctionService.getAuctions();
         }catch (feign.RetryableException e){
-            return new Msg<>(-100, "请求超时", null);
+            return new Msg<>(504, "请求超时", null);
         }
     }
 
@@ -62,7 +63,7 @@ public class AuctionController {
         try {
             return auctionService.joinAuction(auctionid, userid, price);
         }catch (feign.RetryableException e){
-            return new Msg<>(-100,"请求超时",-4);
+            return new Msg<>(504,"请求超时",-4);
         }
     }
 
@@ -71,7 +72,7 @@ public class AuctionController {
         try {
             return auctionService.canEnter(userid,auctionid);
         }catch (feign.RetryableException e){
-            return new Msg<>(-100,"请求超时",false);
+            return new Msg<>(504,"请求超时",false);
         }
     }
 
@@ -80,7 +81,7 @@ public class AuctionController {
         try {
             return auctionService.deposit(userid,auctionid);
         }catch (feign.RetryableException e){
-            return new Msg<>(-100,"请求超时",false);
+            return new Msg<>(504,"请求超时",false);
         }
     }
 
@@ -89,7 +90,7 @@ public class AuctionController {
         try {
             return auctionService.getPrice(auctionid);
         }catch (feign.RetryableException e){
-            return new Msg<>(-100,"请求超时",-4);
+            return new Msg<>(504,"请求超时",-4);
         }
     }
 }

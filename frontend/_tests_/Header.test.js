@@ -14,14 +14,13 @@ describe("test loginform",()=>{
         expect(wrapper.state().login).toBeFalsy();
         expect(wrapper.state().username).toBeNull();
         expect(wrapper.state().usertype).toBeNull();
-        expect(wrapper.state().ifsearch).toBeFalsy();
-        expect(wrapper).toMatchSnapshot();
+        // expect(wrapper.state().ifsearch).toBeFalsy();
     });
 
-    it("test Search",async()=>{
-        await wrapper.instance().toggleSearch("周杰伦");
-        expect(wrapper.state().ifsearch).toBeTruthy();
-    });
+    // it("test Search",async()=>{
+    //     await wrapper.instance().toggleSearch("周杰伦");
+    //     expect(wrapper.state().ifsearch).toBeTruthy();
+    // });
 
     it("test logOut",async()=>{
         wrapper.setState({login:true,username:"test",usertype:"User"})
