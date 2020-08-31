@@ -69,7 +69,7 @@ export class AuctionCard extends React.Component{
                     message.error(res.msg);
             }
         })
-        this.openNotificationWithoutEnoughMoney("warning");
+        // this.openNotificationWithoutEnoughMoney("warning");
     }
 
     handleCancelDeposit=()=>{

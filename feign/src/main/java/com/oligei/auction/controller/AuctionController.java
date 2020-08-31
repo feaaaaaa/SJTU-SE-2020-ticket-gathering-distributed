@@ -25,6 +25,7 @@ public class AuctionController {
 
     private static final Logger logger = LoggerFactory.getLogger(FeignApplication.class);
 
+
     @RequestMapping("/add")
     /**
     *save a new auction
@@ -51,6 +52,9 @@ public class AuctionController {
         }catch (ArithmeticException e) {
             logger.error("ArithmeticException",e);
             return new Msg<>(201,"容量不足",false);
+        }catch (IllegalArgumentException e) {
+            logger.error("IllegalArgumentException",e);
+            return new Msg<>(202,"时间格式错误",false);
         }
         return new Msg<>(200, "竞价成功加入", true);
     }

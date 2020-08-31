@@ -11,7 +11,6 @@ describe("test loginform",()=>{
     it("test initialized state",()=>{
         expect(wrapper.state().user).toBeNull();
         expect(wrapper.state().firstLogin).toBeTruthy();
-        expect(wrapper).toMatchSnapshot();
     });
 
     it("test login function",async()=>{
@@ -23,7 +22,6 @@ describe("test loginform",()=>{
         await login({username:'oligei',password:'123456'},(data)=>{wrapper.setState({user:data,firstLogin:false})});
         expect(wrapper.state().user.userId).toEqual(1);
         expect(wrapper.state().user.username).toEqual('oligei');
-        expect(wrapper).toMatchSnapshot();
     });
 
 });
