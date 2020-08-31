@@ -16,7 +16,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @EnableEurekaClient
 @EnableDiscoveryClient
 @EnableFeignClients
-@SpringBootApplication
+@SpringBootApplication(exclude = MongoAutoConfiguration.class)
 @RestController
 public class GatewayApplication {
     public static void main(String[] args) {
