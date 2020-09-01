@@ -3,7 +3,7 @@ services:
   nginx:
     image: nginx:latest
     ports:
-      - "3000:80"
+      - "30334:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
       - ./build:/usr/share/nginx/html
