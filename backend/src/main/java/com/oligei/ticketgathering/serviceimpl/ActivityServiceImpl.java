@@ -12,6 +12,7 @@ import com.oligei.ticketgathering.entity.info.Cache;
 import com.oligei.ticketgathering.entity.mysql.Actitem;
 import com.oligei.ticketgathering.entity.mysql.Activity;
 import com.oligei.ticketgathering.service.ActivityService;
+import com.oligei.ticketgathering.util.RedisUtil;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
@@ -58,11 +59,12 @@ public class ActivityServiceImpl implements ActivityService {
     private ActitemDao actitemDao;
 
     //used when search null/
-    private Cache<List<ActivitySortpage>> cache=new Cache<>();
+//    private Cache<List<ActivitySortpage>> cache=new Cache<>();
 
-    private Cache<ActivitySortpage> oneCache=new Cache<>();
+//    private Cache<ActivitySortpage> oneCache=new Cache<>();
 
-//    private Cache<List<Integer>> idSetCache=new Cache<>();
+    @Autowired
+    private RedisUtil redisUtil;
 
     private int searchResultMax = 200;
     private int pageSize = 10;
@@ -110,6 +112,15 @@ public class ActivityServiceImpl implements ActivityService {
         return true;
     }
 
+    @SuppressWarnings("rawtypes")
+    private List<ActivitySortpage> object2ActivitySortpage (List<Object> list) {
+        List<ActivitySortpage> result = new ArrayList<>();
+        for (Object o : list) {
+            result.add((ActivitySortpage)o);
+        }
+        return result;
+    }
+
     /**
      *  calculate search score, generate result
      * @param value search value
@@ -123,10 +134,14 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws EmptyResultDataAccessException when activity is not found
      */
     private List<ActivitySortpage> searchResult(String value) throws IOException, ParseException {
-        List<ActivitySortpage> result = cache.getValue(value);
+        List<Object> resultObject = (List<Object>) redisUtil.lGetIndex(value,0);
+        List<ActivitySortpage> result;
+        result = new ArrayList<>();
+        if (resultObject != null) {
+            result = object2ActivitySortpage(resultObject);
+        }
         //not in cache
-        if (result == null) {
-            result = new ArrayList<>();
+        else {
             //not null
 //        Directory directory = FSDirectory.open(new File("./indexDir"));
             // 索引读取工具
@@ -155,7 +170,7 @@ public class ActivityServiceImpl implements ActivityService {
 //            System.out.println("得分： " + scoreDoc.score);
                 result.add(findActivityAndActitem(Integer.parseInt(doc.get("id"))));
             }
-            cache.addOrUpdateCache(value,result);
+            redisUtil.lSet(value,result);
         }
         return result;
     }
@@ -174,13 +189,15 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> search(String value, Integer page) throws IOException, ParseException, IndexOutOfBoundsException {
-        List<ActivitySortpage> result;//every item
+        List<Object> resultObject;//every item
+        List<ActivitySortpage> result;
         List<ActivitySortpage> activitySortpages = new ArrayList<>();//item this page should display
 
         //null
         if (value == null || value.equals("") || value.equals("null")) {
-            result = cache.getValue("searchNull");
-            if (result != null) {
+            resultObject = (List<Object>) redisUtil.lGetIndex("searchNull",0);
+            if (resultObject != null) {
+                result = object2ActivitySortpage(resultObject);
                 System.out.println("search null get from cache");
                 for (int i=(page-1)*pageSize;i<page*pageSize;i++)
                     activitySortpages.add(result.get(i));
@@ -194,7 +211,7 @@ public class ActivityServiceImpl implements ActivityService {
                     if (activitySortpage != null)
                         result.add(activitySortpage);
                 }
-                cache.addOrUpdateCache("searchNull", result);
+                redisUtil.lSet("searchNull",result);
                 System.out.println("search null add into cache");
                 return result;
             }
@@ -223,10 +240,11 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws EmptyResultDataAccessException when activity is not found
      */
     public Integer searchPageNum(String value) throws IOException, ParseException {
+        List<Object> resultObject;
         List<ActivitySortpage> result;
         if (value == null || value.equals("") || value.equals("null")) {
-            result = cache.getValue("searchNull");
-            if (result == null) {
+            resultObject = (List<Object>) redisUtil.lGetIndex("searchNull",0);
+            if (resultObject == null) {
                 // should not be used
                 result = new ArrayList<>();
                 for (int i = 123; i <= 456; i += 9) {
@@ -234,9 +252,10 @@ public class ActivityServiceImpl implements ActivityService {
                     if (activitySortpage != null)
                         result.add(activitySortpage);
                 }
-                cache.addOrUpdateCache("searchNull", result);
+                redisUtil.lSet("searchNull",result);
                 System.out.println("search null add into cache");
             }
+            else result = object2ActivitySortpage(resultObject);
             return result.size()/pageSize;
         }
         result = searchResult(value);
@@ -258,12 +277,11 @@ public class ActivityServiceImpl implements ActivityService {
 
         Objects.requireNonNull(id,"null id --ActivityServiceImpl findActivityAndActitem");
         String cacheName="ActivitySortpage"+id.toString();
-        ActivitySortpage cacheResult=oneCache.getValue(cacheName);
+        ActivitySortpage cacheResult = (ActivitySortpage) redisUtil.lGetIndex(cacheName,0);
         if(cacheResult!=null){
             System.out.println(cacheName+" get from cache");
             return cacheResult;
         }
-
         Activity activity= activityDao.findOneById(id);
         List<Actitem> actitems=actitemDao.findAllByActivityId(id);
         cacheResult= new ActivitySortpage (
@@ -275,7 +293,7 @@ public class ActivityServiceImpl implements ActivityService {
                 activity.getActivityIcon(),
                 actitems
         );
-        oneCache.addOrUpdateCache(cacheName,cacheResult);
+        redisUtil.lSet(cacheName,cacheResult);
         System.out.println(cacheName+" add into cache");
         return cacheResult;
     }
@@ -386,16 +404,18 @@ public class ActivityServiceImpl implements ActivityService {
      */
     public List<ActivitySortpage> selectSearchResult(String type,String name,String city) throws IOException, ParseException {
         List<ActivitySortpage> result;
+        List<Object> resultObject;
         List<Integer> activities;
         String cacheName=name+city;
-        result = cache.getValue(cacheName);
-        if (result == null) {
+        resultObject = (List<Object>) redisUtil.lGetIndex(cacheName,0);
+        if (resultObject == null) {
             result = new ArrayList<>();
             activities = activityDao.findActivityByCategoryAndCity(type, name, city);
             for (Integer activity : activities)
                 result.add(findActivityAndActitem(activity));
-            cache.addOrUpdateCache(cacheName, result);
+            redisUtil.lSet(cacheName,result);
         }
+        else result = object2ActivitySortpage(resultObject);
         return result;
     }
 
@@ -496,11 +516,13 @@ public class ActivityServiceImpl implements ActivityService {
         int i = 0;
         List<Integer> activities;
         List<ActivitySortpage> cacheResult;
+        List<Object> cacheResultObject;
 
         //get from cache
-        cacheResult=cache.getValue(name);
-        if(cacheResult!=null&&cacheResult.size()!=0){
+        cacheResultObject = (List<Object>) redisUtil.lGetIndex(name,0);
+        if(cacheResultObject != null && cacheResultObject.size() != 0){
             System.out.println(name+" get from cache");
+            cacheResult = object2ActivitySortpage(cacheResultObject);
             activitySortpages.addAll(cacheResult);
         }
         //1st time, add into cache, which will be done in initialization
@@ -511,7 +533,7 @@ public class ActivityServiceImpl implements ActivityService {
                 activitySortpages.add(findActivityAndActitem(a));
                 if (++i >= 10) break;
             }
-            cache.addOrUpdateCache(name,activitySortpages);
+            redisUtil.lSet(name,activitySortpages);
         }
         return activitySortpages;
     }
@@ -571,7 +593,7 @@ public class ActivityServiceImpl implements ActivityService {
         initActivityById(11000,activitySortpages);
         initActivityById(12000,activitySortpages);
         //add to searchNull
-        cache.addOrUpdateCache("searchNull", activitySortpages);
+        redisUtil.lSet("searchNull",activitySortpages);
         //add home page to cache
         findActivityByCategoryHome();
         return true;
@@ -602,7 +624,6 @@ public class ActivityServiceImpl implements ActivityService {
 //        if(cacheName==null||cacheName.equals("")||cacheName.equals("null"))
 //            idSetCache.evictCache();
 //        idSetCache.evictCache(cacheName);
-        cache.evictCache();
         return true;
     }
 
