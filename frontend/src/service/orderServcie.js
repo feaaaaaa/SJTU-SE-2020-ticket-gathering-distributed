@@ -11,10 +11,17 @@ export const getOrderInfoByUser= async (value, token, callback) => {
     await authRequest(apiUrl, data, token, callback);
 }
 
-export const addOrder=(userId,actitemId,initprice,orderprice,amount,showtime,orderTime,token,callback)=>
-{
-    const apiUrl='/order/addOrder';
-    const data={userId:userId,actitemId:actitemId,initPrice:initprice,orderPrice:orderprice,amount:amount,showtime:showtime,orderTime:orderTime};
+export const addOrder= async (userId, actitemId, initprice, orderprice, amount, showtime, orderTime, token, callback) => {
+    const apiUrl = '/order/addOrder';
+    const data = {
+        userId: userId,
+        actitemId: actitemId,
+        initPrice: initprice,
+        orderPrice: orderprice,
+        amount: amount,
+        showtime: showtime,
+        orderTime: orderTime
+    };
     console.log(data);
-    authRequest(apiUrl,data,token,callback);
+    await authRequest(apiUrl, data, token, callback);
 }

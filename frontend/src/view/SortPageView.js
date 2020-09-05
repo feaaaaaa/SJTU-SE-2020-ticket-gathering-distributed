@@ -59,7 +59,7 @@ export class SortPageView extends React.Component{
         // this.setState({activity: sports});
         /**toggle search*/
         let value="";
-        if(this.props.location.state!=null){
+        if(this.props.location!=null&&this.props.location.state!=null){
             value=this.props.location.state.search;
         }
         console.log("!" +value);

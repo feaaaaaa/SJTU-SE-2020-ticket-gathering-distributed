@@ -31,7 +31,12 @@ describe("test register",()=>{
     });
 
     it("test input username", async () => {
-        fetch.mockReturnValue(Promise.resolve(new Response(true)));
+        const json= {
+                status: 200,
+            }
+        ;
+        fetch.mockReturnValue(Promise.resolve(new Response(JSON.stringify(json))));
+        // fetch.mockReturnValue(Promise.resolve(new Response(true)));
         // await checkUser('oligei', (data) => {
         //     wrapper.setState({usernameErrorVisible: data})
         // });

@@ -16,7 +16,9 @@ describe("test order",() => {
     });
 
     it("test componentDidMount function",async()=>{
-        const json=[{
+        const json={
+            status:200,
+            data:[{
             'title':'activity1',
             'price':100,
             'amount':2
@@ -24,7 +26,7 @@ describe("test order",() => {
             'title':'activity2',
             'price':150,
             'amount':1
-            }]
+            }]}
 
         ;
         fetch.mockReturnValue(Promise.resolve(new Response(JSON.stringify(json))));
