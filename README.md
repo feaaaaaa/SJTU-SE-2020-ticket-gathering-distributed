@@ -126,7 +126,7 @@ OligeiWeb是我们此次项目目标——聚票网的名字，其作用是将�
   (User,Activity) for personalized recommendation: Personal Ranks Algorithm 
 
     https://blog.csdn.net/qq_40006058/article/details/83444131 for more
-
+    
 ### Redis
 
 利用redis访问响应时间短，速度快的优势，将搜索关键词和得到的结果作为键值对放入redis中，来作为缓存使用，加快搜索响应速度。
