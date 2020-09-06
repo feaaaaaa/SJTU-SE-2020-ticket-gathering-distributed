@@ -16,7 +16,7 @@ public class ControllerHi {
 
     @GetMapping(value = "/hi")
     public String sayHi(@RequestParam String name) {
-        return schedualServiceHi.hi( name );
+        return schedualServiceHi.hi(name);
     }
 
     @GetMapping(value = "/welcome")

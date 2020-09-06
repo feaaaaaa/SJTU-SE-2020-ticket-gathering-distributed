@@ -39,9 +39,9 @@ public class WebMvcConfig implements WebMvcConfigurer {
         excludePath.add("/auction/get");
         //excludePath.add("/actitem/detail");
         registry.addInterceptor(new AuthenInterceptor()).addPathPatterns("/**")
-                                                        .excludePathPatterns(excludePath);
+                .excludePathPatterns(excludePath);
         registry.addInterceptor(new AuthorInterceptor()).addPathPatterns("/activity/add")
-                                                        .addPathPatterns("/activity/delete");
+                .addPathPatterns("/activity/delete");
     }
 
     @Override
@@ -49,7 +49,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedOrigins("*")
                 .allowCredentials(true)
-                .allowedMethods("GET", "POST", "DELETE", "PUT","PATCH")
+                .allowedMethods("GET", "POST", "DELETE", "PUT", "PATCH")
                 .maxAge(3600);
     }
 }

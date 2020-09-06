@@ -13,9 +13,9 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthorInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler) throws Exception{
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String token = request.getHeader("token");
-        if(!token.equals("null")){
+        if (!token.equals("null")) {
             boolean result = TokenUtil.adminverify(token);
             if (result) {
                 System.out.println("authorization passed");
@@ -24,14 +24,14 @@ public class AuthorInterceptor implements HandlerInterceptor {
         }
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
-        try{
+        try {
             JSONObject json = new JSONObject();
-            json.put("msg","无权限，请重新认证！");
-            json.put("status",-101);
-            json.put("data",null);
+            json.put("msg", "无权限，请重新认证！");
+            json.put("status", -101);
+            json.put("data", null);
             response.getWriter().append(json.toJSONString());
             System.out.println("authorization failure");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             response.sendError(500);
             return false;

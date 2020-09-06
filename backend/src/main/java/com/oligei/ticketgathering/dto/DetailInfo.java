@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.List;
 
 /**
- * @ClassName: DetailInfo
- * @Description: detail information
- * @Author: Cui Shaojie
- * @Date: 2020/8/14 16:11
+ * @className DetailInfo
+ * @description detail information
+ * @author Cui Shaojie
+ * @date 2020/8/14 16:11
  **/
 public class DetailInfo {
     Integer key;

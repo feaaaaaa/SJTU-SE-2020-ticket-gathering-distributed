@@ -9,6 +9,6 @@ import org.springframework.web.bind.annotation.*;
 @FeignClient(value = "ticketgathering")
 public interface ActitemService {
 
-    @RequestMapping(value = "/Actitem/detail",method = RequestMethod.GET)
+    @RequestMapping(value = "/Actitem/detail", method = RequestMethod.GET)
     public Msg<DetailInfo> getDetail(@RequestParam(name = "actitemid") Integer actitemid, @RequestParam(name = "userid") Integer userId);
 }

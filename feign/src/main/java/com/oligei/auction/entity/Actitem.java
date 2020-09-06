@@ -14,17 +14,17 @@ public class Actitem {
     private Integer activityId;
     private String website;
 
-    public Actitem(){
+    public Actitem() {
 
     }
-    public Actitem(Integer actitemId,Integer activityId,String website)
-    {
+
+    public Actitem(Integer actitemId, Integer activityId, String website) {
         this.actitemId = actitemId;
         this.activityId = activityId;
         this.website = website;
     }
-    public Actitem(Integer actitemId,Integer activityId,String website,List<JSONObject> price)
-    {
+
+    public Actitem(Integer actitemId, Integer activityId, String website, List<JSONObject> price) {
         this.actitemId = actitemId;
         this.activityId = activityId;
         this.website = website;
@@ -35,20 +35,41 @@ public class Actitem {
     @Column(name = "actitemid")
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    public Integer getActitemId(){return actitemId;}
-    public void setActitemId(Integer actitemId){this.actitemId = actitemId;}
+    public Integer getActitemId() {
+        return actitemId;
+    }
+
+    public void setActitemId(Integer actitemId) {
+        this.actitemId = actitemId;
+    }
 
     @Column(name = "activityid")
-    public Integer getActivityId(){return activityId;}
-    public void setActivityId(Integer activityId){this.activityId = activityId;}
+    public Integer getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Integer activityId) {
+        this.activityId = activityId;
+    }
 
     @Column(name = "website")
-    public String getWebsite(){return website;}
-    public void setWebsite(String website){this.website = website;}
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
 
     private List<JSONObject> price;
+
     @Transient
-    public List<JSONObject> getPrice(){return price;}
-    public void setPrice(List<JSONObject> price){this.price=price;}
+    public List<JSONObject> getPrice() {
+        return price;
+    }
+
+    public void setPrice(List<JSONObject> price) {
+        this.price = price;
+    }
 
 }

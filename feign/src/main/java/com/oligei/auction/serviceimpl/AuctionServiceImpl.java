@@ -42,40 +42,43 @@ public class AuctionServiceImpl implements AuctionService {
     @Autowired
     private UserFeign userFeign;
 
-    private TimeFormatter timeFormatter=new TimeFormatter();
+    private TimeFormatter timeFormatter = new TimeFormatter();
 
-    private HashMap<Integer,AuctionListItem> map0 = new HashMap<Integer, AuctionListItem>() {};
-    private HashMap<Integer,AuctionListItem> map1 = new HashMap<Integer, AuctionListItem>() {};
+    private HashMap<Integer, AuctionListItem> map0 = new HashMap<Integer, AuctionListItem>() {
+    };
+    private HashMap<Integer, AuctionListItem> map1 = new HashMap<Integer, AuctionListItem>() {
+    };
     private Boolean mapFlag = false;
 
-    private int testPrice=500;
+    private int testPrice = 500;
     Lock lock = new ReentrantLock();
 
     /**
-     *wrapper function for 2list
-     *@param auctionid auctionid
-     *@author ziliuziliu
-     *@return auctionlistitem
-     *@throws NullPointerException if parameter is null
-     *@date 2020/8/22
+     * wrapper function for 2list
+     *
+     * @param auctionid auctionid
+     * @return auctionlistitem
+     * @throws NullPointerException if parameter is null
+     * @author ziliuziliu
+     * @date 2020/8/22
      */
     private AuctionListItem getAuctionListItemByAuctionid(Integer auctionid) {
-        Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl getAuctionListItemByAuctionid");
-        return mapFlag?map1.get(auctionid):map0.get(auctionid);
+        Objects.requireNonNull(auctionid, "null auctionid --AuctionServiceImpl getAuctionListItemByAuctionid");
+        return mapFlag ? map1.get(auctionid) : map0.get(auctionid);
     }
 
     @Override
     /**
-     *whether you can enter this auction
-     *@param userid,auctionid
-     *@author ziliuziliu
-     *@return true if OK, false if no
-     *@throws NullPointerException if parameter is null
-     *@date 2020/8/22
+     * @param userid
+     * @param auctionid
+     * @author ziliuziliu
+     * @return true if OK, false if no
+     * @throws NullPointerException if parameter is null
+     * @date 2020/8/22
      */
     public Boolean canEnter(Integer userid, Integer auctionid) throws NullPointerException {
-        Objects.requireNonNull(userid,"null userid --AuctionServiceImpl canEnter");
-        Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl canEnter");
+        Objects.requireNonNull(userid, "null userid --AuctionServiceImpl canEnter");
+        Objects.requireNonNull(auctionid, "null auctionid --AuctionServiceImpl canEnter");
         AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
         if (auctionListItem == null) throw new NullPointerException("auctionid not available");
         return auctionListItem.userExists(userid);
@@ -83,34 +86,35 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     /**
-     *deposit!
-     *@param userid,auctionid
-     *@author ziliuziliu
-     *@return true if OK, false if not enough money
-     *@throws NullPointerException if parameter is null
-     *@date 2020/8/22
+     * @param userid
+     * @param auctionid
+     * @author ziliuziliu
+     * @return true if OK, false if not enough money
+     * @throws NullPointerException if parameter is null
+     * @date 2020/8/22
      */
-    public Boolean deposit(Integer userid, Integer auctionid) throws NullPointerException{
-        Objects.requireNonNull(userid,"null userid --AuctionServiceImpl deposit");
-        Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl deposit");
+    public Boolean deposit(Integer userid, Integer auctionid) throws NullPointerException {
+        Objects.requireNonNull(userid, "null userid --AuctionServiceImpl deposit");
+        Objects.requireNonNull(auctionid, "null auctionid --AuctionServiceImpl deposit");
 //        Integer deposit = auctionDao.findOneById(auctionid).getInitprice() * 3;
         AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
         if (auctionListItem == null) throw new NullPointerException("auctionid not available");
-        Integer deposit=-1*auctionListItem.getDeposit();
-        Msg<Integer> msg = userFeign.rechargeOrDeduct(userid,deposit);
+        Integer deposit = -1 * auctionListItem.getDeposit();
+        Msg<Integer> msg = userFeign.rechargeOrDeduct(userid, deposit);
         if (msg.getStatus() != 200) return false;
         auctionListItem.addUser(userid);
         return true;
     }
 
     /**
-    *a private method called when an auction is over
-    *@param auctionListItem auctionListItem
-    *@author ziliuziliu,Cui Shaojie
-    *@date 2020/8/22
-    */
-    private void whenSetOver(AuctionListItem auctionListItem){
-        Objects.requireNonNull(auctionListItem,"null auctionListItem --AuctionServiceImpl");
+     * a private method called when an auction is over
+     *
+     * @param auctionListItem auctionListItem
+     * @author ziliuziliu, Cui Shaojie
+     * @date 2020/8/22
+     */
+    private void whenSetOver(AuctionListItem auctionListItem) {
+        Objects.requireNonNull(auctionListItem, "null auctionListItem --AuctionServiceImpl");
 
         //save auction detail
         Integer auctionid = auctionListItem.getAuctionid();
@@ -129,23 +133,27 @@ public class AuctionServiceImpl implements AuctionService {
                     timeFormatter.dateToStr(auction.getShowtime()),
                     timeFormatter.timestampToStr(auction.getOrdertime()));
             if (msg.getStatus() == 200)
-                userFeign.rechargeOrDeduct(auction.getUserid(),auction.getInitprice()*3-auction.getOrderprice());
+                userFeign.rechargeOrDeduct(auction.getUserid(), auction.getInitprice() * 3 - auction.getOrderprice());
         }
     }
 
     @Override
     /**
-     *save an auction
-     *@param actitemid,ddl,showtime,initprice,orderprice,amount
-     *@return true if successfully saved
-     *@author ziliuziliu,Cui Shaojie
-     *@throws NullPointerException if parameter is null
-     *@throws ArithmeticException if not enough stock
-     *@date 2020/8/22
+     * @param actitemid id of website ticket
+     * @param ddl deadline of auction
+     * @param showtime show time of activity
+     * @param initprice origin price of tickets
+     * @param orderprice current price of tickets
+     * @param amount number of tickets
+     * @return true if successfully saved
+     * @author ziliuziliu, Cui Shaojie
+     * @throws NullPointerException if parameter is null
+     * @throws ArithmeticException if not enough stock
+     * @date 2020/8/22
      */
     public void addAuction(Integer actitemid, String ddl, String showtime,
                            Integer initprice, Integer orderprice, Integer amount)
-                                throws ArithmeticException, NullPointerException, IllegalArgumentException{
+            throws ArithmeticException, NullPointerException, IllegalArgumentException {
         Objects.requireNonNull(actitemid, "null actitemdid --AuctionServiceImpl addAuction");
         Objects.requireNonNull(ddl, "null ddl --AuctionServiceImpl addAuction");
         Objects.requireNonNull(showtime, "null showtime --AuctionServiceImpl addAuction");
@@ -157,12 +165,12 @@ public class AuctionServiceImpl implements AuctionService {
         Timestamp ddlTimestamp = timeFormatter.strToTimestamp(ddl);
 
         //enough stock?
-        actitemDao.modifyRepository(actitemid,initprice,-amount,showtime);
+        actitemDao.modifyRepository(actitemid, initprice, -amount, showtime);
 
         //save auction to database
         Timestamp ordertime = timeFormatter.currectTimestamp();
-        Auction auction = new Auction(actitemid,0,ddlTimestamp,initprice,orderprice,0,
-                showtimeDate,ordertime,amount);
+        Auction auction = new Auction(actitemid, 0, ddlTimestamp, initprice, orderprice, 0,
+                showtimeDate, ordertime, amount);
         Auction saved_auction = auctionDao.save(auction);
 
         //save auctionlistitem to list
@@ -173,28 +181,29 @@ public class AuctionServiceImpl implements AuctionService {
         String actor = activity.getActor();
         String venue = activity.getVenue();
         String activityIcon = activity.getActivityIcon();
-        AuctionListItem auctionListItem = new AuctionListItem(auctionid,timeFormatter.strToTimestamp(ddl),orderprice,
-                timeFormatter.strToDate(showtime),amount,title,actor,venue,0,activityIcon,3*initprice);
+        AuctionListItem auctionListItem = new AuctionListItem(auctionid, timeFormatter.strToTimestamp(ddl), orderprice,
+                timeFormatter.strToDate(showtime), amount, title, actor, venue, 0, activityIcon, 3 * initprice);
         modifyAuctionList(auctionListItem);
     }
 
     @PostConstruct
-    public void tmpInit(){
+    public void tmpInit() {
 //        Auction auction=auctionDao.findOneById(1);
 //        System.out.println(auction.getInitprice()+"???");
 //        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
-        String Ddl="2020-08-26 06:00:00";
-        String showTime="2020-08-22";
+        String Ddl = "2020-08-26 06:00:00";
+        String showTime = "2020-08-22";
 //        String showTime=timeFormatter.dateToStr(auction.getShowtime());
-        addAuction(30616,Ddl,showTime,80,80,2);
+        addAuction(30616, Ddl, showTime, 80, 80, 2);
     }
 
 
     /**
-     *modify auction list
-     *@param auctionListItem auctionListItem if add, or null if flush
-     *@author ziliuziliu
-     *@date 2020/8/22
+     * modify auction list
+     *
+     * @param auctionListItem auctionListItem if add, or null if flush
+     * @author ziliuziliu
+     * @date 2020/8/22
      */
     private void modifyAuctionList(AuctionListItem auctionListItem) {
         Timestamp currentTime = timeFormatter.currectTimestamp();
@@ -203,9 +212,9 @@ public class AuctionServiceImpl implements AuctionService {
         if (mapFlag) {
             map0 = new HashMap<>();
             for (Map.Entry<Integer, AuctionListItem> entry : map1.entrySet()) {
-                map0.put(entry.getKey(),entry.getValue());
+                map0.put(entry.getKey(), entry.getValue());
             }
-            if (auctionListItem != null) map0.put(auctionid,auctionListItem);
+            if (auctionListItem != null) map0.put(auctionid, auctionListItem);
             else {
                 for (Map.Entry<Integer, AuctionListItem> entry : map0.entrySet()) {
                     AuctionListItem item = entry.getValue();
@@ -215,13 +224,12 @@ public class AuctionServiceImpl implements AuctionService {
                     }
                 }
             }
-        }
-        else {
+        } else {
             map1 = new HashMap<>();
             for (Map.Entry<Integer, AuctionListItem> entry : map0.entrySet()) {
-                map1.put(entry.getKey(),entry.getValue());
+                map1.put(entry.getKey(), entry.getValue());
             }
-            if (auctionListItem != null) map1.put(auctionid,auctionListItem);
+            if (auctionListItem != null) map1.put(auctionid, auctionListItem);
             else {
                 for (Map.Entry<Integer, AuctionListItem> entry : map1.entrySet()) {
                     AuctionListItem item = entry.getValue();
@@ -238,9 +246,9 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Scheduled(cron = "0 0/15 * * * ? ")
     /**
-     *clear auctions which ddl has passed
-     *@author ziliuziliu
-     *@date 2020/8/22
+     * clear auctions which ddl has passed
+     * @author ziliuziliu
+     * @date 2020/8/22
      */
     public void flushAuctions() {
         System.out.println("Here to flush auctions.");
@@ -249,27 +257,25 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     /**
-     *get all available auctions
-     *@return available auctions
-     *@author ziliuziliu
-     *@date 2020/8/22
+     * @return available auctions
+     * @author ziliuziliu
+     * @date 2020/8/22
      */
-    public Map<Integer,AuctionListItem> getAvailableAuctions() {
+    public Map<Integer, AuctionListItem> getAvailableAuctions() {
         if (!mapFlag) return map0;
         else return map1;
     }
 
     @Override
     /**
-     *price now for this auction
-     *@param auctionid auctionid
-     *@return price
-     *@author ziliuziliu
-     *@throws NullPointerException if parameter is null
-     *@date 2020/8/22
+     * @param auctionid auctionid
+     * @return price
+     * @author ziliuziliu
+     * @throws NullPointerException if parameter is null
+     * @date 2020/8/22
      */
-    public Integer getPrice(Integer auctionid) throws NullPointerException{
-        Objects.requireNonNull(auctionid,"null auctionid --AuctionServiceImpl getPrice");
+    public Integer getPrice(Integer auctionid) throws NullPointerException {
+        Objects.requireNonNull(auctionid, "null auctionid --AuctionServiceImpl getPrice");
         AuctionListItem auctionListItem = getAuctionListItemByAuctionid(auctionid);
         if (auctionListItem == null) throw new NullPointerException("auctionid not available");
         return auctionListItem.getPrice();
@@ -277,13 +283,14 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     /**
-    *take part in an auction successfully
-    *@param auctionid,userid,orderprice
-    *@return java.lang.Integer
-    *@author ziliuziliu,Cui Shaojie
-    *@date 2020/8/18
-    */
-    public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) throws NullPointerException{
+     * @param auctionid
+     * @param userid
+     * @param orderprice
+     * @return java.lang.Integer
+     * @author ziliuziliu, Cui Shaojie
+     * @date 2020/8/18
+     */
+    public Integer joinAuction(Integer auctionid, Integer userid, Integer orderprice) throws NullPointerException {
         Objects.requireNonNull(auctionid, "null auctionid --AuctionServiceImpl joinAuction");
         Objects.requireNonNull(userid, "null userid --AuctionServiceImpl joinAuction");
         Objects.requireNonNull(orderprice, "null orderprice --AuctionServiceImpl joinAuction");
@@ -305,8 +312,8 @@ public class AuctionServiceImpl implements AuctionService {
             return -2; //出价低
         }
         auctionListItem.setPrice(orderprice);
-        if (!mapFlag) map0.put(auctionid,auctionListItem);
-        else map1.put(auctionid,auctionListItem);
+        if (!mapFlag) map0.put(auctionid, auctionListItem);
+        else map1.put(auctionid, auctionListItem);
         lock.unlock();
         return 1;
     }

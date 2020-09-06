@@ -21,7 +21,9 @@ public class DetailInfo {
     String website;
     List<JSONObject> prices;
 
-    public DetailInfo(){}
+    public DetailInfo() {
+    }
+
     public DetailInfo(
             Integer key,
             String title,
@@ -32,8 +34,7 @@ public class DetailInfo {
             String description,
             String website,
             List<JSONObject> prices
-    )
-    {
+    ) {
         this.key = key;
         this.title = title;
         this.actor = actor;
@@ -45,22 +46,75 @@ public class DetailInfo {
         this.prices = prices;
     }
 
-    public Integer getKey(){return key;}
-    public void setKey(Integer key){this.key = key;}
-    public String getTitle(){return title;}
-    public void setTitle(String title){this.title = title;}
-    public String getActor(){return actor;}
-    public void setActor(String actor){this.actor = actor;}
-    public String getTimescale(){return timescale;}
-    public void setTimescale(String timescale){this.timescale = timescale;}
-    public String getVenue(){return venue;}
-    public void setVenue(String venue){this.venue = venue;}
-    public String getActivityicon(){return activityicon;}
-    public void setActivityicon(String activityicon){this.activityicon = activityicon;}
-    public String getDescription(){return description;}
-    public void setDescription(String description){this.description = description;}
-    public String getWebsite(){return website;}
-    public void setWebsite(String website){this.website = website;}
-    public List<JSONObject> getPrices(){return prices;}
-    public void setPrices(List<JSONObject> prices){this.prices = prices;}
+    public Integer getKey() {
+        return key;
+    }
+
+    public void setKey(Integer key) {
+        this.key = key;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getActor() {
+        return actor;
+    }
+
+    public void setActor(String actor) {
+        this.actor = actor;
+    }
+
+    public String getTimescale() {
+        return timescale;
+    }
+
+    public void setTimescale(String timescale) {
+        this.timescale = timescale;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
+    public String getActivityicon() {
+        return activityicon;
+    }
+
+    public void setActivityicon(String activityicon) {
+        this.activityicon = activityicon;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
+    public void setWebsite(String website) {
+        this.website = website;
+    }
+
+    public List<JSONObject> getPrices() {
+        return prices;
+    }
+
+    public void setPrices(List<JSONObject> prices) {
+        this.prices = prices;
+    }
 }

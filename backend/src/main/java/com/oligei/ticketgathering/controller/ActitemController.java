@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/Actitem")
-@CrossOrigin(origins = "*",maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ActitemController {
 
     @Autowired
@@ -27,24 +27,24 @@ public class ActitemController {
 
     @RequestMapping("/detail")
     /**
-    *get detail information about the activity in the website in controller layer
-    *@Param: [actitemid, userId]
-    *@return: com.oligei.ticketgathering.util.msgutils.Msg<com.oligei.ticketgathering.dto.DetailInfo>
-    *@Author: Cui Shaojie
-    *@date: 2020/8/18
-    */
-    public Msg<DetailInfo> getDetail(@RequestParam(name = "actitemid") Integer actitemid, @RequestParam(name = "userid") Integer userId)
-    {
+     * get detail information about the activity in the website in controller layer
+     * @param actitemid
+     * @param userid
+     * @return com.oligei.ticketgathering.util.msgutils.Msg<com.oligei.ticketgathering.dto.DetailInfo>
+     * @author Cui Shaojie
+     * @date 2020/8/18
+     */
+    public Msg<DetailInfo> getDetail(@RequestParam(name = "actitemid") Integer actitemid, @RequestParam(name = "userid") Integer userId) {
         DetailInfo detailInfo;
-        try{
-            detailInfo =  actitemService.findActivityAndActitemDetail(actitemid,userId);
-        }catch (NullPointerException e){
-            logger.error("NullPointerException",e);
-            return new Msg<DetailInfo>(201,"不存在的id",null);
-        }catch (InvalidDataAccessApiUsageException e){
-            logger.error("InvalidDataAccessApiUsageException",e);
-            return new Msg<DetailInfo>(201,"错误的参数属性",null);
+        try {
+            detailInfo = actitemService.findActivityAndActitemDetail(actitemid, userId);
+        } catch (NullPointerException e) {
+            logger.error("NullPointerException", e);
+            return new Msg<DetailInfo>(201, "不存在的id", null);
+        } catch (InvalidDataAccessApiUsageException e) {
+            logger.error("InvalidDataAccessApiUsageException", e);
+            return new Msg<DetailInfo>(201, "错误的参数属性", null);
         }
-        return new Msg<DetailInfo>(200,"得到信息",detailInfo);
+        return new Msg<DetailInfo>(200, "得到信息", detailInfo);
     }
 }

@@ -25,8 +25,7 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     /**
-     * get order using user id
-     * @param [userId]
+     * @param userId
      * @return OrderInfo
      * @author Yang Yicheng
      * @date 2020/8/10
@@ -34,21 +33,25 @@ public class OrderDaoImpl implements OrderDao {
      * @throws NullPointerException Order not found
      */
     public List<OrderInfo> getUserOrder(int userId) {
-        if (userId<=0){
-          throw new InvalidDataAccessApiUsageException("illegal userId --OrderDaoImpl getUserOrder");
+        if (userId <= 0) {
+            throw new InvalidDataAccessApiUsageException("illegal userId --OrderDaoImpl getUserOrder");
         }
 
-        List<OrderInfo> result=orderRepository.getUserOrder(userId);
-        if(result==null){
-          throw new NullPointerException("null Order --OrderDaoImpl getUserOrder");
+        List<OrderInfo> result = orderRepository.getUserOrder(userId);
+        if (result == null) {
+            throw new NullPointerException("null Order --OrderDaoImpl getUserOrder");
         }
         return result;
     }
 
     @Override
     /**
-     *  insert an order into database
-     * @param userId,actitemId,price,amount,showtime,orderTime
+     * @param userId
+     * @param actitemId
+     * @param price
+     * @param amount
+     * @param showtime
+     * @param orderTime
      * @return boolean
      * @author Yang Yicheng
      * @date 2020/8/12

@@ -1,0 +1,12 @@
+com.oligei.auction
+com.oligei.auction.controller
+com.oligei.auction.dao
+com.oligei.auction.daoimpl
+com.oligei.auction.dto
+com.oligei.auction.entity
+com.oligei.auction.feign
+com.oligei.auction.repository
+com.oligei.auction.service
+com.oligei.auction.serviceimpl
+com.oligei.auction.util
+com.oligei.auction.util.msgutils

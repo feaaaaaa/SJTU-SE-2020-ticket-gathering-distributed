@@ -11,8 +11,8 @@ import java.util.Date;
 
 public class TokenUtil {
 
-    private static final long EXPIRE_TIME= 15*60*1000;
-    private static final String TOKEN_SECRET="oligei!2020";  //密钥盐
+    private static final long EXPIRE_TIME = 15 * 60 * 1000;
+    private static final String TOKEN_SECRET = "oligei!2020";  //密钥盐
 
     public static String sign(User user) {
         String token = null;
@@ -21,10 +21,10 @@ public class TokenUtil {
             token = JWT.create()
                     .withIssuer("auth0")
                     .withClaim("username", user.getUsername())
-                    .withClaim("type",user.getType())
+                    .withClaim("type", user.getType())
                     .withExpiresAt(expiresAt)
                     .sign(Algorithm.HMAC256(TOKEN_SECRET));
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return token;
@@ -34,9 +34,9 @@ public class TokenUtil {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer("auth0").build();
             DecodedJWT jwt;
-            try{
+            try {
                 jwt = verifier.verify(token);
-            }catch (com.auth0.jwt.exceptions.TokenExpiredException e){
+            } catch (com.auth0.jwt.exceptions.TokenExpiredException e) {
                 System.out.println("认证失败，已过期");
                 return false;
             }
@@ -45,7 +45,7 @@ public class TokenUtil {
             System.out.println("username: " + jwt.getClaim("username").asString());
             System.out.println("过期时间：      " + jwt.getExpiresAt());
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
@@ -55,9 +55,9 @@ public class TokenUtil {
         try {
             JWTVerifier verifier = JWT.require(Algorithm.HMAC256(TOKEN_SECRET)).withIssuer("auth0").build();
             DecodedJWT jwt;
-            try{
+            try {
                 jwt = verifier.verify(token);
-            }catch (com.auth0.jwt.exceptions.TokenExpiredException e){
+            } catch (com.auth0.jwt.exceptions.TokenExpiredException e) {
                 System.out.println("认证失败，已过期");
                 return false;
             }
@@ -68,7 +68,7 @@ public class TokenUtil {
             System.out.println("username: " + jwt.getClaim("username").asString());
             System.out.println("过期时间：      " + jwt.getExpiresAt());
             return true;
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return false;
         }

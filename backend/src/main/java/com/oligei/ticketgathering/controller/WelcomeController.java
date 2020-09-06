@@ -9,9 +9,10 @@ public class WelcomeController {
 
     @Value("${server.port}")
     String port;
+
     @RequestMapping("/")
     public String index() {
-        return "Hello there from"+ port;
+        return "Hello there from" + port;
     }
 
 }

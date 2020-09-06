@@ -20,30 +20,65 @@ public class Order {
     @Column(name = "ORDERID")
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
-    public Integer getOrderId(){return orderId;}
-    public void setOrderId(Integer orderId){this.orderId = orderId;}
+    public Integer getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(Integer orderId) {
+        this.orderId = orderId;
+    }
 
     @Column(name = "USERID")
-    public Integer getUserId(){return userId;}
-    public void setUserId(Integer userId){this.userId = userId;}
+    public Integer getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
 
     @Column(name = "ACTITEMID")
-    public Integer getActitemId(){return actitemId;}
-    public void setActitemId(Integer actitemId){this.actitemId =actitemId;}
+    public Integer getActitemId() {
+        return actitemId;
+    }
+
+    public void setActitemId(Integer actitemId) {
+        this.actitemId = actitemId;
+    }
 
     @Column(name = "PRICE")
-    public Integer getPrice(){return price;}
-    public void setPrice(Integer price){this.price = price;}
+    public Integer getPrice() {
+        return price;
+    }
+
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
     @Column(name = "AMOUNT")
-    public Integer getAmount(){return amount;}
-    public void setAmount(Integer amount){this.amount = amount;}
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
 
     @Column(name = "SHOWTIME")
-    public Date getShowtime(){return showtime;}
-    public void setShowtime(Date showtime){this.showtime = showtime;}
+    public Date getShowtime() {
+        return showtime;
+    }
+
+    public void setShowtime(Date showtime) {
+        this.showtime = showtime;
+    }
 
     @Column(name = "ORDERTIME")
-    public Date getOrderTime(){return orderTime;}
-    public void setOrderTime(Date orderTime){this.orderTime = orderTime;}
+    public Date getOrderTime() {
+        return orderTime;
+    }
+
+    public void setOrderTime(Date orderTime) {
+        this.orderTime = orderTime;
+    }
 }

@@ -6,12 +6,12 @@ package com.oligei.gateway.util.msgutils;
  * @Author: Cui Shaojie
  * @Date: 2020/8/14 15:37
  **/
-public enum  MsgCode {
+public enum MsgCode {
     SUCCESS(MsgUtil.SUCCESS, MsgUtil.SUCCESS_MSG),
-    ERROR(MsgUtil.ERROR,MsgUtil.ERROR_MSG),
-    LOGIN_USER_ERROR(MsgUtil.LOGIN_USER_ERROR,MsgUtil.LOGIN_USER_ERROR_MSG),
-    LOGIN_USER_BANNED(MsgUtil.LOGIN_USER_ERROR,MsgUtil.LOGIN_USER_BANNED_MSG),
-    NOT_LOGGED_IN_ERROR(MsgUtil.NOT_LOGGED_IN_ERROR,MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
+    ERROR(MsgUtil.ERROR, MsgUtil.ERROR_MSG),
+    LOGIN_USER_ERROR(MsgUtil.LOGIN_USER_ERROR, MsgUtil.LOGIN_USER_ERROR_MSG),
+    LOGIN_USER_BANNED(MsgUtil.LOGIN_USER_ERROR, MsgUtil.LOGIN_USER_BANNED_MSG),
+    NOT_LOGGED_IN_ERROR(MsgUtil.NOT_LOGGED_IN_ERROR, MsgUtil.NOT_LOGGED_IN_ERROR_MSG);
 
     private int status;
     private String msg;

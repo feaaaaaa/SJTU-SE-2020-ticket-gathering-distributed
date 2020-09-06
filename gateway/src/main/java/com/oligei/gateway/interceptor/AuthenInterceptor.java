@@ -13,11 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 public class AuthenInterceptor implements HandlerInterceptor {
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response,Object handler) throws Exception{
+    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         System.out.println(request.getRequestURL());
         String token = request.getHeader("token");
         System.out.println(token);
-        if(token!=null&&!token.equals("null")){
+        if (token != null && !token.equals("null")) {
             boolean result = TokenUtil.authenverify(token);
             System.out.println(result);
             if (result) {
@@ -27,15 +27,15 @@ public class AuthenInterceptor implements HandlerInterceptor {
         }
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json; charset=utf-8");
-        try{
+        try {
             JSONObject json = new JSONObject();
 //            json.put("message","authentication failure");
-            json.put("msg","认证失败！");
-            json.put("status",-100);
-            json.put("data",null);
+            json.put("msg", "认证失败！");
+            json.put("status", -100);
+            json.put("data", null);
             response.getWriter().append(json.toJSONString());
             System.out.println("authentication failure");
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             response.sendError(500);
             return false;
