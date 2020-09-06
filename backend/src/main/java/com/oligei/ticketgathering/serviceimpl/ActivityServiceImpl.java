@@ -373,27 +373,6 @@ public class ActivityServiceImpl implements ActivityService {
         return true;
     }
 
-<<<<<<< Updated upstream
-    @Override
-    @Transactional
-    /**
-     * @param id the activityId of activity
-     * @return delete success or fail
-     * @author feaaaaaa
-     * @date 2020.8.15
-     * @throws NullPointerException when id is null or mongo data is null
-     * @throws JpaObjectRetrievalFailureException when id is invalid
-     * @throws EmptyResultDataAccessException when activity is not found
-     */
-    public Boolean delete(Integer activityId) {
-        Objects.requireNonNull(activityId, "null id --ActivityServiceImpl delete");
-        List<Actitem> actitems = actitemDao.findAllByActivityId(activityId);
-        for (Actitem a : actitems)
-            actitemDao.deleteActitem(a.getActitemId());
-        activityDao.delete(activityId);
-        return true;
-    }
-=======
 //    @Override
 //    @Transactional
 //    /**
@@ -414,7 +393,6 @@ public class ActivityServiceImpl implements ActivityService {
 //        activityDao.delete(activityId);
 //        return true;
 //    }
->>>>>>> Stashed changes
 
     /**
      * selectSearch result
@@ -469,12 +447,7 @@ public class ActivityServiceImpl implements ActivityService {
         List<ActivitySortpage> result;//every item
         List<ActivitySortpage> activitySortpages = new ArrayList<>(); //item this page should display
 
-<<<<<<< Updated upstream
         if (!type.equals("category") && !type.equals("subcategory"))
-=======
-        System.out.println(type);
-        if(!type.equals("category") && !type.equals("subcategory"))
->>>>>>> Stashed changes
             throw new InvalidDataAccessApiUsageException("invalid category");
         if (name.equals("全部") && city.equals("全国")) return search("", page);
         result = selectSearchResult(type, name, city);
@@ -603,65 +576,6 @@ public class ActivityServiceImpl implements ActivityService {
         return activitySortpages;
     }
 
-<<<<<<< Updated upstream
-    @Override
-    /**
-     * @return true if initialize finished successfully
-     * @author feaaaaaa
-     * @date 2020.08.14
-     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
-     */
-    public Boolean initActivity() {
-
-        List<ActivitySortpage> activitySortpages = new ArrayList<>();
-        //add all the activitySortpage into cache
-        initActivityById(1000, activitySortpages);
-        initActivityById(2000, activitySortpages);
-        initActivityById(3000, activitySortpages);
-        initActivityById(4000, activitySortpages);
-        initActivityById(5000, activitySortpages);
-        initActivityById(6000, activitySortpages);
-        initActivityById(7000, activitySortpages);
-        initActivityById(8000, activitySortpages);
-        initActivityById(9000, activitySortpages);
-        initActivityById(10000, activitySortpages);
-        initActivityById(11000, activitySortpages);
-        initActivityById(12000, activitySortpages);
-        //add to searchNull
-        redisUtil.lSet("searchNull", activitySortpages);
-        //add home page to cache
-        findActivityByCategoryHome();
-        return true;
-    }
-
-    /**
-     * add 1000 activitySortpage into cache
-     *
-     * @param cnt the max id that add into cache
-     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
-     * @author feaaaaaa
-     * @date 2020.08.14
-     */
-    public void initActivityById(int cnt, List<ActivitySortpage> activitySortpages) {
-        int basic = Math.max(1, cnt - 1000);
-        for (int i = basic; i < cnt; ++i) {
-            activitySortpages.add(findActivityAndActitem(i));
-        }
-    }
-
-    /**
-     * @return true if clear clear successfully
-     * @author feaaaaaa
-     * @date 2020.08.14
-     */
-    @Override
-    public Boolean clear() {
-//        if(cacheName==null||cacheName.equals("")||cacheName.equals("null"))
-//            idSetCache.evictCache();
-//        idSetCache.evictCache(cacheName);
-        return true;
-    }
-=======
 //    @Override
 //    /**
 //     *  add all the activitySortpage into cache
@@ -720,7 +634,6 @@ public class ActivityServiceImpl implements ActivityService {
 ////        idSetCache.evictCache(cacheName);
 //        return true;
 //    }
->>>>>>> Stashed changes
 
 
     //    public void initActivityByCity(String city) {

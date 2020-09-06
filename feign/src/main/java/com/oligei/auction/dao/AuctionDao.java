@@ -11,17 +11,14 @@ public interface AuctionDao {
      */
     Auction save(Auction auction);
 
-<<<<<<< Updated upstream
-    /**
-     * get all available auctions
-     */
-    List<Auction> getAvailableAuctionsForNow();
+//    /**
+//     * get all available auctions
+//     */
+//    List<Auction> getAvailableAuctionsForNow();
 
     /**
      * find an auction by id
      */
-=======
->>>>>>> Stashed changes
     Auction findOneById(Integer auctionid);
 
 }

@@ -39,33 +39,26 @@ public interface ActivityService {
      * parse the string info of activity and save it
      */
     Boolean add(String activity);
-<<<<<<< Updated upstream
 
-    /**
-     * use activityId to delete activity and all the actitem
-     */
-    Boolean delete(Integer activityId);
+//    /**
+//     * use activityId to delete activity and all the actitem
+//     */
+//    Boolean delete(Integer activityId);
 
     /**
      * use userId and activityId to get ActivitySortpage that is the same kind of activity and haven't been seen by the user
      */
     List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId);
 
-    /**
-     * dd all the activitySortpage into cache
-     */
-    Boolean initActivity();
+//    /**
+//     * dd all the activitySortpage into cache
+//     */
+////    Boolean initActivity();
 
-    /**
-     * clear cache which have home cache and select search
-     */
-    Boolean clear();
-=======
-//    Boolean delete(Integer activityId);
-    List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId);
-//    Boolean initActivity();
+//    /**
+//     * clear cache which have home cache and select search
+//     */
 //    Boolean clear();
->>>>>>> Stashed changes
 //    Boolean initSearchIndex() throws IOException;
 
 }

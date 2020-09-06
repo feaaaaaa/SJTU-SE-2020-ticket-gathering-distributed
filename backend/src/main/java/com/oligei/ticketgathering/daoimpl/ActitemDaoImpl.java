@@ -109,20 +109,6 @@ public class ActitemDaoImpl implements ActitemDao {
         return actitemRepository.save(new Actitem(null, activityId, website));
     }
 
-<<<<<<< Updated upstream
-    @Override
-    /**
-     * @param actitemId
-     * @return Boolean
-     * @author
-     * @date 2020/8/18
-     */
-    public Boolean deleteActitem(Integer actitemId) {
-        actitemRepository.deleteById(actitemId);
-        actitemMongoDBRepository.deleteByActitemId(actitemId);
-        return true;
-    }
-=======
 //    @Override
 //    /**
 //     *  delete Actitem from database
@@ -136,7 +122,6 @@ public class ActitemDaoImpl implements ActitemDao {
 //        actitemMongoDBRepository.deleteByActitemId(actitemId);
 //        return true;
 //    }
->>>>>>> Stashed changes
 
     @Override
     /**

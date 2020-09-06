@@ -108,24 +108,14 @@ public class AuctionServiceImpl implements AuctionService {
 
     @Override
     /**
-<<<<<<< Updated upstream
      * a private method called when an auction is over
      *
      * @param auctionListItem auctionListItem
      * @author ziliuziliu, Cui Shaojie
      * @date 2020/8/22
      */
-    private void whenSetOver(AuctionListItem auctionListItem) {
+    public Boolean whenSetOver(AuctionListItem auctionListItem) {
         Objects.requireNonNull(auctionListItem, "null auctionListItem --AuctionServiceImpl");
-=======
-    *a private method called when an auction is over
-    *@param auctionListItem auctionListItem
-    *@author ziliuziliu,Cui Shaojie
-    *@date 2020/8/22
-    */
-    public Boolean whenSetOver(AuctionListItem auctionListItem){
-        Objects.requireNonNull(auctionListItem,"null auctionListItem --AuctionServiceImpl");
->>>>>>> Stashed changes
 
         //save auction detail
         Integer auctionid = auctionListItem.getAuctionid();
@@ -200,21 +190,12 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @PostConstruct
-<<<<<<< Updated upstream
-    public void tmpInit() {
-//        Auction auction=auctionDao.findOneById(1);
-//        System.out.println(auction.getInitprice()+"???");
-//        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
-        String Ddl = "2020-08-26 06:00:00";
-        String showTime = "2020-08-22";
-=======
     private void tmpInit(){
 //        Auction auction=auctionDao.findOneById(1);
 //        System.out.println(auction.getInitprice()+"???");
 //        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
         String Ddl="2020-12-31 06:00:00";
         String showTime="2020-08-22";
->>>>>>> Stashed changes
 //        String showTime=timeFormatter.dateToStr(auction.getShowtime());
         addAuction(30616, Ddl, showTime, 80, 80, 2);
     }

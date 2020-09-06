@@ -73,17 +73,6 @@ public class ActivityController {
         } catch (IOException e) {
             logger.error("索引文件无法打开", e);
             return new Msg<>(201, "索引文件无法打开", 0);
-<<<<<<< Updated upstream
-        } catch (ParseException e) {
-            logger.error("关键词解析失败", e);
-            return new Msg<>(201, "关键词解析失败", 0);
-        } catch (JpaObjectRetrievalFailureException e) {
-            logger.error("使用非法id进行查询", e);
-            return new Msg<>(201, "使用非法id进行查询", 0);
-        } catch (EmptyResultDataAccessException e) {
-            logger.error("activity查找失败", e);
-            return new Msg<>(201, "activity查找失败", 0);
-=======
         }catch (ParseException e){
             logger.error("关键词解析失败",e);
             return new Msg<>(201,"关键词解析失败", 0);
@@ -96,7 +85,6 @@ public class ActivityController {
         } catch (InvalidDataAccessApiUsageException e) {
             logger.error("invalid category",e);
             return new Msg<>(201,"invalid category",0);
->>>>>>> Stashed changes
         }
         return new Msg<>(200, "搜索成功", pageNum);
     }
@@ -113,18 +101,11 @@ public class ActivityController {
                                               @RequestParam(name = "page") String pageStr) {
         System.out.println("value:" + value);
         List<ActivitySortpage> activitySortpages;
-<<<<<<< Updated upstream
-        try {
-            activitySortpages = activityService.search(value, page);
-        } catch (IOException e) {
-            logger.error("索引文件无法打开", e);
-=======
         try{
             Integer page = Integer.valueOf(pageStr);
             activitySortpages=activityService.search(value,page);
         }catch (IOException e){
             logger.error("索引文件无法打开",e);
->>>>>>> Stashed changes
             return new Msg<>(201, "索引文件无法打开", new LinkedList<>());
         } catch (ParseException e) {
             logger.error("关键词解析失败", e);
@@ -136,13 +117,8 @@ public class ActivityController {
             logger.error("activity查找失败", e);
             return new Msg<>(201, "activity查找失败", new LinkedList<>());
         } catch (IndexOutOfBoundsException e) {
-<<<<<<< Updated upstream
-            logger.error("页码越界", e);
-            return new Msg<>(201, "页码越界", new LinkedList<>());
-=======
             logger.error("找不到搜索结果",e);
             return new Msg<>(201,"找不到搜索结果",new LinkedList<>());
->>>>>>> Stashed changes
         }
         return new Msg<>(200, "搜索成功", activitySortpages);
     }
@@ -175,39 +151,7 @@ public class ActivityController {
         }
         return new Msg<>(200, "添加成功", true);
     }
-<<<<<<< Updated upstream
 
-    @RequestMapping("/delete")
-    /**
-     *  delete activity and actitems
-     * @param activityId id of activity and actitem that to be deleted
-     * @return Msg(status, msg, Boolean) 200 is OK, 201 is predicted exception, 203 is no exception but wrong
-     * @author feaaaaaa
-     * @date 2020.8.17
-     */
-    public Msg<Boolean> delete(@RequestParam(name = "activityId") String activityid) {
-        Integer activityId = Integer.parseInt(activityid);
-        System.out.println("delete:" + activityId);
-        Boolean flag;
-        try {
-            flag = activityService.delete(activityId);
-        } catch (NullPointerException e) {
-            logger.error("参数丢失", e);
-            return new Msg<>(201, "参数丢失", false);
-        } catch (JpaObjectRetrievalFailureException e) {
-            logger.error("非法id", e);
-            return new Msg<>(201, "非法id", false);
-        } catch (EmptyResultDataAccessException e) {
-            logger.error("id错误，找不到activity或actitem", e);
-            return new Msg<>(201, "id错误，找不到activity或actitem", false);
-        }
-        if (!flag) {
-            logger.error("错误 --/Activity/delete");
-            return new Msg<>(203, "错误", false);
-        }
-        return new Msg<>(200, "删除成功", true);
-    }
-=======
 //
 //    @RequestMapping("/delete")
 //    /**
@@ -239,7 +183,6 @@ public class ActivityController {
 //        }
 //        return new Msg<>(200,"删除成功", true);
 //    }
->>>>>>> Stashed changes
 
     @RequestMapping("/RecommendOnContent")
     /**
@@ -275,32 +218,6 @@ public class ActivityController {
      * @author ziliuziliu, feaaaaaa
      * @date 2020.8.17
      */
-<<<<<<< Updated upstream
-    public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type") String type,
-                                                    @RequestParam(name = "name") String name,
-                                                    @RequestParam(name = "city") String city,
-                                                    @RequestParam(name = "page") Integer page) {
-        try {
-            return new Msg<>(200, "成功", activityService.selectSearch(type, name, city, page));
-        } catch (IOException e) {
-            logger.error("索引文件无法打开", e);
-            return new Msg<>(201, "索引文件无法打开", new LinkedList<>());
-        } catch (ParseException e) {
-            logger.error("关键词解析失败", e);
-            return new Msg<>(201, "关键词解析失败", new LinkedList<>());
-        } catch (JpaObjectRetrievalFailureException e) {
-            logger.error("使用非法id进行查询", e);
-            return new Msg<>(201, "使用非法id进行查询", new LinkedList<>());
-        } catch (EmptyResultDataAccessException e) {
-            logger.error("activity查找失败", e);
-            return new Msg<>(201, "activity查找失败", new LinkedList<>());
-        } catch (InvalidDataAccessApiUsageException e) {
-            logger.error("非法type", e);
-            return new Msg<>(201, "非法type", new LinkedList<>());
-        } catch (IndexOutOfBoundsException e) {
-            logger.error("页码越界", e);
-            return new Msg<>(201, "页码越界", new LinkedList<>());
-=======
     public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
                                                     @RequestParam(name = "name")String name,
                                                     @RequestParam(name = "city")String city,
@@ -326,7 +243,6 @@ public class ActivityController {
         } catch(IndexOutOfBoundsException e) {
             logger.error("找不到搜索结果",e);
             return new Msg<>(201,"找不到搜索结果",new LinkedList<>());
->>>>>>> Stashed changes
         }
     }
 
@@ -337,35 +253,15 @@ public class ActivityController {
      * @author ziliuziliu
      * @date 2020/8/21
      */
-<<<<<<< Updated upstream
     public Msg<Integer> selectSearchPageNum(@RequestParam(name = "type") String type,
                                             @RequestParam(name = "name") String name,
                                             @RequestParam(name = "city") String city) {
-=======
-    public Msg<Integer> selectSearchPageNum(@RequestParam(name = "type")String type,
-                                            @RequestParam(name = "name")String name,
-                                            @RequestParam(name = "city")String city) {
->>>>>>> Stashed changes
         Integer pageNum;
         try {
             pageNum = activityService.selectSearchPageNum(type, name, city);
         } catch (IOException e) {
             logger.error("索引文件无法打开", e);
             return new Msg<>(201, "索引文件无法打开", 0);
-<<<<<<< Updated upstream
-        } catch (ParseException e) {
-            logger.error("关键词解析失败", e);
-            return new Msg<>(201, "关键词解析失败", 0);
-        } catch (JpaObjectRetrievalFailureException e) {
-            logger.error("使用非法id进行查询", e);
-            return new Msg<>(201, "使用非法id进行查询", 0);
-        } catch (EmptyResultDataAccessException e) {
-            logger.error("activity查找失败", e);
-            return new Msg<>(201, "activity查找失败", 0);
-        } catch (InvalidDataAccessApiUsageException e) {
-            logger.error("非法type", e);
-            return new Msg<>(201, "非法type", 0);
-=======
         }catch (ParseException e){
             logger.error("关键词解析失败",e);
             return new Msg<>(201,"关键词解析失败",0);
@@ -378,7 +274,6 @@ public class ActivityController {
         } catch(InvalidDataAccessApiUsageException e){
             logger.error("invalid category",e);
             return new Msg<>(201,"invalid category",0);
->>>>>>> Stashed changes
         }
         return new Msg<>(200, "成功", pageNum);
     }
@@ -405,46 +300,6 @@ public class ActivityController {
         }
     }
 
-
-<<<<<<< Updated upstream
-    @RequestMapping("/initActivity")
-    /**
-     *  add all the activity into cache
-     * @return Msg(status, msg, Boolean) 200 is OK, 201 is predicted exception, 203 is no exception but wrong
-     * @author feaaaaaa
-     * @date 2020.8.17
-     */
-    public Msg<Boolean> initActivity() {
-        Boolean flag;
-        try {
-            flag = activityService.initActivity();
-        } catch (JpaObjectRetrievalFailureException e) {
-            logger.error("查找activity失败", e);
-            return new Msg<>(201, "查找activity失败", false);
-        }
-        if (!flag) {
-            logger.error("错误 --/Activity/initActivity");
-            return new Msg<>(203, "错误", false);
-        }
-        return new Msg<>(200, "初始化成功", true);
-    }
-
-    @RequestMapping("/clear")
-    /**
-     *  clear cache of home & search null
-     * @return Msg(status, msg, Boolean) 200 is OK, 203 is no exception but wrong
-     * @author feaaaaaa
-     * @date 2020.8.17
-     */
-    public Msg<Boolean> clear() {//@RequestParam(name = "name")String cacheName
-        Boolean flag = activityService.clear();
-        if (!flag) {
-            logger.error("错误 --/Activity/clear");
-            return new Msg<>(203, "错误", false);
-        }
-        return new Msg<>(200, "清除成功", true);
-    }
-=======
 //    @RequestMapping("/initActivity")
 //    /**
 //     *  add all the activity into cache
@@ -482,6 +337,5 @@ public class ActivityController {
 //        }
 //        return new Msg<>(200,"清除成功", true);
 //    }
->>>>>>> Stashed changes
 
 }
