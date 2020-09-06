@@ -76,6 +76,7 @@ public class ActitemDaoImpl implements ActitemDao {
      * @date 2020/8/18
      */
     public void deleteMongoDBByActitemId(Integer actitemId) {
+        Objects.requireNonNull(actitemId,"null actitemId --ActitemDaoImpl deleteMongoDBByActitemId");
         actitemMongoDBRepository.deleteByActitemId(actitemId);
     }
 
@@ -87,7 +88,9 @@ public class ActitemDaoImpl implements ActitemDao {
      * @author
      * @date 2020/8/18
      */
-    public ActitemMongoDB insertActitemInMongo(int actitemId, List<JSONObject> price) {
+    public ActitemMongoDB insertActitemInMongo(Integer actitemId, List<JSONObject> price) {
+        Objects.requireNonNull(actitemId,"null actitemId --ActitemDaoImpl insertActitemInMongo");
+        Objects.requireNonNull(price,"null price --ActitemDaoaImpl insertActitemInMongo");
         ActitemMongoDB actitemMongoDB = new ActitemMongoDB(actitemId, price);
         return actitemMongoDBRepository.save(actitemMongoDB);
     }
@@ -100,10 +103,13 @@ public class ActitemDaoImpl implements ActitemDao {
      * @Author
      * @date 2020/8/18
      */
-    public Actitem add(int activityId, String website) {
+    public Actitem add(Integer activityId, String website) {
+        Objects.requireNonNull(activityId,"null activityId --ActitemDaoImpl add");
+        Objects.requireNonNull(website,"null website --ActitemDaoImpl add");
         return actitemRepository.save(new Actitem(null, activityId, website));
     }
 
+<<<<<<< Updated upstream
     @Override
     /**
      * @param actitemId
@@ -116,6 +122,21 @@ public class ActitemDaoImpl implements ActitemDao {
         actitemMongoDBRepository.deleteByActitemId(actitemId);
         return true;
     }
+=======
+//    @Override
+//    /**
+//     *  delete Actitem from database
+//     * @param actitemId
+//     * @return Boolean
+//     * @author
+//     * @date 2020/8/18
+//     */
+//    public Boolean deleteActitem(Integer actitemId) {
+//        actitemRepository.deleteById(actitemId);
+//        actitemMongoDBRepository.deleteByActitemId(actitemId);
+//        return true;
+//    }
+>>>>>>> Stashed changes
 
     @Override
     /**

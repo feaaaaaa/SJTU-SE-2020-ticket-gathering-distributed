@@ -30,6 +30,7 @@ public class AuctionDaoImpl implements AuctionDao {
 
     @Override
     /**
+<<<<<<< Updated upstream
      * @return java.util.List<com.oligei.auction.entity.Auction>
      * @author Cui Shaojie
      * @date 2020/8/18
@@ -45,6 +46,14 @@ public class AuctionDaoImpl implements AuctionDao {
      * @author Cui Shaojie
      * @date 2020/8/18
      */
+=======
+    *find an auction by id
+    *@param: auctionid
+    *@return: com.oligei.auction.entity.Auction
+    *@author: Cui Shaojie
+    *@date: 2020/8/18
+    */
+>>>>>>> Stashed changes
     public Auction findOneById(Integer auctionid) {
         Objects.requireNonNull(auctionid, "null auctionid --AuctionDaoImpl findOneById");
 

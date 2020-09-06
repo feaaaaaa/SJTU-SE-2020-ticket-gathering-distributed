@@ -37,5 +37,7 @@ public interface AuctionService {
      * price now for this auction
      */
     Integer getPrice(Integer auctionid);
+    Boolean flushAuctions();
+    Boolean whenSetOver(AuctionListItem auctionListItem);
 }
 

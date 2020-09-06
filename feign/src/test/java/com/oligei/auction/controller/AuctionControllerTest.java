@@ -64,7 +64,7 @@ class AuctionControllerTest {
     private Integer auctionid2 = -1;
     private Integer price1 = 100;
 
-    JSONObject addAuctionMock(Integer actitemid, String ddl, String showtime, Integer initprice, Integer orderprice, Integer amount) throws Exception{
+    private JSONObject addAuctionMock(Integer actitemid, String ddl, String showtime, Integer initprice, Integer orderprice, Integer amount) throws Exception{
         MvcResult result = mockMvc.perform(get("/Auction/add?actitemid="+actitemid
                 +"&ddl="+ddl
                 +"&showtime="+showtime
@@ -98,7 +98,7 @@ class AuctionControllerTest {
         }
     }
 
-    JSONObject canEnterMock(Integer userid, Integer auctionid) throws Exception{
+    private JSONObject canEnterMock(Integer userid, Integer auctionid) throws Exception{
         MvcResult result = mockMvc.perform(get("/Auction/canEnter?userid="+userid+"&auctionid="+auctionid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn();
@@ -118,7 +118,7 @@ class AuctionControllerTest {
         }
     }
 
-    JSONObject depositMock(Integer userid, Integer auctionid) throws Exception{
+    private JSONObject depositMock(Integer userid, Integer auctionid) throws Exception{
         MvcResult result = mockMvc.perform(get("/Auction/deposit?userid="+userid+"&auctionid="+auctionid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn();
@@ -138,7 +138,7 @@ class AuctionControllerTest {
         }
     }
 
-    JSONObject getPriceMock(Integer userid, Integer auctionid) throws Exception{
+    private JSONObject getPriceMock(Integer userid, Integer auctionid) throws Exception{
         MvcResult result = mockMvc.perform(get("/Auction/getPrice?"+"auctionid="+auctionid)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn();
@@ -158,12 +158,27 @@ class AuctionControllerTest {
         }
     }
 
+    private JSONObject getAuctionsMock() throws Exception {
+        MvcResult result = mockMvc.perform(get("/Auction/get")
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn();
+        String resultContent = result.getResponse().getContentAsString();
+        return om.readValue(resultContent, new TypeReference<JSONObject>() {});
+    }
+
     @Test
     @Rollback
     void getAuctions() {
+        System.out.println("Correct response");
+        try {
+            JSONObject msg = getAuctionsMock();
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    JSONObject joinAuctionMock(Integer auctionid, Integer userid, Integer price) throws Exception{
+    private JSONObject joinAuctionMock(Integer auctionid, Integer userid, Integer price) throws Exception{
         MvcResult result = mockMvc.perform(get("/Auction/join?"+"auctionid="+auctionid
                 +"&userid="+userid
                 +"&price="+price)

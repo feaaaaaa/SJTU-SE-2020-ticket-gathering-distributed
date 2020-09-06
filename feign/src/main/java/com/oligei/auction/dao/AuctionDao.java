@@ -11,6 +11,7 @@ public interface AuctionDao {
      */
     Auction save(Auction auction);
 
+<<<<<<< Updated upstream
     /**
      * get all available auctions
      */
@@ -19,6 +20,8 @@ public interface AuctionDao {
     /**
      * find an auction by id
      */
+=======
+>>>>>>> Stashed changes
     Auction findOneById(Integer auctionid);
 
 }

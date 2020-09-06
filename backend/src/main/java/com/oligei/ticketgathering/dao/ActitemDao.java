@@ -21,6 +21,7 @@ public interface ActitemDao {
      * delete data from moongoDB
      */
     void deleteMongoDBByActitemId(Integer actitemId);
+<<<<<<< Updated upstream
 
     /**
      * insert into mongoDB
@@ -36,6 +37,11 @@ public interface ActitemDao {
      * delete Actitem from database
      */
     Boolean deleteActitem(Integer actitemId);
+=======
+    ActitemMongoDB insertActitemInMongo(Integer actitemId,List<JSONObject> price);
+    Actitem add(Integer activityId,String website);
+//    Boolean deleteActitem(Integer actitemId);
+>>>>>>> Stashed changes
 
     /**
      * modify data in mongoDB and Mysql

@@ -178,7 +178,16 @@ public class ActivityDaoImpl implements ActivityDao {
      * @date 2020/9/6
      */
     public ActivityNeo4j addActivityNeo4j(String activityId, String category, String subcategory, String city) {
+<<<<<<< Updated upstream
         ActivityNeo4j activityNeo4j = new ActivityNeo4j(activityId, category, subcategory, city);
+=======
+        Objects.requireNonNull(activityId,"null activityId --ActivityDaoImpl addActivityNeo4j");
+        Objects.requireNonNull(category,"null category --ActivityDaoImpl addActivityNeo4j");
+        Objects.requireNonNull(subcategory,"null subcategory --ActivityDaoImpl addActivityNeo4j");
+        Objects.requireNonNull(city,"null city --ActivityDaoImpl addActivityNeo4j");
+
+        ActivityNeo4j activityNeo4j = new ActivityNeo4j(activityId,category,subcategory,city);
+>>>>>>> Stashed changes
         activityNeo4jRepository.save(activityNeo4j);
         CityNeo4j cityNeo4j = cityNeo4jRepository.findByName(city);
         if (cityNeo4j != null)
