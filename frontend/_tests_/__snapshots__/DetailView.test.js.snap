@@ -1,0 +1,53 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`test profile test componentDidMount function 1`] = `
+<div>
+  <HeaderInfo
+    logOut={[Function]}
+    search={[Function]}
+  />
+  <div
+    id="Detail"
+    style={
+      Object {
+        "float": "left",
+        "marginLeft": -100,
+        "paddingTop": 150,
+        "width": "80%",
+      }
+    }
+  >
+    <DetailCard
+      info={null}
+    />
+    <Menu
+      mode="horizontal"
+      onClick={[Function]}
+    >
+      <MenuItem
+        onClick={[Function]}
+      >
+        购票须知
+      </MenuItem>
+      <MenuItem
+        onClick={[Function]}
+      >
+        观影须知
+      </MenuItem>
+    </Menu>
+    <Component />
+  </div>
+  <RecommendList
+    info={null}
+  />
+  <div
+    style={
+      Object {
+        "paddingTop": 2000,
+      }
+    }
+  >
+    <FooterInfo />
+  </div>
+</div>
+`;

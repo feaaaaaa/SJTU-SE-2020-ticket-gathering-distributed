@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/actitem")
-@CrossOrigin(origins = "*",maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class ActitemController {
 
     @Autowired
@@ -24,13 +24,12 @@ public class ActitemController {
     private static final Logger logger = LoggerFactory.getLogger(GatewayApplication.class);
 
     @RequestMapping("/detail")
-    public Msg<DetailInfo> getDetail(@RequestParam(name = "actitemid") Integer actitemid, @RequestParam(name = "userid") Integer userId)
-    {
+    public Msg<DetailInfo> getDetail(@RequestParam(name = "actitemid") Integer actitemid, @RequestParam(name = "userid") Integer userId) {
         try {
             return actitemService.getDetail(actitemid, userId);
-        }catch (feign.RetryableException e){
-            logger.error("请求超时",e);
-            return new Msg<>(-100,"请求超时，请重试",new DetailInfo());
+        } catch (feign.RetryableException e) {
+            logger.error("请求超时", e);
+            return new Msg<>(-100, "请求超时，请重试", new DetailInfo());
         }
     }
 }

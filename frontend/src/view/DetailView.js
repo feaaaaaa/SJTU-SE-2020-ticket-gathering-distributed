@@ -26,7 +26,7 @@ export class DetailView extends React.Component{
     componentDidMount() {
         console.log(JSON.parse(window.localStorage.getItem("detail")));
         this.setState({info:JSON.parse(window.localStorage.getItem("detail"))});
-        console.log(this.state.info.title);
+        // console.log(this.state.info.title);
     }
 
     handleClick = e => {

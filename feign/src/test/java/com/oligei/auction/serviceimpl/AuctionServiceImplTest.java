@@ -83,17 +83,24 @@ class AuctionServiceImplTest {
 
     @Test
     @Rollback
-    void tmpInit() {
+    void flushAuctions() {
+        System.out.println("Correct flushing");
+        assertTrue(auctionService.flushAuctions());
     }
 
     @Test
     @Rollback
-    void flushAuctions() {
+    void whenSetOver() {
+        System.out.println("Null AuctionListItem");
+        assertThrows(NullPointerException.class,
+                ()->auctionService.whenSetOver(null),"null auctionListItem --AuctionServiceImpl");
     }
 
     @Test
     @Rollback
     void getAvailableAuctions() {
+        System.out.println("Correct Response");
+        assertNotNull(auctionService.getAvailableAuctions());
     }
 
     @Test

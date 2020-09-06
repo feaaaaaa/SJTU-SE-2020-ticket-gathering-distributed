@@ -13,21 +13,21 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/order")
-@CrossOrigin(origins = "*",maxAge = 3600)
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class OrderController {
 
     @Autowired
     private OrderService orderService;
 
     @RequestMapping("/GetOrderInfoByUser")
-    public Msg<List<OrderInfo>> getOrderInfoByUser(@RequestParam("userId")int userId){
+    public Msg<List<OrderInfo>> getOrderInfoByUser(@RequestParam("userId") int userId) {
         return orderService.getOrderInfoByUser(userId);
     }
 
     @RequestMapping("/addOrder")
-    public Msg<Boolean> addOrder(@RequestParam("userId")int userId, @RequestParam("actitemId")int actitemId,
-                            @RequestParam("initPrice")int initPrice, @RequestParam("orderPrice")int orderPrice, @RequestParam("amount")int amount,
-                            @RequestParam("showtime")String showtime,@RequestParam("orderTime")String orderTime){
-        return orderService.addOrder(userId,actitemId,initPrice,orderPrice,amount,showtime,orderTime);
+    public Msg<Boolean> addOrder(@RequestParam("userId") int userId, @RequestParam("actitemId") int actitemId,
+                                 @RequestParam("initPrice") int initPrice, @RequestParam("orderPrice") int orderPrice, @RequestParam("amount") int amount,
+                                 @RequestParam("showtime") String showtime, @RequestParam("orderTime") String orderTime) {
+        return orderService.addOrder(userId, actitemId, initPrice, orderPrice, amount, showtime, orderTime);
     }
 }

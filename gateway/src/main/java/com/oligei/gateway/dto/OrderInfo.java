@@ -19,44 +19,65 @@ public class OrderInfo {
     private String venue;
     private String activityIcon;
 
-    OrderInfo(){}
-
-    public OrderInfo(Order order, Activity activity){
-        this.orderId=order.getOrderId();
-        this.userId=order.getUserId();
-        this.actitemId=order.getActitemId();
-        this.price=order.getPrice();
-        this.amount=order.getAmount();
-        this.title=activity.getTitle();
-        this.venue=activity.getVenue();
-        this.activityIcon=activity.getActivityIcon();
-
-        SimpleDateFormat sdf1 =new SimpleDateFormat("yyyy-MM-dd HH:mm:ss" );
-        SimpleDateFormat sdf2 =new SimpleDateFormat("yyyy-MM-dd" );
-        Date tmp=order.getShowtime();
-        this.showtime=sdf2.format(tmp);
-        tmp=order.getOrderTime();
-        this.orderTime=sdf1.format(tmp);
+    OrderInfo() {
     }
 
-    public Integer getOrderId(){return orderId;}
+    public OrderInfo(Order order, Activity activity) {
+        this.orderId = order.getOrderId();
+        this.userId = order.getUserId();
+        this.actitemId = order.getActitemId();
+        this.price = order.getPrice();
+        this.amount = order.getAmount();
+        this.title = activity.getTitle();
+        this.venue = activity.getVenue();
+        this.activityIcon = activity.getActivityIcon();
 
-    public Integer getUserId(){return userId;}
+        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy-MM-dd");
+        Date tmp = order.getShowtime();
+        this.showtime = sdf2.format(tmp);
+        tmp = order.getOrderTime();
+        this.orderTime = sdf1.format(tmp);
+    }
 
-    public Integer getActitemId(){return actitemId;}
+    public Integer getOrderId() {
+        return orderId;
+    }
 
-    public Integer getPrice(){return price;}
+    public Integer getUserId() {
+        return userId;
+    }
 
-    public Integer getAmount(){return amount;}
+    public Integer getActitemId() {
+        return actitemId;
+    }
 
-    public String getShowtime(){return showtime;}
+    public Integer getPrice() {
+        return price;
+    }
 
-    public String getOrderTime(){return orderTime;}
+    public Integer getAmount() {
+        return amount;
+    }
 
-    public String getTitle(){return title;}
+    public String getShowtime() {
+        return showtime;
+    }
 
-    public String getVenue(){return venue;}
+    public String getOrderTime() {
+        return orderTime;
+    }
 
-    public String getActivityIcon(){return activityIcon;}
+    public String getTitle() {
+        return title;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public String getActivityIcon() {
+        return activityIcon;
+    }
 
 }

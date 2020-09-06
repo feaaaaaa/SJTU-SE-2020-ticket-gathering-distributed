@@ -2,14 +2,14 @@ package com.oligei.ticketgathering.dao;
 
 import com.oligei.ticketgathering.entity.mysql.Activity;
 import com.oligei.ticketgathering.entity.neo4j.ActivityNeo4j;
-import com.oligei.ticketgathering.repository.ActivityNeo4jRepository;
-import com.oligei.ticketgathering.repository.ActivityRepository;
+import com.oligei.ticketgathering.repository.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.boot.test.mock.mockito.MockBeans;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.dao.InvalidDataAccessApiUsageException;
 import org.springframework.orm.jpa.JpaObjectRetrievalFailureException;
@@ -36,7 +36,6 @@ class ActivityDaoTest {
 
     @MockBean
     private ActivityNeo4jRepository activityNeo4jRepository;
-
 
     @BeforeEach
     void setUp() {
@@ -212,6 +211,14 @@ class ActivityDaoTest {
     @Transactional
     @Rollback
     void addActivityNeo4j() {
-
+        String activityId = "1", category = "2", subcategory = "3", city = "4";
+        assertThrows(NullPointerException.class,()->activityDao.addActivityNeo4j(null,category,subcategory,city),
+                "null activityId --ActivityDaoImpl addActivityNeo4j");
+        assertThrows(NullPointerException.class,()->activityDao.addActivityNeo4j(activityId,null,subcategory,city),
+                "null category --ActivityDaoImpl addActivityNeo4j");
+        assertThrows(NullPointerException.class,()->activityDao.addActivityNeo4j(activityId,category,null,city),
+                "null subcategory --ActivityDaoImpl addActivityNeo4j");
+        assertThrows(NullPointerException.class,()->activityDao.addActivityNeo4j(activityId,category,subcategory,null),
+                "null city --ActivityDaoImpl addActivityNeo4j");
     }
 }

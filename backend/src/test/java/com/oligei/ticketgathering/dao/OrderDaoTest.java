@@ -64,7 +64,7 @@ class OrderDaoTest {
             orderDao.getUserOrder(noneExistedUserId);
         }
         catch (NullPointerException e){
-            assertEquals("Order not found",e.getMessage());
+            assertEquals("null Order --OrderDaoImpl getUserOrder",e.getMessage());
         }
 
         System.out.println("using illegal userId to test");
@@ -72,7 +72,7 @@ class OrderDaoTest {
             orderDao.getUserOrder(illegalUserId);
         }
         catch (InvalidDataAccessApiUsageException e){
-            assertEquals("using illegal userId",e.getMessage());
+            assertEquals("illegal userId --OrderDaoImpl getUserOrder",e.getMessage());
         }
     }
 

@@ -69,7 +69,7 @@ public class ActivityServiceImpl implements ActivityService {
     private int searchResultMax = 200;
     private int pageSize = 10;
 
-    Directory directoryRandom=new RAMDirectory();
+    Directory directoryRandom = new RAMDirectory();
 
 
     @PostConstruct
@@ -101,7 +101,7 @@ public class ActivityServiceImpl implements ActivityService {
         IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
         conf.setOpenMode(IndexWriterConfig.OpenMode.CREATE_OR_APPEND);
 //        IndexWriter indexWriter = new IndexWriter(directory, conf);
-        IndexWriter indexWriter1=new IndexWriter(directoryRandom,conf);
+        IndexWriter indexWriter1 = new IndexWriter(directoryRandom, conf);
 //        indexWriter.addDocuments(docs);
 //        indexWriter.commit();
 //        indexWriter.close();
@@ -113,28 +113,29 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @SuppressWarnings("rawtypes")
-    private List<ActivitySortpage> object2ActivitySortpage (List<Object> list) {
+    private List<ActivitySortpage> object2ActivitySortpage(List<Object> list) {
         List<ActivitySortpage> result = new ArrayList<>();
         for (Object o : list) {
-            result.add((ActivitySortpage)o);
+            result.add((ActivitySortpage) o);
         }
         return result;
     }
 
     /**
-     *  calculate search score, generate result
+     * calculate search score, generate result
+     *
      * @param value search value
      * @return search result
-     * @author feaaaaaa,ziliuziliu
-     * @date 2020/8/21
-     * @throws NullPointerException the param of activitySortpage is null or the mongo data of actitem is null
-     * @throws IOException if open file fails
-     * @throws ParseException if parse of value fails
+     * @throws NullPointerException               the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws IOException                        if open file fails
+     * @throws ParseException                     if parse of value fails
      * @throws JpaObjectRetrievalFailureException if id is invalid
-     * @throws EmptyResultDataAccessException when activity is not found
+     * @throws EmptyResultDataAccessException     when activity is not found
+     * @author feaaaaaa, ziliuziliu
+     * @date 2020/8/21
      */
     private List<ActivitySortpage> searchResult(String value) throws IOException, ParseException {
-        List<Object> resultObject = (List<Object>) redisUtil.lGetIndex(value,0);
+        List<Object> resultObject = (List<Object>) redisUtil.lGetIndex(value, 0);
         List<ActivitySortpage> result;
         result = new ArrayList<>();
         if (resultObject != null) {
@@ -170,17 +171,17 @@ public class ActivityServiceImpl implements ActivityService {
 //            System.out.println("得分： " + scoreDoc.score);
                 result.add(findActivityAndActitem(Integer.parseInt(doc.get("id"))));
             }
-            redisUtil.lSet(value,result);
+            redisUtil.lSet(value, result);
         }
         return result;
     }
 
     @Override
     /**
-     *  use index to get search id, then get data from cache and return
-     * @param value,page
+     * @param value
+     * @param page
      * @return search result for certain page
-     * @author feaaaaaa,ziliuziliu
+     * @author feaaaaaa, ziliuziliu
      * @date 2020.08.21
      * @throws NullPointerException the param of activitySortpage is null or the mongo data of actitem is null
      * @throws IOException if open file fails
@@ -189,21 +190,23 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> search(String value, Integer page) throws IOException, ParseException, IndexOutOfBoundsException {
+        Objects.requireNonNull(value,"null value --ActivityServiceImpl search");
+        Objects.requireNonNull(page,"null page --ActivityServiceImpl page");
+
         List<Object> resultObject;//every item
         List<ActivitySortpage> result;
         List<ActivitySortpage> activitySortpages = new ArrayList<>();//item this page should display
 
         //null
         if (value == null || value.equals("") || value.equals("null")) {
-            resultObject = (List<Object>) redisUtil.lGetIndex("searchNull",0);
+            resultObject = (List<Object>) redisUtil.lGetIndex("searchNull", 0);
             if (resultObject != null) {
                 result = object2ActivitySortpage(resultObject);
                 System.out.println("search null get from cache");
-                for (int i=(page-1)*pageSize;i<page*pageSize;i++)
+                for (int i = (page - 1) * pageSize; i < page * pageSize; i++)
                     activitySortpages.add(result.get(i));
                 return activitySortpages;
-            }
-            else {
+            } else {
                 // should not be used
                 result = new ArrayList<>();
                 for (int i = 10; i <= 451; i += 9) {
@@ -211,7 +214,7 @@ public class ActivityServiceImpl implements ActivityService {
                     if (activitySortpage != null)
                         result.add(activitySortpage);
                 }
-                redisUtil.lSet("searchNull",result);
+                redisUtil.lSet("searchNull", result);
                 System.out.println("search null add into cache");
                 return result;
             }
@@ -222,14 +225,13 @@ public class ActivityServiceImpl implements ActivityService {
             ActivitySortpage activitySortpage = result.get(i);
             activitySortpages.add(activitySortpage);
         }
-        if (activitySortpages.size() == 0) throw new IndexOutOfBoundsException("页码越界");
+        if (activitySortpages.size() == 0) throw new IndexOutOfBoundsException("找不到搜索结果");
         return activitySortpages;
     }
 
     @Override
     /**
-     *  how many pages?
-     * @param value,page
+     * @param value
      * @return pagenum
      * @author ziliuziliu
      * @date 2020/8/21
@@ -240,10 +242,11 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws EmptyResultDataAccessException when activity is not found
      */
     public Integer searchPageNum(String value) throws IOException, ParseException {
+
         List<Object> resultObject;
         List<ActivitySortpage> result;
         if (value == null || value.equals("") || value.equals("null")) {
-            resultObject = (List<Object>) redisUtil.lGetIndex("searchNull",0);
+            resultObject = (List<Object>) redisUtil.lGetIndex("searchNull", 0);
             if (resultObject == null) {
                 // should not be used
                 result = new ArrayList<>();
@@ -252,39 +255,40 @@ public class ActivityServiceImpl implements ActivityService {
                     if (activitySortpage != null)
                         result.add(activitySortpage);
                 }
-                redisUtil.lSet("searchNull",result);
+                redisUtil.lSet("searchNull", result);
                 System.out.println("search null add into cache");
-            }
-            else result = object2ActivitySortpage(resultObject);
-            return result.size()/pageSize;
+            } else result = object2ActivitySortpage(resultObject);
+            return result.size() / pageSize;
         }
         result = searchResult(value);
-        return result.size()/pageSize;
+        return result.size() / pageSize;
     }
 
 //    @Override
+
     /**
      * use id to find activity and actitems to make a activitySortpage
-     *@param id the activityId
-     *@return ActivitySortpage that have the id
-     *@author feaaaaaa
-     *@date 2020.8.15
-     *@throws NullPointerException when id is null or the param of activitySortpage is null or the mongo data of actitem is null
-     *@throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
-     *@throws EmptyResultDataAccessException when activity is not found
+     *
+     * @param id the activityId
+     * @return ActivitySortpage that have the id
+     * @throws NullPointerException               when id is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
+     * @throws EmptyResultDataAccessException     when activity is not found
+     * @author feaaaaaa
+     * @date 2020.8.15
      */
     public ActivitySortpage findActivityAndActitem(Integer id) {
 
-        Objects.requireNonNull(id,"null id --ActivityServiceImpl findActivityAndActitem");
-        String cacheName="ActivitySortpage"+id.toString();
-        ActivitySortpage cacheResult = (ActivitySortpage) redisUtil.lGetIndex(cacheName,0);
-        if(cacheResult!=null){
-            System.out.println(cacheName+" get from cache");
+        Objects.requireNonNull(id, "null id --ActivityServiceImpl findActivityAndActitem");
+        String cacheName = "ActivitySortpage" + id.toString();
+        ActivitySortpage cacheResult = (ActivitySortpage) redisUtil.lGetIndex(cacheName, 0);
+        if (cacheResult != null) {
+            System.out.println(cacheName + " get from cache");
             return cacheResult;
         }
-        Activity activity= activityDao.findOneById(id);
-        List<Actitem> actitems=actitemDao.findAllByActivityId(id);
-        cacheResult= new ActivitySortpage (
+        Activity activity = activityDao.findOneById(id);
+        List<Actitem> actitems = actitemDao.findAllByActivityId(id);
+        cacheResult = new ActivitySortpage(
                 activity.getActivityId(),
                 activity.getTitle(),
                 activity.getActor(),
@@ -293,60 +297,59 @@ public class ActivityServiceImpl implements ActivityService {
                 activity.getActivityIcon(),
                 actitems
         );
-        redisUtil.lSet(cacheName,cacheResult);
-        System.out.println(cacheName+" add into cache");
+        redisUtil.lSet(cacheName, cacheResult);
+        System.out.println(cacheName + " add into cache");
         return cacheResult;
     }
 
     @Override
     /**
-     * parse the string info of activity and save it
-     *@param activity
-     *@return save success or fail
-     *@author feaaaaaa
-     *@date 2020.8.15
-     *@throws NullPointerException when param is null
-     *@throws ArrayIndexOutOfBoundsException,NumberFormatException if string activity is not the correct format
+     * @param activity
+     * @return save success or fail
+     * @author feaaaaaa
+     * @date 2020.8.15
+     * @throws NullPointerException when param is null
+     * @throws ArrayIndexOutOfBoundsException,NumberFormatException if string activity is not the correct format
      */
     public Boolean add(String activity) {
-        Objects.requireNonNull(activity,"null activity --ActivityServiceImpl add");
-        activity=activity.substring(1,activity.length()-1);
+        Objects.requireNonNull(activity, "null activity --ActivityServiceImpl add");
+        activity = activity.substring(1, activity.length() - 1);
         String[] arr = activity.split(",");
 //        System.out.println(Arrays.toString(arr));
-        int webcnt=Integer.parseInt(arr[0]);
-        int daycnt=Integer.parseInt(arr[1]);
-        int classcnt=Integer.parseInt(arr[2]);
-        String city=arr[8].substring(1,arr[8].length()-1);
-        String category=arr[9].substring(1,arr[9].length()-1);
-        String subcategory=arr[10].substring(1,arr[10].length()-1);
+        int webcnt = Integer.parseInt(arr[0]);
+        int daycnt = Integer.parseInt(arr[1]);
+        int classcnt = Integer.parseInt(arr[2]);
+        String city = arr[8].substring(1, arr[8].length() - 1);
+        String category = arr[9].substring(1, arr[9].length() - 1);
+        String subcategory = arr[10].substring(1, arr[10].length() - 1);
 //        System.out.println(city+category+subcategory);
 
-        Activity savedActivity=activityDao.add(arr[3].substring(1,arr[3].length()-1),arr[4].substring(1,arr[4].length()-1),arr[5].substring(1,arr[5].length()-1),
-                arr[6].substring(1,arr[6].length()-1),arr[7].substring(1,arr[7].length()-1));
-        int activityId=savedActivity.getActivityId();
-        int number=daycnt*classcnt+daycnt;
-        activityDao.addActivityNeo4j(String.valueOf(activityId),category,subcategory,city);
+        Activity savedActivity = activityDao.add(arr[3].substring(1, arr[3].length() - 1), arr[4].substring(1, arr[4].length() - 1), arr[5].substring(1, arr[5].length() - 1),
+                arr[6].substring(1, arr[6].length() - 1), arr[7].substring(1, arr[7].length() - 1));
+        int activityId = savedActivity.getActivityId();
+        int number = daycnt * classcnt + daycnt;
+        activityDao.addActivityNeo4j(String.valueOf(activityId), category, subcategory, city);
 
-        for(int i=0;i<webcnt;++i){
+        for (int i = 0; i < webcnt; ++i) {
             //website
-            int basic=11+i*(number+1);
-            Actitem savedActitem=actitemDao.add(activityId,arr[basic].substring(1,arr[basic].length()-1));
+            int basic = 11 + i * (number + 1);
+            Actitem savedActitem = actitemDao.add(activityId, arr[basic].substring(1, arr[basic].length() - 1));
             //date
-            basic+=1;
+            basic += 1;
 
-            int actitemId=savedActitem.getActitemId();
+            int actitemId = savedActitem.getActitemId();
             List<JSONObject> CLASS;
-            List<JSONObject> prices=new ArrayList<>();
+            List<JSONObject> prices = new ArrayList<>();
             JSONObject clas;
 
-            for(int k=0;k<daycnt;++k) {
+            for (int k = 0; k < daycnt; ++k) {
                 //date
-                if(k!=0)basic+=classcnt+1;
-                CLASS=new ArrayList<>();
-                String date=arr[basic].substring(1,arr[basic].length()-1);
+                if (k != 0) basic += classcnt + 1;
+                CLASS = new ArrayList<>();
+                String date = arr[basic].substring(1, arr[basic].length() - 1);
 
                 for (int j = 0; j < classcnt; ++j) {
-                    String classPrice = "{price:" + arr[basic+1+j] + ",num:100}";
+                    String classPrice = "{price:" + arr[basic + 1 + j] + ",num:100}";
                     clas = JSON.parseObject(classPrice);
                     CLASS.add(clas);
                 }
@@ -365,97 +368,102 @@ public class ActivityServiceImpl implements ActivityService {
 //            tmp.add(actitemMongo);
 //            System.out.println("!!!!");
 //            System.out.println(prices.toString());
-            actitemDao.insertActitemInMongo(actitemId,prices);
+            actitemDao.insertActitemInMongo(actitemId, prices);
         }
         return true;
     }
 
-    @Override
-    @Transactional
-    /**
-     * use activityId to delete activity&all the actitem
-     *@param id the activityId of activity
-     *@return delete success or fail
-     *@author feaaaaaa
-     *@date 2020.8.15
-     *@throws NullPointerException when id is null or mongo data is null
-     *@throws JpaObjectRetrievalFailureException when id is invalid
-     *@throws EmptyResultDataAccessException when activity is not found
-     */
-    public Boolean delete(Integer activityId) {
-        Objects.requireNonNull(activityId,"null id --ActivityServiceImpl delete");
-        List<Actitem> actitems=actitemDao.findAllByActivityId(activityId);
-        for(Actitem a : actitems)
-            actitemDao.deleteActitem(a.getActitemId());
-        activityDao.delete(activityId);
-        return true;
-    }
+//    @Override
+//    @Transactional
+//    /**
+//     * use activityId to delete activity&all the actitem
+//     *@param id the activityId of activity
+//     *@return delete success or fail
+//     *@author feaaaaaa
+//     *@date 2020.8.15
+//     *@throws NullPointerException when id is null or mongo data is null
+//     *@throws JpaObjectRetrievalFailureException when id is invalid
+//     *@throws EmptyResultDataAccessException when activity is not found
+//     */
+//    public Boolean delete(Integer activityId) {
+//        Objects.requireNonNull(activityId,"null id --ActivityServiceImpl delete");
+//        List<Actitem> actitems=actitemDao.findAllByActivityId(activityId);
+//        for(Actitem a : actitems)
+//            actitemDao.deleteActitem(a.getActitemId());
+//        activityDao.delete(activityId);
+//        return true;
+//    }
 
     /**
-     *  selectSearch result
-     * @param type,name,city
+     * selectSearch result
+     *
+     * @param type
+     * @param name
+     * @param city
      * @return true if initialize finished successfully
+     * @throws NullPointerException               when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
+     * @throws EmptyResultDataAccessException     when activity is not found
+     * @throws InvalidDataAccessApiUsageException when type is invalid
      * @author ziliuziliu
      * @date 2020/8/21
-     * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
-     * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
-     * @throws EmptyResultDataAccessException when activity is not found
-     * @throws InvalidDataAccessApiUsageException when type is invalid
      */
-    public List<ActivitySortpage> selectSearchResult(String type,String name,String city) throws IOException, ParseException {
+    public List<ActivitySortpage> selectSearchResult(String type, String name, String city) throws IOException, ParseException {
         List<ActivitySortpage> result;
         List<Object> resultObject;
         List<Integer> activities;
-        String cacheName=name+city;
-        resultObject = (List<Object>) redisUtil.lGetIndex(cacheName,0);
+        String cacheName = name + city;
+        resultObject = (List<Object>) redisUtil.lGetIndex(cacheName, 0);
         if (resultObject == null) {
             result = new ArrayList<>();
             activities = activityDao.findActivityByCategoryAndCity(type, name, city);
             for (Integer activity : activities)
                 result.add(findActivityAndActitem(activity));
-            redisUtil.lSet(cacheName,result);
-        }
-        else result = object2ActivitySortpage(resultObject);
+            redisUtil.lSet(cacheName, result);
+        } else result = object2ActivitySortpage(resultObject);
         return result;
     }
 
     @Override
     /**
-     *  use index to get search id, then get data from cache and return
-     * @param type,name,city,page
+     * @param type
+     * @param name
+     * @param city
+     * @param page
      * @return true if initialize finished successfully
-     * @author ziliuziliu,feaaaaaa
+     * @author ziliuziliu, feaaaaaa
      * @date 2020.08.21
      * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
      * @throws JpaObjectRetrievalFailureException if id found by neo4j is invalid
      * @throws EmptyResultDataAccessException when activity is not found
      * @throws InvalidDataAccessApiUsageException when type is invalid
      */
-    public List<ActivitySortpage> selectSearch(String type,String name,String city,Integer page) throws IOException,
+    public List<ActivitySortpage> selectSearch(String type, String name, String city, Integer page) throws IOException,
             ParseException, IndexOutOfBoundsException {
-        Objects.requireNonNull(type,"null type --ActivityServiceImpl selectSearch");
-        Objects.requireNonNull(name,"null name --ActivityServiceImpl selectSearch");
-        Objects.requireNonNull(city,"null city --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(type, "null type --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(name, "null name --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(city, "null city --ActivityServiceImpl selectSearch");
 
         List<ActivitySortpage> result;//every item
         List<ActivitySortpage> activitySortpages = new ArrayList<>(); //item this page should display
 
-        if(!type.equals("category") && !type.equals("subcategory"))
+        if (!type.equals("category") && !type.equals("subcategory"))
             throw new InvalidDataAccessApiUsageException("invalid category");
-        if (name.equals("全部") && city.equals("全国")) return search("",page);
-        result = selectSearchResult(type,name,city);
-        for (int i=(page-1)*10;i<page*10;i++) {
+        if (name.equals("全部") && city.equals("全国")) return search("", page);
+        result = selectSearchResult(type, name, city);
+        for (int i = (page - 1) * 10; i < page * 10; i++) {
             if (i >= result.size()) break;
             activitySortpages.add(result.get(i));
         }
-        if (activitySortpages.size() == 0) throw new IndexOutOfBoundsException("页码越界");
+        if (activitySortpages.size() == 0) throw new IndexOutOfBoundsException("找不到搜索结果");
         return activitySortpages;
     }
 
     @Override
     /**
-     *  how many pages?
-     * @param type,name,city
+     * @param type
+     * @param name
+     * @param city
      * @return pagenum
      * @author ziliuziliu
      * @date 2020/8/21
@@ -464,27 +472,26 @@ public class ActivityServiceImpl implements ActivityService {
      * @throws EmptyResultDataAccessException when activity is not found
      * @throws InvalidDataAccessApiUsageException when type is invalid
      */
-    public Integer selectSearchPageNum(String type,String name,String city) throws IOException, ParseException {
-        Objects.requireNonNull(type,"null type --ActivityServiceImpl selectSearch");
-        Objects.requireNonNull(name,"null name --ActivityServiceImpl selectSearch");
-        Objects.requireNonNull(city,"null city --ActivityServiceImpl selectSearch");
+    public Integer selectSearchPageNum(String type, String name, String city) throws IOException, ParseException {
+        Objects.requireNonNull(type, "null type --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(name, "null name --ActivityServiceImpl selectSearch");
+        Objects.requireNonNull(city, "null city --ActivityServiceImpl selectSearch");
         List<ActivitySortpage> result;//every item
-        if(!type.equals("category") && !type.equals("subcategory"))
+        if (!type.equals("category") && !type.equals("subcategory"))
             throw new InvalidDataAccessApiUsageException("invalid category");
         if (name.equals("全部") && city.equals("全国")) return searchPageNum("");
-        result = selectSearchResult(type,name,city);
-        return result.size()/pageSize;
+        result = selectSearchResult(type, name, city);
+        return result.size() / pageSize;
     }
 
     @Override
     /**
-     *  call findActivityByOneCategoryHome 8 times to find a list of activitySortpage for homepage
      * @return total list of activitySortpage for homepage
      * @author feaaaaaa
      * @date 2020.08.14
-     *@throws NullPointerException when the param of activitySortpage is null or the mongo data of actitem is null
-     *@throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
-     *@throws EmptyResultDataAccessException when activity is not found
+     * @throws NullPointerException when the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> findActivityByCategoryHome() {
         List<ActivitySortpage> activitySortpages = new ArrayList<>();
@@ -500,17 +507,18 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     /**
-     *  use findActivityByCategoryAndCity("category", name, "全国")  to get one content of homepage from cache
-     * @return a list of activitySortpage for homepage
+     * use findActivityByCategoryAndCity("category", name, "全国")  to get one content of homepage from cache
+     *
      * @param name name of category
+     * @return a list of activitySortpage for homepage
+     * @throws NullPointerException               when name is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
+     * @throws EmptyResultDataAccessException     when activity is not found
      * @author feaaaaaa
      * @date 2020.08.18
-     *@throws NullPointerException when name is null or the param of activitySortpage is null or the mongo data of actitem is null
-     *@throws JpaObjectRetrievalFailureException when id found by neo4j is invalid
-     *@throws EmptyResultDataAccessException when activity is not found
      */
-    private List<ActivitySortpage> findActivityByOneCategoryHome(String name){
-        Objects.requireNonNull(name,"null name --ActivityServiceImpl findActivityByOneCategoryHome");
+    private List<ActivitySortpage> findActivityByOneCategoryHome(String name) {
+        Objects.requireNonNull(name, "null name --ActivityServiceImpl findActivityByOneCategoryHome");
 
         List<ActivitySortpage> activitySortpages = new ArrayList<ActivitySortpage>();
         int i = 0;
@@ -519,44 +527,44 @@ public class ActivityServiceImpl implements ActivityService {
         List<Object> cacheResultObject;
 
         //get from cache
-        cacheResultObject = (List<Object>) redisUtil.lGetIndex(name,0);
-        if(cacheResultObject != null && cacheResultObject.size() != 0){
-            System.out.println(name+" get from cache");
+        cacheResultObject = (List<Object>) redisUtil.lGetIndex(name, 0);
+        if (cacheResultObject != null && cacheResultObject.size() != 0) {
+            System.out.println(name + " get from cache");
             cacheResult = object2ActivitySortpage(cacheResultObject);
             activitySortpages.addAll(cacheResult);
         }
         //1st time, add into cache, which will be done in initialization
         else {
-            System.out.println(name+" put into cache");
+            System.out.println(name + " put into cache");
             activities = activityDao.findActivityByCategoryAndCity("category", name, "全国");
             for (Integer a : activities) {
                 activitySortpages.add(findActivityAndActitem(a));
                 if (++i >= 10) break;
             }
-            redisUtil.lSet(name,activitySortpages);
+            redisUtil.lSet(name, activitySortpages);
         }
         return activitySortpages;
     }
 
     @Override
     /**
-     * use userId and activityId to get ActivitySortpage that is the same kind of activity and haven't been seen by the user
-     *@param userId,activityId
-     *@return the list of recommend activity
-     *@author ziliuziliu, feaaaaaa
-     *@date 2020.8.18
-     *@throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
-     *@throws InvalidDataAccessApiUsageException when param is invalid
-     *@throws JpaObjectRetrievalFailureException when id found by neo4j and used to find activitySortpage is invalid
-     *@throws EmptyResultDataAccessException when activity is not found
+     * @param userId
+     * @param activityId
+     * @return the list of recommend activity
+     * @author ziliuziliu, feaaaaaa
+     * @date 2020.8.18
+     * @throws NullPointerException when param is null or the param of activitySortpage is null or the mongo data of actitem is null
+     * @throws InvalidDataAccessApiUsageException when param is invalid
+     * @throws JpaObjectRetrievalFailureException when id found by neo4j and used to find activitySortpage is invalid
+     * @throws EmptyResultDataAccessException when activity is not found
      */
     public List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId) {
         //check param
-        Objects.requireNonNull(userId,"null userId --ActivityServiceImpl recommendOnContent");
-        Objects.requireNonNull(activityId,"null activityId --ActivityServiceImpl recommendOnContent");
-        if(userId<=0)
+        Objects.requireNonNull(userId, "null userId --ActivityServiceImpl recommendOnContent");
+        Objects.requireNonNull(activityId, "null activityId --ActivityServiceImpl recommendOnContent");
+        if (userId <= 0)
             throw new InvalidDataAccessApiUsageException("invalid userId --ActivityServiceImpl recommendOnContent");
-        if(activityId<=0)
+        if (activityId <= 0)
             throw new InvalidDataAccessApiUsageException("invalid activityId --ActivityServiceImpl recommendOnContent");
         //find activity
         List<Integer> activities = activityDao.recommendOnContent(userId, activityId);
@@ -568,64 +576,64 @@ public class ActivityServiceImpl implements ActivityService {
         return activitySortpages;
     }
 
-    @Override
-    /**
-     *  add all the activitySortpage into cache
-     * @return true if initialize finished successfully
-     * @author feaaaaaa
-     * @date 2020.08.14
-     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
-     */
-    public Boolean initActivity() {
+//    @Override
+//    /**
+//     *  add all the activitySortpage into cache
+//     * @return true if initialize finished successfully
+//     * @author feaaaaaa
+//     * @date 2020.08.14
+//     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
+//     */
+//    public Boolean initActivity() {
+//
+//        List<ActivitySortpage> activitySortpages = new ArrayList<>();
+//        //add all the activitySortpage into cache
+//        initActivityById(1000,activitySortpages);
+//        initActivityById(2000,activitySortpages);
+//        initActivityById(3000,activitySortpages);
+//        initActivityById(4000,activitySortpages);
+//        initActivityById(5000,activitySortpages);
+//        initActivityById(6000,activitySortpages);
+//        initActivityById(7000,activitySortpages);
+//        initActivityById(8000,activitySortpages);
+//        initActivityById(9000,activitySortpages);
+//        initActivityById(10000,activitySortpages);
+//        initActivityById(11000,activitySortpages);
+//        initActivityById(12000,activitySortpages);
+//        //add to searchNull
+//        redisUtil.lSet("searchNull",activitySortpages);
+//        //add home page to cache
+//        findActivityByCategoryHome();
+//        return true;
+//    }
+//
+//    /**
+//     *  add 1000 activitySortpage into cache
+//     * @param cnt the max id that add into cache
+//     * @author feaaaaaa
+//     * @date 2020.08.14
+//     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
+//     */
+//    public void initActivityById(int cnt, List<ActivitySortpage> activitySortpages) {
+//        int basic=Math.max(1,cnt-1000);
+//        for(int i=basic;i<cnt;++i){
+//            activitySortpages.add(findActivityAndActitem(i));
+//        }
+//    }
 
-        List<ActivitySortpage> activitySortpages = new ArrayList<>();
-        //add all the activitySortpage into cache
-        initActivityById(1000,activitySortpages);
-        initActivityById(2000,activitySortpages);
-        initActivityById(3000,activitySortpages);
-        initActivityById(4000,activitySortpages);
-        initActivityById(5000,activitySortpages);
-        initActivityById(6000,activitySortpages);
-        initActivityById(7000,activitySortpages);
-        initActivityById(8000,activitySortpages);
-        initActivityById(9000,activitySortpages);
-        initActivityById(10000,activitySortpages);
-        initActivityById(11000,activitySortpages);
-        initActivityById(12000,activitySortpages);
-        //add to searchNull
-        redisUtil.lSet("searchNull",activitySortpages);
-        //add home page to cache
-        findActivityByCategoryHome();
-        return true;
-    }
-
-    /**
-     *  add 1000 activitySortpage into cache
-     * @param cnt the max id that add into cache
-     * @author feaaaaaa
-     * @date 2020.08.14
-     * @throws JpaObjectRetrievalFailureException if cnt exceeds max id of activity
-     */
-    public void initActivityById(int cnt, List<ActivitySortpage> activitySortpages) {
-        int basic=Math.max(1,cnt-1000);
-        for(int i=basic;i<cnt;++i){
-            activitySortpages.add(findActivityAndActitem(i));
-        }
-    }
-
-    /**
-     *   clear cache which have home cache and select search
-     * @return true if clear clear successfully
-     * @author feaaaaaa
-     * @date 2020.08.14
-     */
-    @Override
-    public Boolean clear() {
-//        if(cacheName==null||cacheName.equals("")||cacheName.equals("null"))
-//            idSetCache.evictCache();
-//        idSetCache.evictCache(cacheName);
-        return true;
-    }
+//    /**
+//     *   clear cache which have home cache and select search
+//     * @return true if clear clear successfully
+//     * @author feaaaaaa
+//     * @date 2020.08.14
+//     */
+//    @Override
+//    public Boolean clear() {
+////        if(cacheName==null||cacheName.equals("")||cacheName.equals("null"))
+////            idSetCache.evictCache();
+////        idSetCache.evictCache(cacheName);
+//        return true;
+//    }
 
 
     //    public void initActivityByCity(String city) {

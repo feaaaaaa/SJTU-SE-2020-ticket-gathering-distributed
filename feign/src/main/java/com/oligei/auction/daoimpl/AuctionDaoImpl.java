@@ -17,39 +17,36 @@ public class AuctionDaoImpl implements AuctionDao {
 
     @Override
     /**
-    *save an auction
-    *@param: auction
-    *@return: com.oligei.auction.entity.Auction
-    *@author: Cui Shaojie
-    *@date: 2020/8/18
-    */
+     * @param auction
+     * @return com.oligei.auction.entity.Auction
+     * @author Cui Shaojie
+     * @date 2020/8/18
+     */
     public Auction save(Auction auction) {
-        Objects.requireNonNull(auction,"null auction --AuctionDaoImpl save");
+        Objects.requireNonNull(auction, "null auction --AuctionDaoImpl save");
 
         return auctionRepository.save(auction);
     }
 
-    @Override
-    /**
-    *get all available auctions
-    *@return: java.util.List<com.oligei.auction.entity.Auction>
-    *@author: Cui Shaojie
-    *@date: 2020/8/18
-    */
-    public List<Auction> getAvailableAuctionsForNow() {
-        return auctionRepository.findAuctionsByIsoverEquals(0);
-    }
+//    @Override
+//    /**
+//     * @return java.util.List<com.oligei.auction.entity.Auction>
+//     * @author Cui Shaojie
+//     * @date 2020/8/18
+//     */
+//    public List<Auction> getAvailableAuctionsForNow() {
+//        return auctionRepository.findAuctionsByIsoverEquals(0);
+//    }
 
     @Override
     /**
-    *find an auction by id
-    *@param: auctionid
-    *@return: com.oligei.auction.entity.Auction
-    *@author: Cui Shaojie
-    *@date: 2020/8/18
-    */
+     * @param auctionid
+     * @return com.oligei.auction.entity.Auction
+     * @author Cui Shaojie
+     * @date 2020/8/18
+     */
     public Auction findOneById(Integer auctionid) {
-        Objects.requireNonNull(auctionid,"null auctionid --AuctionDaoImpl findOneById");
+        Objects.requireNonNull(auctionid, "null auctionid --AuctionDaoImpl findOneById");
 
         return auctionRepository.getOne(auctionid);
     }

@@ -9,7 +9,13 @@ import java.util.List;
 public interface OrderDao {
 //    List<Order> getOrderByUserId(int userId);
 
-    boolean addOrder(int userId, int actitemId, int price,int amount, Date showtime, Date orderTime);
+    /**
+     * insert an order into database
+     */
+    boolean addOrder(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime);
 
+    /**
+     * get order using user id
+     */
     List<OrderInfo> getUserOrder(int userId);
 }

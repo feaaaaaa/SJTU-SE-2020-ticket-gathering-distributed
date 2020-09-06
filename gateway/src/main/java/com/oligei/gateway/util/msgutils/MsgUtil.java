@@ -22,7 +22,6 @@ public class MsgUtil {
     public static final String NOT_LOGGED_IN_ERROR_MSG = "Please log in！";
 
 
-
 //    template<class T>
 //    public static Msg<T> makeMsg(MsgCode code, JSONObject data){
 //        return new Msg<T>(code, data);

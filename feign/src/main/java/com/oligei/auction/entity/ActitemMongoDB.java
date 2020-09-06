@@ -15,15 +15,26 @@ public class ActitemMongoDB {
 
     @Field("prices")
     private List<JSONObject> price;
-    public List<JSONObject> getPrice() {return price;}
-    public void setPrice(List<JSONObject> price){this.price = price;}
 
-    public ActitemMongoDB(Integer actitemId,List<JSONObject> price){
+    public List<JSONObject> getPrice() {
+        return price;
+    }
+
+    public void setPrice(List<JSONObject> price) {
+        this.price = price;
+    }
+
+    public ActitemMongoDB(Integer actitemId, List<JSONObject> price) {
         this.actitemId = actitemId;
         this.price = price;
     }
 
-    public Integer getActitemId(){return actitemId;}
-    public void setActitemId(Integer actitemId){this.actitemId = actitemId;}
+    public Integer getActitemId() {
+        return actitemId;
+    }
+
+    public void setActitemId(Integer actitemId) {
+        this.actitemId = actitemId;
+    }
 
 }

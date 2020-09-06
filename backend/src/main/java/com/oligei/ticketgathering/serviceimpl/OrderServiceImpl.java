@@ -48,7 +48,6 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     /**
-     *  get order using user id
      * @param userId
      * @return OrderInfo
      * @author Yang Yicheng
@@ -57,11 +56,11 @@ public class OrderServiceImpl implements OrderService {
      * @throws NullPointerException Order not found
      */
     public List<OrderInfo> getUserOrder(int userId) {
-        if (userId<=0){
+        if (userId <= 0) {
             throw new InvalidDataAccessApiUsageException("illegal userId --OrderServiceImpl getUserOrder");
         }
-        List<OrderInfo> result=orderDao.getUserOrder(userId);
-        if(result==null){
+        List<OrderInfo> result = orderDao.getUserOrder(userId);
+        if (result == null) {
             throw new NullPointerException("null Order --OrderServiceImpl getUserOrder");
         }
         return result;
@@ -69,8 +68,13 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     /**
-     *  insert an order into database
-     * @param userId,actitemId,initPrice,orderPrice,amount,showtime,orderTime
+     * @param userId
+     * @param actitemId
+     * @param initPrice
+     * @param orderPrice
+     * @param amount
+     * @param showtime
+     * @param orderTime
      * @return boolean
      * @author Yang Yicheng
      * @date 2020/8/12
@@ -88,7 +92,7 @@ public class OrderServiceImpl implements OrderService {
             }
             if (orderPrice == 0) {
                 System.out.println("normal addOrder");
-                if(userService.rechargeOrDeduct(userId,-initPrice)==-1)
+                if (userService.rechargeOrDeduct(userId, -initPrice) == -1)
                     return false;//余额不足
                 return orderDao.addOrder(userId, actitemId, initPrice, amount, Showtime, OrderTime);
             } else {

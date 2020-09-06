@@ -9,9 +9,8 @@
 OligeiWeb是我们此次项目目标——聚票网的名字，其作用是将来自不同票源的相同门票整合到一起，供用户选取，为用户节约时间，节约金钱。
 
 ## 地址
-
-1. 前端地址：
-2. skywalking监控地址：
+1. 公网ip：202.120.40.8
+2. 端口：jenkins 30331， eureka 30332， gateway 30333， frontend 30334
 
 ## 如何获得源码
 
@@ -66,13 +65,14 @@ OligeiWeb是我们此次项目目标——聚票网的名字，其作用是将�
 
 1. 前端：react + antd ui
 2. 后端：采用springcloud微服务，使用了包括eureka,feign等工具
-3. 数据库：mysql+mongodb+neo4j
+3. 数据库：mysql+mongodb+neo4j+redis
 4. 自动化部署：jenkins+docker
 5. 日志：log4j
 6. 搜索分词工具：lucene
-7. 单元测试：junit+mock
-8. 性能测试：jmeter+prometheus+grafana
-9. 远程服务监控：skywalking
+7. 前端单元测试: jest+enzyme
+8. 后端单元测试：junit+mock
+9. 性能测试：jmeter+prometheus+grafana
+10. 远程服务监控：skywalking
 
 ## 前端总体设计
 
@@ -97,7 +97,7 @@ OligeiWeb是我们此次项目目标——聚票网的名字，其作用是将�
 
 ## 数据库设计
 
-本项目采用mysql,mongodb,neo4j三种数据库
+本项目采用mysql,mongodb,neo4j,redis
 
 ###  Mysql+MongoDB
 
@@ -126,6 +126,20 @@ OligeiWeb是我们此次项目目标——聚票网的名字，其作用是将�
   (User,Activity) for personalized recommendation: Personal Ranks Algorithm 
 
     https://blog.csdn.net/qq_40006058/article/details/83444131 for more
+    
+### Redis
+
+利用redis访问响应时间短，速度快的优势，将搜索关键词和得到的结果作为键值对放入redis中，来作为缓存使用，加快搜索响应速度。
+
+## 服务器
+
+使用软院提供的三台服务器，其中一台可以连公网(A)，两台限制在内网(B,C)。配置均为4核8G。
+
+### A: jenkins + frontend + eureka + gateway + Jmeter
+
+### B: ticketgathering + mysql + mongodb
+
+### C: auction + neo4j + redis
 
 ## 自动化部署
 
@@ -141,6 +155,10 @@ OligeiWeb是我们此次项目目标——聚票网的名字，其作用是将�
 
 ### 前端测试
 
++ 前端测试采用了jest+enzyme进行测试，由于每个组件的函数众多，我们主要对涉及到前后端交互和逻辑功能比较复杂的组件进行测试
++ 对前者我们将与后台交互的fetch进行了mock，然后测试组件state的变化情况
++ 对后者我们主要进行操作（如click，change，blur）的模拟来测试
+
 ### 后端单元测试
 
 1. 使用 Junit对各层的公有函数进行单元测试，覆盖率100%
@@ -149,5 +167,8 @@ OligeiWeb是我们此次项目目标——聚票网的名字，其作用是将�
 
 ### 性能测试
 
-## 远程监控
+1. 性能测试主要用jmeter进行压力测试，并用grafana进行辅助的判断，其中jmeter从本地、服务器端分别进行测试，两种测试结果十分接近。
+2. 测试对象为非管理员使用的所有用户接口，对这些接口我们先进行了单接口的测试，之后在考虑用户使用习惯上的基础上进行了组合接口的测试，总的并发数为100，例如：
+每秒80用户获取商品详情的同时有20用户进行下单的处理
 
+## 远程监控

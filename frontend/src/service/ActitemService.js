@@ -6,10 +6,10 @@
 import {authRequest} from "../utils/ajax";
 
 
-export const getDetail = (id,userid,token,callback) => {
-    const data={actitemid:id, userid:userid};
+export const getDetail = async (id, userid, token, callback) => {
+    const data = {actitemid: id, userid: userid};
     const url = `/actitem/detail`;
-    authRequest(url, data,token,callback);
+    await authRequest(url, data, token, callback);
 };
 // export const getDetail = (id,userid,callback) => {
 //     const data={actitemid:id, userId: userid};

@@ -25,33 +25,24 @@ public class ActitemServiceImpl implements ActitemService {
 
     @Override
     /**
-    *get detail information about the activity in the website in service layer
-    *@Param: [id, userId]
-    *@return: com.oligei.ticketgathering.dto.DetailInfo
-    *@Author: Cui Shaojie
-    *@date: 2020/8/18
-    *@Throws NullPointerException Actitem Not Found
-    *@Throws NullPointerException Actitem Not Found
-    */
+     * @param id
+     * @param userId
+     * @return com.oligei.ticketgathering.dto.DetailInfo
+     * @author Cui Shaojie
+     * @date 2020/8/18
+     * @Throws NullPointerException Actitem Not Found
+     * @Throws NullPointerException Actitem Not Found
+     */
     public DetailInfo findActivityAndActitemDetail(Integer id, Integer userId) {
         Actitem actitem = actitemDao.findOneById(id);
-        if(actitem == null)
+        if (actitem == null)
             throw new NullPointerException("Actitem Not Found");
         Activity activity = activityDao.findOneById(actitem.getActivityId());
-        if(activity == null)
+        if (activity == null)
             throw new NullPointerException("Activity Not Found");
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("key",actitem.getActivityId());
-//        jsonObject.put("title",activity.getTitle());
-//        jsonObject.put("actor",activity.getActor());
-//        jsonObject.put("timescale",activity.getTimescale());
-//        jsonObject.put("venue",activity.getVenue());
-//        jsonObject.put("activityicon",activity.getActivityIcon());
-//        jsonObject.put("description",activity.getDescription());
-//        jsonObject.put("website",actitem.getWebsite());
-//        jsonObject.put("prices",actitem.getPrice());
-        DetailInfo detailInfo = new DetailInfo(actitem.getActivityId(),activity.getTitle(),activity.getActor(),activity.getTimescale(),
-                activity.getVenue(),activity.getActivityIcon(),activity.getDescription(),actitem.getWebsite(),actitem.getPrice());
+
+        DetailInfo detailInfo = new DetailInfo(actitem.getActivityId(), activity.getTitle(), activity.getActor(), activity.getTimescale(),
+                activity.getVenue(), activity.getActivityIcon(), activity.getDescription(), actitem.getWebsite(), actitem.getPrice());
         visitedRelationshipDao.saveVisitedHistory(userId, actitem.getActivityId());
         return detailInfo;
     }
