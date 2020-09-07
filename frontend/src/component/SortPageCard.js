@@ -85,16 +85,16 @@ export class SortPageCard extends React.Component{
         else
         return(
              <div style={{paddingBottom:30}} data-wow-duration=".5s" data-wow-offset="100" className="wow slideInRight">
-                 {
-                     this.props.usertype==="Admin" &&
-                     <div style={{float: "right"}}>
-                         {/*onClick={()=>this.handleDelete(this.props.info)}*/}
-                         <Button  href="/adminModify" onClick={()=>{
-                             console.log("jumping to modify...");
-                             localStorage.setItem("modifyId",this.props.info.activityId);
-                         }}>修改</Button>
-                     </div>
-                 }
+//                  {
+//                      this.props.usertype==="Admin" &&
+//                      <div style={{float: "right"}}>
+//                          {/*onClick={()=>this.handleDelete(this.props.info)}*/}
+//                          <Button  href="/adminModify" onClick={()=>{
+//                              console.log("jumping to modify...");
+//                              localStorage.setItem("modifyId",this.props.info.activityId);
+//                          }}>修改</Button>
+//                      </div>
+//                  }
                  <div>
                      <img className='image' alt="example" src={this.props.info.activityIcon} />
                      <p id="title">{this.props.info.title}</p>
