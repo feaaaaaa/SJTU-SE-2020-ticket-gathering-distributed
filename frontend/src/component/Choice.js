@@ -100,7 +100,7 @@ export class Choice extends React.Component{
     render(){
         const menu1 = (
             <Menu onClick={this.handleSubcategoryClick}>
-                <Menu.Item key="展会">展会</Menu.Item>
+//                 <Menu.Item key="展会">展会</Menu.Item>
                 <Menu.Item key="特色体验">特色体验</Menu.Item>
                 <Menu.Item key="其他展览休闲">其他展览休闲</Menu.Item>
             </Menu>
