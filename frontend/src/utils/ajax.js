@@ -6,7 +6,7 @@ import fetch,{Response}from 'node-fetch';
  * */
 
 
-const baseUrl='http://localhost:1111';
+const baseUrl='http://202.120.40.8:30333';
 
 let postRequest = async (apiUrl, data, callback) => {
     const url = baseUrl + apiUrl;
