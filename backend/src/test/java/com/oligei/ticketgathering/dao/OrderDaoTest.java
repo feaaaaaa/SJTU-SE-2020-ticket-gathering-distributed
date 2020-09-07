@@ -76,31 +76,31 @@ class OrderDaoTest {
         }
     }
 
-//    @Test
-//    void addOrder(){
-//        Date Showtime=null,OrderTime=null;
-//        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-//        DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-//        try{
-//            Showtime=format1.parse("2020-01-01");
-//            OrderTime=format2.parse("2020-02-21 16:00:00");
-//        } catch (ParseException e){
-//            e.printStackTrace();
-//        }
-//        Order saveOrder=new Order(1,1,1,100,2,Showtime,OrderTime);
-//
-//        /*any(anyInt,anyString同理)的用法*/
-//        when(orderRepository.save(any(Order.class))).thenReturn(saveOrder);
-//
-//        assertTrue(orderDao.addOrder(1, 1, 100, 2, Showtime, OrderTime));
-//        verify(orderRepository,times(1)).save(any(Order.class));
-//
-//        /*自定义匹配的类型*/
-//        when(orderRepository.save(argThat(Objects::nonNull))).thenReturn(saveOrder);
-//        assertTrue(orderDao.addOrder(1, 1, 100, 2, Showtime, OrderTime));
-//
-//        /*verify+time 判断该方法调用了几次*/
-//        verify(orderRepository,times(2)).save(argThat(Objects::nonNull));
-//
-//    }
+    @Test
+    void addOrder(){
+        Date Showtime=null,OrderTime=null;
+        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try{
+            Showtime=format1.parse("2020-01-01");
+            OrderTime=format2.parse("2020-02-21 16:00:00");
+        } catch (ParseException e){
+            e.printStackTrace();
+        }
+        Order saveOrder=new Order(1,1,1,100,2,Showtime,OrderTime);
+
+        /*any(anyInt,anyString同理)的用法*/
+        when(orderRepository.save(any(Order.class))).thenReturn(saveOrder);
+
+        assertTrue(orderDao.addOrder(saveOrder));
+        verify(orderRepository,times(1)).save(any(Order.class));
+
+        /*自定义匹配的类型*/
+        when(orderRepository.save(argThat(Objects::nonNull))).thenReturn(saveOrder);
+        assertTrue(orderDao.addOrder(saveOrder));
+
+        /*verify+time 判断该方法调用了几次*/
+        verify(orderRepository,times(2)).save(argThat(Objects::nonNull));
+
+    }
 }

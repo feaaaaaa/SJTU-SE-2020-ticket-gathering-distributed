@@ -113,6 +113,7 @@ public class OrderServiceImpl implements OrderService {
         }
     }
 
+    @Override
     /**
      * @param userId
      * @param actitemId
@@ -124,7 +125,9 @@ public class OrderServiceImpl implements OrderService {
      * @author ziliuziliu
      * @date 2020/9/6
      */
-    private boolean addOrderToRedis(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime) {
+    public Boolean addOrderToRedis(Integer userId, Integer actitemId, Integer price, Integer amount, Date showtime, Date orderTime) {
+        Objects.requireNonNull(userId,"null userId --OrderServiceImpl addOrderToRedis");
+        Objects.requireNonNull(actitemId,"null actitemId --OrderServiceImpl addOrderToRedis");
         Order saveOrder = new Order();
         saveOrder.setActitemId(actitemId);saveOrder.setAmount(amount);
         saveOrder.setOrderTime(orderTime);saveOrder.setUserId(userId);

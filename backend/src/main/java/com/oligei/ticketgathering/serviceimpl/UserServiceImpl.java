@@ -85,6 +85,7 @@ public class UserServiceImpl implements UserService {
         User user = (User) redisUtil.lGetIndex(cacheName,0);
         if (user == null) {
             user = userDao.findUserByUserId(userId);
+            if (user == null) return null;
             redisUtil.lSet("UserList", user.getUserId());
             redisUtil.lSet(cacheName, user);
         }
