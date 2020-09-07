@@ -216,7 +216,7 @@ class UserControllerTest {
         MvcResult result = mockMvc.perform(
                 post("/User/rechargeOrDeduct")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .param("userid","1")
+                        .param("userId","1")
                         .param("increment","100")
         )
                 .andExpect(status().isOk())

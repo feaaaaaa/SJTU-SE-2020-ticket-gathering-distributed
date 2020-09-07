@@ -23,7 +23,9 @@ public class AuctionListItem {
     private Integer deposit;
     private Set<Integer> users = new HashSet<>();
 
-    public AuctionListItem(){}
+    public AuctionListItem() {
+    }
+
     public AuctionListItem(
             Integer auctionid,
             Timestamp ddl,
@@ -36,8 +38,7 @@ public class AuctionListItem {
             Integer userid,
             String activityIcon,
             Integer deposit
-    )
-    {
+    ) {
         this.auctionid = auctionid;
         this.ddl = ddl;
         this.price = price;
@@ -48,48 +49,104 @@ public class AuctionListItem {
         this.venue = venue;
         this.userid = userid;
         this.activityIcon = activityIcon;
-        this.deposit=deposit;
+        this.deposit = deposit;
     }
 
-    public Integer getAuctionid(){return auctionid;}
-    public void setAuctionid(Integer auctionid){this.auctionid = auctionid;}
+    public Integer getAuctionid() {
+        return auctionid;
+    }
 
-    public Date getDdl(){return ddl;}
-    public void setDdl(Timestamp ddl){this.ddl = ddl;}
+    public void setAuctionid(Integer auctionid) {
+        this.auctionid = auctionid;
+    }
 
-    public Integer getPrice(){return price;}
-    public void setPrice(Integer price){this.price = price;}
+    public Date getDdl() {
+        return ddl;
+    }
 
-    public Date getShowtime(){return showtime;}
-    public void setShowtime(Date showtime){this.showtime = showtime;}
+    public void setDdl(Timestamp ddl) {
+        this.ddl = ddl;
+    }
 
-    public Integer getAmount(){return amount;}
-    public void setAmount(Integer amount){this.amount = amount;}
+    public Integer getPrice() {
+        return price;
+    }
 
-    public String getTitle(){return title;}
-    public void setTitle(String title){this.title = title;}
+    public void setPrice(Integer price) {
+        this.price = price;
+    }
 
-    public String getActor(){return actor;}
-    public void setActor(String actor){this.actor = actor;}
+    public Date getShowtime() {
+        return showtime;
+    }
 
-    public String getVenue(){return venue;}
-    public void setVenue(String venue){this.venue = venue;}
+    public void setShowtime(Date showtime) {
+        this.showtime = showtime;
+    }
 
-    public Integer getUserid(){return userid;}
-    public void setUserid(Integer userid){this.userid = userid;}
+    public Integer getAmount() {
+        return amount;
+    }
 
-    public String getActivityIcon(){return activityIcon;}
-    public void setActivityIcon(String activityIcon){this.activityIcon = activityIcon;}
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getActor() {
+        return actor;
+    }
+
+    public void setActor(String actor) {
+        this.actor = actor;
+    }
+
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
+
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
+
+    public String getActivityIcon() {
+        return activityIcon;
+    }
+
+    public void setActivityIcon(String activityIcon) {
+        this.activityIcon = activityIcon;
+    }
 
     public Integer getDeposit() {
         return deposit;
     }
+
     public void setDeposit(Integer deposit) {
         this.deposit = deposit;
     }
 
-    public boolean userExists(Integer userid) {return users.contains(userid);}
-    public void addUser(Integer userid) {users.add(userid);}
+    public boolean userExists(Integer userid) {
+        return users.contains(userid);
+    }
+
+    public void addUser(Integer userid) {
+        users.add(userid);
+    }
 }
 
 

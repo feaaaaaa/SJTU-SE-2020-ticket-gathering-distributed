@@ -6,10 +6,19 @@ import java.util.List;
 
 public interface AuctionDao {
 
+    /**
+     * save an auction
+     */
     Auction save(Auction auction);
 
-    List<Auction> getAvailableAuctionsForNow();
+//    /**
+//     * get all available auctions
+//     */
+//    List<Auction> getAvailableAuctionsForNow();
 
+    /**
+     * find an auction by id
+     */
     Auction findOneById(Integer auctionid);
 
 }

@@ -11,45 +11,46 @@ public class Msg<T> {
     private String msg;
     private T data;
 
-    Msg(){}
+    Msg() {
+    }
 
-    Msg(Msg<T> Msg){
+    Msg(Msg<T> Msg) {
         this.status = Msg.status;
         this.msg = Msg.msg;
         this.data = Msg.data;
     }
 
-    Msg(MsgCode msg, T data){
+    Msg(MsgCode msg, T data) {
         this.status = msg.getStatus();
         this.msg = msg.getMsg();
         this.data = data;
     }
 
-    Msg(MsgCode msg, String extra, T data){
+    Msg(MsgCode msg, String extra, T data) {
         this.status = msg.getStatus();
         this.msg = extra;
         this.data = data;
     }
 
-    Msg(MsgCode msg){
+    Msg(MsgCode msg) {
         this.status = msg.getStatus();
         this.msg = msg.getMsg();
         this.data = null;
     }
 
-    Msg(MsgCode msg, String extra){
+    Msg(MsgCode msg, String extra) {
         this.status = msg.getStatus();
         this.msg = extra;
         this.data = null;
     }
 
-    public Msg(int status, String extra, T data){
+    public Msg(int status, String extra, T data) {
         this.status = status;
         this.msg = extra;
         this.data = data;
     }
 
-    Msg(int status, String extra){
+    Msg(int status, String extra) {
         this.status = status;
         this.msg = extra;
         this.data = null;

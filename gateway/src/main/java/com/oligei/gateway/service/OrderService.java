@@ -10,11 +10,11 @@ import java.util.List;
 @FeignClient(value = "ticketgathering")
 public interface OrderService {
 
-    @RequestMapping(value = "/Order/GetOrderInfoByUser",method = RequestMethod.GET)
-    public Msg<List<OrderInfo>> getOrderInfoByUser(@RequestParam("userId")int userId);
+    @RequestMapping(value = "/Order/GetOrderInfoByUser", method = RequestMethod.GET)
+    public Msg<List<OrderInfo>> getOrderInfoByUser(@RequestParam("userId") int userId);
 
-    @RequestMapping(value = "/Order/addOrder",method = RequestMethod.POST)
-    public Msg<Boolean> addOrder(@RequestParam("userId")int userId, @RequestParam("actitemId")int actitemId,
-                                 @RequestParam("initPrice")int initPrice, @RequestParam("orderPrice")int orderPrice, @RequestParam("amount")int amount,
-                                 @RequestParam("showtime")String showtime, @RequestParam("orderTime")String orderTime);
+    @RequestMapping(value = "/Order/addOrder", method = RequestMethod.POST)
+    public Msg<Boolean> addOrder(@RequestParam("userId") int userId, @RequestParam("actitemId") int actitemId,
+                                 @RequestParam("initPrice") int initPrice, @RequestParam("orderPrice") int orderPrice, @RequestParam("amount") int amount,
+                                 @RequestParam("showtime") String showtime, @RequestParam("orderTime") String orderTime);
 }

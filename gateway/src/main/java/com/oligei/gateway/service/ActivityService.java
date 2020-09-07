@@ -10,43 +10,43 @@ import java.util.List;
 @FeignClient(value = "ticketgathering")
 public interface ActivityService {
 
-    @RequestMapping(value="/Activity/initActivity",method = RequestMethod.GET)
+    @RequestMapping(value = "/Activity/initActivity", method = RequestMethod.GET)
     Msg<Boolean> initActivity();
 
-    @RequestMapping(value = "/Activity/initSearchIndex",method = RequestMethod.GET)
+    @RequestMapping(value = "/Activity/initSearchIndex", method = RequestMethod.GET)
     Msg<Boolean> initSearchIndex();
 
-    @RequestMapping(value = "/Activity/clear",method = RequestMethod.GET)
+    @RequestMapping(value = "/Activity/clear", method = RequestMethod.GET)
     Msg<Boolean> clear();
 
-    @RequestMapping(value = "/Activity/search",method = RequestMethod.GET)
+    @RequestMapping(value = "/Activity/search", method = RequestMethod.GET)
     public Msg<List<ActivitySortpage>> search(@RequestParam(name = "search") String value,
-                                              @RequestParam(name = "page")Integer page);
+                                              @RequestParam(name = "page") Integer page);
 
     @RequestMapping(value = "/Activity/searchPageNum", method = RequestMethod.GET)
     public Msg<Integer> searchPageNum(@RequestParam(name = "search") String value);
 
-    @RequestMapping(value = "/Activity/add",method = RequestMethod.POST)
+    @RequestMapping(value = "/Activity/add", method = RequestMethod.POST)
     public Msg<Boolean> add(@RequestParam(name = "activity") String activity);
 
-    @RequestMapping(value = "/Activity/delete",method = RequestMethod.POST)
+    @RequestMapping(value = "/Activity/delete", method = RequestMethod.POST)
     public Msg<Boolean> delete(@RequestParam(name = "activityId") String activityid);
 
-    @RequestMapping(value = "/Activity/RecommendOnContent",method = RequestMethod.GET)
+    @RequestMapping(value = "/Activity/RecommendOnContent", method = RequestMethod.GET)
     public Msg<List<ActivitySortpage>> recommendOnContent(@RequestParam(name = "userId") Integer userId,
-                                                     @RequestParam(name = "activityId") Integer activityId);
+                                                          @RequestParam(name = "activityId") Integer activityId);
 
-    @RequestMapping(value = "/Activity/FindActivityByCategory",method = RequestMethod.GET)
-    public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type")String type,
-                                                    @RequestParam(name = "name")String name,
-                                                    @RequestParam(name = "city")String city,
-                                                    @RequestParam(name = "page")Integer page);
+    @RequestMapping(value = "/Activity/FindActivityByCategory", method = RequestMethod.GET)
+    public Msg<List<ActivitySortpage>> selectSearch(@RequestParam(name = "type") String type,
+                                                    @RequestParam(name = "name") String name,
+                                                    @RequestParam(name = "city") String city,
+                                                    @RequestParam(name = "page") Integer page);
 
-    @RequestMapping(value = "/Activity/FindActivityByCategoryPageNum",method = RequestMethod.GET)
-    public Msg<Integer> selectSearchPageNum(@RequestParam(name = "type")String type,
-                                            @RequestParam(name = "name")String name,
-                                            @RequestParam(name = "city")String city);
+    @RequestMapping(value = "/Activity/FindActivityByCategoryPageNum", method = RequestMethod.GET)
+    public Msg<Integer> selectSearchPageNum(@RequestParam(name = "type") String type,
+                                            @RequestParam(name = "name") String name,
+                                            @RequestParam(name = "city") String city);
 
-    @RequestMapping(value = "/Activity/FindActivityByCategoryHome",method = RequestMethod.GET)
+    @RequestMapping(value = "/Activity/FindActivityByCategoryHome", method = RequestMethod.GET)
     public Msg<List<ActivitySortpage>> findActivityByCategoryHome();
 }

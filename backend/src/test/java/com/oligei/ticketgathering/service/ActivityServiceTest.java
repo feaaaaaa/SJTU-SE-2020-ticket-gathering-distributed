@@ -44,26 +44,37 @@ class ActivityServiceTest {
      * @author feaaaaaa
      * @date 2020.08.17
      */
-    void search() throws IOException, ParseException {
-        Activity existedAcitivity=new Activity(1,"test","actor","timescale","venue","activityIcon");
-        Actitem existedActitem=new Actitem(1,1,"123");
-        List<Actitem> existedActitems=new LinkedList<>();
-        existedActitems.add(existedActitem);
-        for(int i=0;i<10000;++i) {
-            doReturn(existedAcitivity).when(activityDao).findOneById(i);
-            doReturn(existedActitems).when(actitemDao).findAllByActivityId(i);
-        }
-        activityService.search(null,1);
-        activityService.search("周杰伦演唱会螺蛳粉肉丸子",1);
-//        System.out.println("Reasonable Value");
-//        assertTrue(activityService.search("周杰伦").size()>0);
-//        assertTrue(activityService.search("周杰伦演唱会").size()>0);
-//        assertTrue(activityService.search("周杰伦演唱会螺蛳粉肉丸子").size()>0);
-//        System.out.println("Unreasonable Value");
-//        assertEquals(0, activityService.search("12345").size());
-//        assertEquals(0, activityService.search("螺蛳粉肉丸子").size());
+    void search() {
+        assertThrows(NullPointerException.class,()->activityService.search(null,1),
+                "null value --ActivityServiceImpl search");
+        assertThrows(NullPointerException.class,()->activityService.search("周杰伦",null),
+                "null page --ActivityServiceImpl page");
+        assertThrows(IndexOutOfBoundsException.class,()->activityService.search("周杰伦",2000),
+                "找不到搜索结果");
     }
 
+    @Test
+    @Transactional
+    @Rollback
+    void selectSearchPageNum() {
+        assertThrows(NullPointerException.class,()->activityService.selectSearchPageNum(null,"1","1"),
+                "null type --ActivityServiceImpl selectSearch");
+        assertThrows(NullPointerException.class,()->activityService.selectSearchPageNum("1",null,"1"),
+                "null name --ActivityServiceImpl selectSearch");
+        assertThrows(NullPointerException.class,()->activityService.selectSearchPageNum("1","1",null),
+                "null city --ActivityServiceImpl selectSearch");
+    }
+
+    @Test
+    @Transactional
+    @Rollback
+    void searchPageNum() {
+        try {
+            assertTrue(activityService.searchPageNum(null) > 0);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     @Transactional
@@ -141,20 +152,8 @@ class ActivityServiceTest {
         assertThrows(NullPointerException.class,()->activityService.selectSearch(null,"name","city",1));
         assertThrows(NullPointerException.class,()->activityService.selectSearch("type",null,"city",1));
         assertThrows(NullPointerException.class,()->activityService.selectSearch("type","name",null,1));
-
+        assertThrows(IndexOutOfBoundsException.class,()->activityService.selectSearch("category","话剧歌剧","成都",2000));
         assertThrows(InvalidDataAccessApiUsageException.class,()->activityService.selectSearch("type","name","city",1));
-
-
-//        assertNotEquals(0,activityService.selectSearch("category","话剧歌剧","成都")
-//                .size());
-//        assertNotEquals(0,activityService.selectSearch("subcategory","音乐剧","成都")
-//                .size());
-//        assertNotEquals(0,activityService.selectSearch("123","全部","成都")
-//                .size());
-//        assertNotEquals(0,activityService.selectSearch("category","话剧歌剧","全国")
-//                .size());
-//        assertNotEquals(0,activityService.selectSearch("subcategory","音乐剧","全国")
-//                .size());
     }
 
     @Test
@@ -170,29 +169,29 @@ class ActivityServiceTest {
         assertThrows(ArrayIndexOutOfBoundsException.class,()->activityService.add("[1,2,3]"));
         assertThrows(NumberFormatException.class,()->activityService.add("[1,lll,null,4,5,6,7,null,null,test]"));
     }
-
-    @Test
-    @Transactional
-    @Rollback
-    /**
-     *  test delete
-     * @author feaaaaaa
-     * @date 2020.08.17
-     */
-    void delete(){
-
-        assertThrows(NullPointerException.class,()->activityService.delete(null));
-    }
-
-    @Test
-    @Transactional
-    @Rollback
-    /**
-     *  test clear
-     * @author feaaaaaa
-     * @date 2020.08.17
-     */
-    void clear(){
-        activityService.clear();
-    }
+//
+//    @Test
+//    @Transactional
+//    @Rollback
+//    /**
+//     *  test delete
+//     * @author feaaaaaa
+//     * @date 2020.08.17
+//     */
+//    void delete(){
+//
+//        assertThrows(NullPointerException.class,()->activityService.delete(null));
+//    }
+//
+//    @Test
+//    @Transactional
+//    @Rollback
+//    /**
+//     *  test clear
+//     * @author feaaaaaa
+//     * @date 2020.08.17
+//     */
+//    void clear(){
+//        activityService.clear();
+//    }
 }

@@ -1,11 +1,12 @@
 package com.oligei.auction.util.msgutils;
 
 import net.sf.json.JSONObject;
+
 /**
- * @ClassName: MsgUtil
- * @Description: MsgUtil
- * @Author: Cui Shaojie
- * @Date: 2020/8/10 17:53
+ * @className MsgUtil
+ * @description MsgUtil
+ * @author Cui Shaojie
+ * @date 2020/8/10 17:53
  **/
 public class MsgUtil {
     public static final int SUCCESS = 0;
@@ -21,7 +22,6 @@ public class MsgUtil {
     public static final String LOGIN_USER_ERROR_MSG = "Username or password is wrong！";
     public static final String LOGIN_USER_BANNED_MSG = "You have been banned！";
     public static final String NOT_LOGGED_IN_ERROR_MSG = "Please log in！";
-
 
 
 //    template<class T>

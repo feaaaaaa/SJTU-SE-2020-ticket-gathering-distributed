@@ -1,0 +1,15 @@
+com.oligei.ticketgathering
+com.oligei.ticketgathering.config
+com.oligei.ticketgathering.controller
+com.oligei.ticketgathering.dao
+com.oligei.ticketgathering.daoimpl
+com.oligei.ticketgathering.dto
+com.oligei.ticketgathering.entity.info
+com.oligei.ticketgathering.entity.mongodb
+com.oligei.ticketgathering.entity.mysql
+com.oligei.ticketgathering.entity.neo4j
+com.oligei.ticketgathering.repository
+com.oligei.ticketgathering.service
+com.oligei.ticketgathering.serviceimpl
+com.oligei.ticketgathering.util
+com.oligei.ticketgathering.util.msgutils

@@ -1,13 +1,16 @@
 package com.oligei.ticketgathering.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.inject.internal.cglib.proxy.$InvocationHandler;
 import com.oligei.ticketgathering.service.ActivityService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
@@ -21,6 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 
 @SpringBootTest
 @Transactional
@@ -29,8 +33,8 @@ class ActivityControllerTest {
     @Autowired
     private WebApplicationContext context;
 
-    @Autowired
-    private  ActivityService activityService;
+    @MockBean
+    private ActivityService activityService;
 
     private MockMvc mockMvc;
     private ObjectMapper om = new ObjectMapper();
@@ -44,40 +48,81 @@ class ActivityControllerTest {
     void tearDown() {
     }
 
-    @Test
-    void search() throws Exception {
-
-        System.out.println("Reasonable Value");
-        MvcResult result = mockMvc.perform(get("/Activity/search?search=周杰伦演唱会").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
+    JSONObject searchMock(String search, Integer page) throws Exception {
+        MvcResult result = mockMvc.perform(get("/Activity/search?search="+search+"&page="+page)
+                        .contentType(MediaType.APPLICATION_JSON_VALUE))
+                        .andExpect(status().isOk()).andReturn();
         String resultContent = result.getResponse().getContentAsString();
-        System.out.println(resultContent);
-        assertEquals(200,result.getResponse().getStatus());
-        int resultLength=result.getResponse().getContentLength();
-//        assertNotEquals("[]", resultContent);
-        assertTrue(resultLength > -1);
-
-        System.out.println("Uneasonable Value");
-        MvcResult result2 = mockMvc.perform(get("/Activity/search?search=123456").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
-        String resultContent2 = result2.getResponse().getContentAsString();
-        System.out.println(resultContent2);
-        assertEquals(200,result2.getResponse().getStatus());
-        int resultLength2 = result2.getResponse().getContentLength();
-//        assertEquals("[]", resultContent2);
-        assertTrue(resultLength2 > -1);
-
-        System.out.println("Reasonable and Uneasonable Value");
-        MvcResult result3 = mockMvc.perform(get("/Activity/search?search=周杰伦123456").contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
-        String resultContent3 = result3.getResponse().getContentAsString();
-        System.out.println(resultContent3);
-        assertEquals(200,result3.getResponse().getStatus());
-        int resultLength3 = result3.getResponse().getContentLength();
-//        assertNotEquals("[]", resultContent3);
-        assertTrue(resultLength3 > -1);
+        return om.readValue(resultContent, new TypeReference<JSONObject>() {});
     }
 
+    @Test
+    @Rollback
+    void search(){
+        JSONObject msg = null;
+
+        System.out.println("Reasonable Value");
+        try {
+            msg = searchMock("周杰伦",1);
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Combined Value");
+        try {
+            msg = searchMock("周杰伦天津",1);
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Unreasonable Value");
+        try {
+            msg = searchMock("螺狮粉",1);
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    JSONObject searchPageNumMock(String search) throws Exception{
+        MvcResult result = mockMvc.perform(get("/Activity/searchPageNum?search="+search)
+                .contentType(MediaType.APPLICATION_JSON_VALUE))
+                .andExpect(status().isOk()).andReturn();
+        String resultContent = result.getResponse().getContentAsString();
+        return om.readValue(resultContent, new TypeReference<JSONObject>() {});
+    }
+
+    @Test
+    @Rollback
+    void searchPageNum() {
+        JSONObject msg = null;
+
+        System.out.println("Reasonable Value");
+        try {
+            msg = searchPageNumMock("周杰伦");
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Combined Value");
+        try {
+            msg = searchPageNumMock("周杰伦天津");
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        System.out.println("Unreasonable Value");
+        try {
+            msg = searchPageNumMock("螺狮粉");
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     @Test
     @Rollback
@@ -90,44 +135,108 @@ class ActivityControllerTest {
         assertNotNull(resultContent);
     }
 
+    JSONObject selectSearchMock(String type, String name, String city, Integer page) throws Exception{
+        MvcResult result = mockMvc.perform(get("/Activity/FindActivityByCategory?type="+type
+                                                +"&name="+name+"&city="+city+"&page="+page)
+                                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+                                    .andExpect(status().isOk()).andReturn();
+        String resultContent = result.getResponse().getContentAsString();
+        return om.readValue(resultContent, new TypeReference<JSONObject>() {});
+    }
+
     @Test
     @Rollback
     void selectSearch() throws Exception{
-        MvcResult result; String resultContent;
+        JSONObject msg = null;
 
-        result = mockMvc.perform(get("/Activity/FindActivityByCategory?type=category&name=话剧歌剧&city=成都")
+        try {
+            msg = selectSearchMock("category","话剧歌剧","成都",1);
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            msg = selectSearchMock("category","话剧歌剧","全国",1);
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            msg = selectSearchMock("subcategory","音乐剧","全国",1);
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    JSONObject selectSearchPageNumMock(String type, String name, String city) throws Exception{
+        MvcResult result = mockMvc.perform(get("/Activity/FindActivityByCategoryPageNum?type="+type
+                +"&name="+name+"&city="+city)
                 .contentType(MediaType.APPLICATION_JSON_VALUE))
                 .andExpect(status().isOk()).andReturn();
-        resultContent = result.getResponse().getContentAsString();
-        System.out.println(resultContent);
-        assertNotNull(resultContent);
+        String resultContent = result.getResponse().getContentAsString();
+        return om.readValue(resultContent, new TypeReference<JSONObject>() {});
+    }
 
-        result = mockMvc.perform(get("/Activity/FindActivityByCategory?type=subcategory&name=音乐剧&city=成都")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
-        resultContent = result.getResponse().getContentAsString();
-        System.out.println(resultContent);
-        assertNotNull(resultContent);
+    @Test
+    @Rollback
+    void selectSearchPageNum() {
+        JSONObject msg = null;
 
-        result = mockMvc.perform(get("/Activity/FindActivityByCategory?type=123&name=全部&city=成都")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
-        resultContent = result.getResponse().getContentAsString();
-        System.out.println(resultContent);
-        assertNotNull(resultContent);
+        try {
+            msg = selectSearchPageNumMock("category","话剧歌剧","成都");
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
-        result = mockMvc.perform(get("/Activity/FindActivityByCategory?type=category&name=话剧歌剧&city=全国")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
-        resultContent = result.getResponse().getContentAsString();
-        System.out.println(resultContent);
-        assertNotNull(resultContent);
 
-        result = mockMvc.perform(get("/Activity/FindActivityByCategory?type=subcategory&name=音乐剧&city=全国")
-                .contentType(MediaType.APPLICATION_JSON_VALUE))
-                .andExpect(status().isOk()).andReturn();
-        resultContent = result.getResponse().getContentAsString();
-        System.out.println(resultContent);
-        assertNotNull(resultContent);
+        try {
+            msg = selectSearchPageNumMock("category","话剧歌剧","全国");
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        try {
+            msg = selectSearchPageNumMock("subcategory","音乐剧","全国");
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    @Rollback
+    void findActivityByCategoryHome() {
+        try {
+            MvcResult result = mockMvc.perform(get("/Activity/FindActivityByCategoryHome")
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(status().isOk()).andReturn();
+            String resultContent = result.getResponse().getContentAsString();
+            JSONObject msg = om.readValue(resultContent, new TypeReference<JSONObject>() {});
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    @Rollback
+    void add() {
+        String activity = "[1,lll,null,4,5,6,7,null,null,test]";
+        when(activityService.add(activity)).thenReturn(true);
+        try {
+            MvcResult result = mockMvc.perform(get("/Activity/add?activity="+activity)
+                    .contentType(MediaType.APPLICATION_JSON_VALUE))
+                    .andExpect(status().isOk()).andReturn();
+            String resultContent = result.getResponse().getContentAsString();
+            JSONObject msg = om.readValue(resultContent, new TypeReference<JSONObject>() {});
+            assertEquals(200,msg.get("status"));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

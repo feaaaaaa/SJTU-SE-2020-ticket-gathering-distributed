@@ -11,22 +11,22 @@ import java.util.Map;
 @FeignClient(value = "auction")
 public interface AuctionService {
 
-    @RequestMapping(value = "/Auction/add",method = RequestMethod.POST)
-    Msg<Boolean> addAuction(@RequestParam("actitemid")Integer actitemid,
-                                   @RequestParam("ddl")String ddl,
-                                   @RequestParam("showtime")String showtime,
-                                   @RequestParam("initprice")Integer initprice,
-                                   @RequestParam("orderprice")Integer orderprice,
-                                   @RequestParam("amount")Integer amount);
+    @RequestMapping(value = "/Auction/add", method = RequestMethod.POST)
+    Msg<Boolean> addAuction(@RequestParam("actitemid") Integer actitemid,
+                            @RequestParam("ddl") String ddl,
+                            @RequestParam("showtime") String showtime,
+                            @RequestParam("initprice") Integer initprice,
+                            @RequestParam("orderprice") Integer orderprice,
+                            @RequestParam("amount") Integer amount);
 
 
-    @RequestMapping(value = "/Auction/get",method = RequestMethod.GET)
-    Msg<Map<Integer,AuctionListItem>> getAuctions();
+    @RequestMapping(value = "/Auction/get", method = RequestMethod.GET)
+    Msg<Map<Integer, AuctionListItem>> getAuctions();
 
-    @RequestMapping(value = "/Auction/join",method = RequestMethod.POST)
+    @RequestMapping(value = "/Auction/join", method = RequestMethod.POST)
     Msg<Integer> joinAuction(@RequestParam("auctionid") java.lang.Integer auctionid,
-                                          @RequestParam("userid") java.lang.Integer userid,
-                                          @RequestParam("price") java.lang.Integer price);
+                             @RequestParam("userid") java.lang.Integer userid,
+                             @RequestParam("price") java.lang.Integer price);
 
     @RequestMapping("/Auction/canEnter")
     Msg<Boolean> canEnter(@RequestParam("userid") Integer userid, @RequestParam("auctionid") Integer auctionid);

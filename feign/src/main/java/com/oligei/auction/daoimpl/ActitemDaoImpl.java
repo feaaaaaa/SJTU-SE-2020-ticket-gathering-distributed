@@ -26,8 +26,10 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     /**
-     *  modify data in mongoDB and Mysql
-     * @param actitemId, price, amount, showtime
+     * @param actitemId
+     * @param price
+     * @param amount
+     * @param showtime
      * @return boolean
      * @author Yang Yicheng
      * @date 2020/8/12
@@ -37,7 +39,7 @@ public class ActitemDaoImpl implements ActitemDao {
      */
     public boolean modifyRepository(int actitemId, int price, int amount, String showtime) {
         Actitem actitem = findOneById(actitemId);
-        if(actitem==null||actitem.getPrice()==null){
+        if (actitem == null || actitem.getPrice() == null) {
             throw new NullPointerException("invalid actiemId --ActitemDaoImpl modifyRepository");
         }
         List<JSONObject> prices = actitem.getPrice();
@@ -49,7 +51,7 @@ public class ActitemDaoImpl implements ActitemDao {
                 break;
             }
         }
-        if(i==prices.size()){
+        if (i == prices.size()) {
 //            System.out.println(i);
             throw new ArrayIndexOutOfBoundsException("null actitem --ActitemDaoImpl modifyRepository");
         }
@@ -59,17 +61,17 @@ public class ActitemDaoImpl implements ActitemDao {
             JSONObject ticket = tickets.getJSONObject(j);
             if (Objects.equals(price, Integer.parseInt(ticket.getString("price")))) {
                 repository = Integer.parseInt(ticket.getString("num"));
-                if (Objects.equals(0, repository) || repository<amount) {
+                if (Objects.equals(0, repository) || repository < amount) {
                     throw new ArithmeticException("repository is zero --ActitemDaoImpl modifyRepository");
                 } else {
-                    repository = repository +amount;
+                    repository = repository + amount;
                     ticket.put("num", repository);
                     tickets.set(j, ticket);
                     break;
                 }
             }
         }
-        if(j==tickets.size()){
+        if (j == tickets.size()) {
             throw new ArrayIndexOutOfBoundsException("null actitem --ActitemDaoImpl modifyRepository");
         }
         tmp.put("class", tickets);
@@ -82,7 +84,6 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     /**
-     *  use actitemId to find the actitem
      * @param id the actitemId of actitem
      * @return actitem that actitemId equals id
      * @author feaaaaaa
@@ -92,19 +93,18 @@ public class ActitemDaoImpl implements ActitemDao {
      * @throws EmptyResultDataAccessException when actitem is not found
      */
     public Actitem findOneById(Integer id) {
-        Objects.requireNonNull(id,"null id --actitemDaoImpl findOneById");
+        Objects.requireNonNull(id, "null id --actitemDaoImpl findOneById");
         Actitem actitem = actitemRepository.getOne(id);
         ActitemMongoDB actitemMongoDB = actitemMongoDBRepository.findByActitemId(id);
         if (actitemMongoDB != null)
             actitem.setPrice(actitemMongoDB.getPrice());
         else
-            throw new NullPointerException("null mongoDB data of id"+id.toString()+" --actitemDaoImpl findOneById");
+            throw new NullPointerException("null mongoDB data of id" + id.toString() + " --actitemDaoImpl findOneById");
         return actitem;
     }
 
     @Override
     /**
-     *  delete data from moongoDB
      * @param actitemId
      * @return void
      * @author
@@ -116,7 +116,6 @@ public class ActitemDaoImpl implements ActitemDao {
 
     @Override
     /**
-     * insert into mongoDB
      * @param [actitemId, price]
      * @return ActitemMongoDB
      * @author

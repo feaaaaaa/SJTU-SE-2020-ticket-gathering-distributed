@@ -17,13 +17,12 @@ public class ActivityDaoImpl implements ActivityDao {
 
     @Override
     /**
-     * use activityId to find activity(no data in mongo)
-     *@param id the activityId of activity
-     *@return the activity
-     *@author feaaaaaa
-     *@date 2020.8.15
-     *@throws NullPointerException when id is null
-     *@throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
+     * @param id the activityId of activity
+     * @return the activity
+     * @author feaaaaaa
+     * @date 2020.8.15
+     * @throws NullPointerException when id is null
+     * @throws JpaObjectRetrievalFailureException when id is invalid or no activity is found
      */
     public Activity findOneById(Integer id) {
 //        Activity activity;
@@ -31,7 +30,7 @@ public class ActivityDaoImpl implements ActivityDao {
 //        ActivityMongoDB activityMongoDB = activityMongoDBRepository.findByActivityId(id);
 //        activity.setDescription(activityMongoDB.getDescription());
 //        return activity;
-        Objects.requireNonNull(id,"null id --ActivityDaoimpl findOneById");
+        Objects.requireNonNull(id, "null id --ActivityDaoimpl findOneById");
         return activityRepository.getOne(id);
     }
 }

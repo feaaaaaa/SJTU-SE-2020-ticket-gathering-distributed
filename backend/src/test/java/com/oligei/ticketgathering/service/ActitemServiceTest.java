@@ -40,39 +40,9 @@ class ActitemServiceTest {
     @Test
     @Rollback
     void findActivityAndActitemDetail() {
-        DetailInfo detailInfo = new DetailInfo(1,"title","actor","timescale","venue","icon","descrption","website",null);
-        Activity activity = new Activity(1,"title","actor","timescale","venue","icon");
-        Actitem actitem = new Actitem(2,1,"website",null);
-
-        when(actitemDao.findOneById(2)).thenReturn(actitem);
-        when(activityDao.findOneById(1)).thenReturn(activity);
-        when(actitemDao.findOneById(4)).thenReturn(null);
-        when(visitedRelationshipDao.saveVisitedHistory(1,2)).thenReturn(null);
-
-        assertEquals(detailInfo.getKey(),actitemService.findActivityAndActitemDetail(2,1).getKey());
-
-        try {
-            actitemService.findActivityAndActitemDetail(4,1);
-        }
-        catch (NullPointerException e){
-            assertEquals("Actitem Not Found",e.getMessage());
-        }
-//        List<JSONObject> list = new ArrayList<>();
-//        JSONObject object = new JSONObject();
-//        object.put("test","T");
-//        list.add(object);
-//        JSONObject jsonObject = new JSONObject();
-//        jsonObject.put("key",1);
-//        jsonObject.put("title","name");
-//        jsonObject.put("actor","actors");
-//        jsonObject.put("timescale","showtime");
-//        jsonObject.put("venue","venue");
-//        jsonObject.put("activityicon","verticalPic");
-//        jsonObject.put("description",null);
-//        jsonObject.put("website","JuCheng");
-//        jsonObject.put("prices",list);
-//        assertEquals(jsonObject,actitemService.findActivityAndActitemDetail(2,1));
-//
-//        assertEquals(actitemService.findActivityAndActitemDetail(15,1).get("key"),5);
+        assertThrows(NullPointerException.class,()->actitemService.findActivityAndActitemDetail(null,1),
+                "null id --ActitemServiceImpl findActivityAndActitemDetail");
+        assertThrows(NullPointerException.class,()->actitemService.findActivityAndActitemDetail(1,null),
+                "null userId --ActitemServiceImpl findActivityAndActitemDetail");
     }
 }

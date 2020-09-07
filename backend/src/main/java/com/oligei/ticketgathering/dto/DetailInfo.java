@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import java.util.List;
 
 /**
+ * @className DetailInfo
  * @description detail information
  * @author Cui Shaojie
  * @date 2020/8/14 16:11

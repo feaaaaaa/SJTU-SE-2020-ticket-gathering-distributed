@@ -16,13 +16,12 @@ public class Activity {
     private String venue;
     private String activityIcon;
 
-    public Activity(){
+    public Activity() {
 
     }
 
-    public Activity(Integer activityId,String title,String actor,String timescale,
-                    String venue,String activityIcon)
-    {
+    public Activity(Integer activityId, String title, String actor, String timescale,
+                    String venue, String activityIcon) {
         this.activityId = activityId;
         this.title = title;
         this.actor = actor;
@@ -34,32 +33,68 @@ public class Activity {
     @Id
     @Column(name = "ACTIVITYID")
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment",strategy = "increment")
-    public Integer getActivityId(){return activityId;}
-    public void setActivityId(Integer activityId){this.activityId = activityId;}
+    @GenericGenerator(name = "increment", strategy = "increment")
+    public Integer getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(Integer activityId) {
+        this.activityId = activityId;
+    }
 
     @Column(name = "TITLE")
-    public String getTitle(){return title;}
-    public void setTitle(String title){this.title = title;}
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
     @Column(name = "ACTOR")
-    public String getActor(){return actor;}
-    public void setActor(String actor){this.actor = actor;}
+    public String getActor() {
+        return actor;
+    }
+
+    public void setActor(String actor) {
+        this.actor = actor;
+    }
 
     @Column(name = "TIMESCALE")
-    public String getTimescale(){return timescale;}
-    public void setTimescale(String timescale){this.timescale = timescale;}
+    public String getTimescale() {
+        return timescale;
+    }
+
+    public void setTimescale(String timescale) {
+        this.timescale = timescale;
+    }
 
     @Column(name = "VENUE")
-    public String getVenue(){return venue;}
-    public void setVenue(String venue){this.venue=venue;}
+    public String getVenue() {
+        return venue;
+    }
+
+    public void setVenue(String venue) {
+        this.venue = venue;
+    }
 
     @Column(name = "ACTIVITYICON")
-    public String getActivityIcon(){return activityIcon;}
-    public void setActivityIcon(String activityIcon){this.activityIcon=activityIcon;}
+    public String getActivityIcon() {
+        return activityIcon;
+    }
+
+    public void setActivityIcon(String activityIcon) {
+        this.activityIcon = activityIcon;
+    }
 
     private String description;
+
     @Transient
-    public String getDescription(){return description;}
-    public void setDescription(String description){this.description=description;}
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

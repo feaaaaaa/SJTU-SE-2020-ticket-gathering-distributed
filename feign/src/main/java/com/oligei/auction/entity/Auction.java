@@ -24,7 +24,9 @@ public class Auction {
     private Timestamp ordertime;
     private Integer amount;
 
-    public Auction(){}
+    public Auction() {
+    }
+
     public Auction(Integer actitemid, Integer userid, Timestamp ddl, Integer initprice,
                    Integer orderprice, Integer isover, Date showtime, Timestamp ordertime, Integer amount) {
         this.actitemid = actitemid;
@@ -41,43 +43,93 @@ public class Auction {
     @Id
     @Column(name = "auctionid")
     @GeneratedValue(generator = "increment")
-    @GenericGenerator(name = "increment",strategy = "increment")
-    public Integer getAuctionid(){return auctionid;}
-    public void setAuctionid(Integer auctionid){this.auctionid = auctionid;}
+    @GenericGenerator(name = "increment", strategy = "increment")
+    public Integer getAuctionid() {
+        return auctionid;
+    }
+
+    public void setAuctionid(Integer auctionid) {
+        this.auctionid = auctionid;
+    }
 
     @Column(name = "actitemid")
-    public Integer getActitemid(){return actitemid;}
-    public void setActitemid(Integer actitemid){this.actitemid = actitemid;}
+    public Integer getActitemid() {
+        return actitemid;
+    }
+
+    public void setActitemid(Integer actitemid) {
+        this.actitemid = actitemid;
+    }
 
     @Column(name = "userid")
-    public Integer getUserid(){return userid;}
-    public void setUserid(Integer userid){this.userid = userid;}
+    public Integer getUserid() {
+        return userid;
+    }
+
+    public void setUserid(Integer userid) {
+        this.userid = userid;
+    }
 
     @Column(name = "ddl")
-    public Timestamp getDdl(){return ddl;}
-    public void setDdl(Timestamp ddl) {this.ddl = ddl;}
+    public Timestamp getDdl() {
+        return ddl;
+    }
+
+    public void setDdl(Timestamp ddl) {
+        this.ddl = ddl;
+    }
 
     @Column(name = "initprice")
-    public Integer getInitprice(){return initprice;}
-    public void setInitprice(Integer initprice){this.initprice = initprice;}
+    public Integer getInitprice() {
+        return initprice;
+    }
+
+    public void setInitprice(Integer initprice) {
+        this.initprice = initprice;
+    }
 
     @Column(name = "orderprice")
-    public Integer getOrderprice(){return orderprice;}
-    public void setOrderprice(Integer orderprice){this.orderprice = orderprice;}
+    public Integer getOrderprice() {
+        return orderprice;
+    }
+
+    public void setOrderprice(Integer orderprice) {
+        this.orderprice = orderprice;
+    }
 
     @Column(name = "isover")
-    public Integer getIsover(){return isover;}
-    public void setIsover(Integer isover){this.isover = isover;}
+    public Integer getIsover() {
+        return isover;
+    }
+
+    public void setIsover(Integer isover) {
+        this.isover = isover;
+    }
 
     @Column(name = "showtime")
-    public Date getShowtime(){return showtime;}
-    public void setShowtime(Date showtime){this.showtime = showtime;}
+    public Date getShowtime() {
+        return showtime;
+    }
+
+    public void setShowtime(Date showtime) {
+        this.showtime = showtime;
+    }
 
     @Column(name = "ordertime")
-    public Timestamp getOrdertime(){return ordertime;}
-    public void setOrdertime(Timestamp ordertime){this.ordertime = ordertime;}
+    public Timestamp getOrdertime() {
+        return ordertime;
+    }
+
+    public void setOrdertime(Timestamp ordertime) {
+        this.ordertime = ordertime;
+    }
 
     @Column(name = "amount")
-    public Integer getAmount(){return amount;}
-    public void setAmount(Integer amount){this.amount = amount;}
+    public Integer getAmount() {
+        return amount;
+    }
+
+    public void setAmount(Integer amount) {
+        this.amount = amount;
+    }
 }
