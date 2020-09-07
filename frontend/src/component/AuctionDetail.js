@@ -169,7 +169,7 @@ export class AuctionDetail extends React.Component{
                     onCancel={this.handleCancel}
                 >
                     <InputNumber
-                        defaultValue={this.state.activity.price+10}
+                        defaultValue={this.state.activity.price}
                         formatter={value => ` ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
                         parser={value => value.replace(/\$\s?|(,*)/g, '')}
                         onChange={this.onChange}
