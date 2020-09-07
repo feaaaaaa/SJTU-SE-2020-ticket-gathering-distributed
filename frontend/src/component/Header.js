@@ -181,9 +181,6 @@ export class HeaderInfo extends React.Component {
                                             <Menu.Item>
                                                 <a href="/admin">添加活动</a>
                                             </Menu.Item>
-//                                             <Menu.Item>
-//                                                 <a href= "/login">订单管理</a>
-//                                             </Menu.Item>
                                         </Menu>
                                     )}>
                                     <Button> Admin </Button>
