@@ -15,7 +15,7 @@ public interface ActivityService {
 //    List<ActivitySortpage> search1(String value);
 //    List<ActivitySortpage> search2(String value);
 //    ActivitySortpage findActivityAndActitem(Integer id);
-    Boolean add(String activity);
+    Boolean add(String activity) throws IOException;
     Boolean delete(Integer activityId);
     List<ActivitySortpage> recommendOnContent(Integer userId, Integer activityId);
     Boolean initActivity();

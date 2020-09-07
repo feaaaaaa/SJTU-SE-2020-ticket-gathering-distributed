@@ -71,6 +71,12 @@ public class ActivityServiceImpl implements ActivityService {
 
     Directory directoryRandom=new RAMDirectory();
 
+    IndexReader reader ;
+    // 索引搜索工具
+    IndexSearcher searcher ;
+    // 创建查询解析器,两个参数：默认要查询的字段的名称，分词器
+    QueryParser parser;
+
 
     @PostConstruct
     /**
@@ -108,6 +114,12 @@ public class ActivityServiceImpl implements ActivityService {
         indexWriter1.addDocuments(docs);
         indexWriter1.commit();
         indexWriter1.close();
+
+        //initialize things used to search
+        reader = DirectoryReader.open(directoryRandom);
+        searcher = new IndexSearcher(reader);
+        parser = new QueryParser("title", new IKAnalyzer());
+
         System.out.println("Initialize search index successfully!");
         return true;
     }
@@ -143,6 +155,7 @@ public class ActivityServiceImpl implements ActivityService {
         //not in cache
         else {
             //not null
+            /*
 //        Directory directory = FSDirectory.open(new File("./indexDir"));
             // 索引读取工具
 //        IndexReader reader = DirectoryReader.open(directory);
@@ -152,6 +165,8 @@ public class ActivityServiceImpl implements ActivityService {
 
             // 创建查询解析器,两个参数：默认要查询的字段的名称，分词器
             QueryParser parser = new QueryParser("title", new IKAnalyzer());
+             */
+
             // 创建查询对象
             Query query = parser.parse(value);
 
@@ -308,7 +323,7 @@ public class ActivityServiceImpl implements ActivityService {
      *@throws NullPointerException when param is null
      *@throws ArrayIndexOutOfBoundsException,NumberFormatException if string activity is not the correct format
      */
-    public Boolean add(String activity) {
+    public Boolean add(String activity) throws IOException {
         Objects.requireNonNull(activity,"null activity --ActivityServiceImpl add");
         activity=activity.substring(1,activity.length()-1);
         String[] arr = activity.split(",");
@@ -367,6 +382,19 @@ public class ActivityServiceImpl implements ActivityService {
 //            System.out.println(prices.toString());
             actitemDao.insertActitemInMongo(actitemId,prices);
         }
+
+        String content = savedActivity.getTitle() + savedActivity.getVenue() + savedActivity.getActor();
+        Analyzer analyzer = new IKAnalyzer();
+        IndexWriterConfig conf = new IndexWriterConfig(Version.LATEST, analyzer);
+        conf.setOpenMode(IndexWriterConfig.OpenMode.APPEND);
+        Document document = new Document();
+        document.add(new IntField("id", activityId, Field.Store.YES));
+        document.add(new TextField("title", content, Field.Store.YES));
+        IndexWriter indexWriter1=new IndexWriter(directoryRandom,conf);
+        indexWriter1.addDocument(document);
+        indexWriter1.commit();
+        indexWriter1.close();
+
         return true;
     }
 
