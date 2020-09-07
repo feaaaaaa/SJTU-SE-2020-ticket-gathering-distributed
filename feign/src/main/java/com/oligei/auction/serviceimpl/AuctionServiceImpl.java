@@ -247,7 +247,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    @Scheduled(cron = "0 0/15 * * * ? ")
+    @Scheduled(cron = "0 */15 * * * ? ")
     /**
      * clear auctions which ddl has passed
      * @author ziliuziliu
