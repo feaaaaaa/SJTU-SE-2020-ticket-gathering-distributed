@@ -40,11 +40,11 @@ public class ActitemController {
             detailInfo = actitemService.findActivityAndActitemDetail(actitemid, userId);
         } catch (NullPointerException e) {
             logger.error("NullPointerException", e);
-            return new Msg<DetailInfo>(201, "不存在的id", null);
+            return new Msg<>(201, "不存在的id", null);
         } catch (InvalidDataAccessApiUsageException e) {
             logger.error("InvalidDataAccessApiUsageException", e);
-            return new Msg<DetailInfo>(201, "错误的参数属性", null);
+            return new Msg<>(201, "错误的参数属性", null);
         }
-        return new Msg<DetailInfo>(200, "得到信息", detailInfo);
+        return new Msg<>(200, "得到信息", detailInfo);
     }
 }

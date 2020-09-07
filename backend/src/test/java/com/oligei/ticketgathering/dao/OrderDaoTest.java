@@ -92,12 +92,12 @@ class OrderDaoTest {
         /*any(anyInt,anyString同理)的用法*/
         when(orderRepository.save(any(Order.class))).thenReturn(saveOrder);
 
-        assertTrue(orderDao.addOrder(1, 1, 100, 2, Showtime, OrderTime));
+        assertTrue(orderDao.addOrder(saveOrder));
         verify(orderRepository,times(1)).save(any(Order.class));
 
         /*自定义匹配的类型*/
         when(orderRepository.save(argThat(Objects::nonNull))).thenReturn(saveOrder);
-        assertTrue(orderDao.addOrder(1, 1, 100, 2, Showtime, OrderTime));
+        assertTrue(orderDao.addOrder(saveOrder));
 
         /*verify+time 判断该方法调用了几次*/
         verify(orderRepository,times(2)).save(argThat(Objects::nonNull));

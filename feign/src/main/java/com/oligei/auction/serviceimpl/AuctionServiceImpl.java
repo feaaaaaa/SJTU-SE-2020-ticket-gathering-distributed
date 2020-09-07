@@ -200,7 +200,6 @@ public class AuctionServiceImpl implements AuctionService {
 //         addAuction(30616, Ddl, showTime, 80, 80, 2);
 //     }
 
-
     /**
      * modify auction list
      *
@@ -247,7 +246,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    @Scheduled(cron = "0 0/15 * * * ? ")
+    @Scheduled(cron = "0 */15 * * * ? ")
     /**
      * clear auctions which ddl has passed
      * @author ziliuziliu
