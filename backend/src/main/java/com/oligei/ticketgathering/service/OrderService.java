@@ -16,4 +16,9 @@ public interface OrderService {
      * get order using user id
      */
     List<OrderInfo> getUserOrder(int userId);
+
+    /**
+     * flush new order to database
+     */
+    Boolean flushOrder();
 }

@@ -46,24 +46,12 @@ public class OrderDaoImpl implements OrderDao {
 
     @Override
     /**
-     * @param userId
-     * @param actitemId
-     * @param price
-     * @param amount
-     * @param showtime
-     * @param orderTime
+     * @param saveOrder
      * @return boolean
      * @author Yang Yicheng
      * @date 2020/8/12
      */
-    public boolean addOrder(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime) {
-        Order saveOrder = new Order();
-        saveOrder.setActitemId(actitemId);
-        saveOrder.setAmount(amount);
-        saveOrder.setOrderTime(orderTime);
-        saveOrder.setUserId(userId);
-        saveOrder.setShowtime(showtime);
-        saveOrder.setPrice(price);
+    public boolean addOrder(Order saveOrder) {
         orderRepository.save(saveOrder);
         return true;
     }

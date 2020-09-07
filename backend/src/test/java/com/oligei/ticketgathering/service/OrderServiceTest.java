@@ -80,22 +80,22 @@ class OrderServiceTest {
         }
     }
 
-    @Test
-    void addOrder(){
-        Date Showtime=null,OrderTime=null;
-        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
-        DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        try{
-            Showtime=format1.parse("2020-01-01");
-            OrderTime=format2.parse("2020-02-21 16:00:00");
-        } catch (ParseException e){
-            e.printStackTrace();
-        }
-
-        when(orderDao.addOrder(1,1,100,2,Showtime,OrderTime)).thenReturn(true);
-        when(actitemDao.modifyRepository(1,100,-2,"2020-01-01")).thenReturn(true);
-
-        assertTrue(orderService.addOrder(1, 1, 100, 0,2, "2020-01-01", "2020-02-21 16:00:00"));
-        verify(orderDao,times(1)).addOrder(1,1,100,2,Showtime,OrderTime);
-    }
+//    @Test
+//    void addOrder(){
+//        Date Showtime=null,OrderTime=null;
+//        DateFormat format1 = new SimpleDateFormat("yyyy-MM-dd");
+//        DateFormat format2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+//        try{
+//            Showtime=format1.parse("2020-01-01");
+//            OrderTime=format2.parse("2020-02-21 16:00:00");
+//        } catch (ParseException e){
+//            e.printStackTrace();
+//        }
+//
+//        when(orderDao.addOrder(1,1,100,2,Showtime,OrderTime)).thenReturn(true);
+//        when(actitemDao.modifyRepository(1,100,-2,"2020-01-01")).thenReturn(true);
+//
+//        assertTrue(orderService.addOrder(1, 1, 100, 0,2, "2020-01-01", "2020-02-21 16:00:00"));
+//        verify(orderDao,times(1)).addOrder(1,1,100,2,Showtime,OrderTime);
+//    }
 }
