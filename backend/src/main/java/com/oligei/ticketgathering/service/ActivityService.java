@@ -38,7 +38,7 @@ public interface ActivityService {
     /**
      * parse the string info of activity and save it
      */
-    Boolean add(String activity);
+    Boolean add(String activity) throws IOException;
 
 //    /**
 //     * use activityId to delete activity and all the actitem

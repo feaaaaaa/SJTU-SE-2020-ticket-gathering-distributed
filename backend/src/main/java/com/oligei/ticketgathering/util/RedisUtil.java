@@ -142,4 +142,13 @@ public final class RedisUtil {
             return 0;
         }
     }
+
+    public Object lLeftPop(String key) {
+        try {
+            return redisTemplate.opsForList().leftPop(key);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 }

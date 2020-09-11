@@ -12,7 +12,7 @@ public interface OrderDao {
     /**
      * insert an order into database
      */
-    boolean addOrder(int userId, int actitemId, int price, int amount, Date showtime, Date orderTime);
+    boolean addOrder(Order saveOrder);
 
     /**
      * get order using user id

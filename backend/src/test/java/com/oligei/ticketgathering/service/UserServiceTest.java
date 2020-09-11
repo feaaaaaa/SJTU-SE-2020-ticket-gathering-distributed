@@ -123,13 +123,15 @@ class UserServiceTest {
     @Test
     @Rollback
     void rechargeOrDeduct(){
-        User tmp1 = new User(userId1,"test","123","123","123",encoder.encode(password1),
-                String.valueOf(userId1),"123");
-        when(userDao.findUserByUserId(userId1)).thenReturn(tmp1);
-        when(userDao.findUserByUserId(userId2)).thenReturn(null);
+        assertThrows(NullPointerException.class,()->userService.rechargeOrDeduct(null,1),
+                "null userid --UserServiceImpl rechargeOrDeduct");
+        assertThrows(NullPointerException.class,()->userService.rechargeOrDeduct(1,null),
+                "null increment --UserServiceImpl rechargeOrDeduct");
+    }
 
-        assertEquals(550,userService.rechargeOrDeduct(userId1,50));
-        assertThrows(NullPointerException.class,()->userService.rechargeOrDeduct(userId2,50),
-                "null user --UserServiceImpl rechargeOrDeduct");
+    @Test
+    @Rollback
+    void flushUser() {
+        assertTrue(userService.flushUser());
     }
 }

@@ -35,4 +35,9 @@ public interface UserService {
      * recharge one's balance
      */
     Integer rechargeOrDeduct(Integer userid, Integer increment);
+
+    /**
+     * flush user info back to database
+     */
+    Boolean flushUser();
 }

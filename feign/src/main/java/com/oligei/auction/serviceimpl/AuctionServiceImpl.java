@@ -189,17 +189,16 @@ public class AuctionServiceImpl implements AuctionService {
         modifyAuctionList(auctionListItem);
     }
 
-    @PostConstruct
-    private void tmpInit(){
-//        Auction auction=auctionDao.findOneById(1);
-//        System.out.println(auction.getInitprice()+"???");
-//        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
-        String Ddl="2020-12-31 06:00:00";
-        String showTime="2020-08-22";
-//        String showTime=timeFormatter.dateToStr(auction.getShowtime());
-        addAuction(30616, Ddl, showTime, 80, 80, 2);
-    }
-
+//     @PostConstruct
+//     private void tmpInit(){
+// //        Auction auction=auctionDao.findOneById(1);
+// //        System.out.println(auction.getInitprice()+"???");
+// //        String Ddl=timeFormatter.timestampToStr(auction.getDdl());
+//         String Ddl="2020-12-31 06:00:00";
+//         String showTime="2020-08-22";
+// //        String showTime=timeFormatter.dateToStr(auction.getShowtime());
+//         addAuction(30616, Ddl, showTime, 80, 80, 2);
+//     }
 
     /**
      * modify auction list
@@ -247,7 +246,7 @@ public class AuctionServiceImpl implements AuctionService {
     }
 
     @Override
-    @Scheduled(cron = "0 0/15 * * * ? ")
+    @Scheduled(cron = "0 */15 * * * ? ")
     /**
      * clear auctions which ddl has passed
      * @author ziliuziliu
