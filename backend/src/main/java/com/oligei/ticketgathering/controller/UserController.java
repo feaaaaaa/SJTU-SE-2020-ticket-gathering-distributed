@@ -37,7 +37,8 @@ public class UserController {
     @RequestMapping("/Login")
     /**
      *check username and password
-     * @param username,password
+     * @param username
+     * @param password
      * @return Msg(status, msg, data) 200 login success, 201 login failure, 202 exception
      * @author ziliuziliu, Yang Yicheng
      * @date 2020/8/18
@@ -134,10 +135,11 @@ public class UserController {
     @RequestMapping("/rechargeOrDeduct")
     /**
      *recharge one's balance
-     * @param: userid, increment
-     * @return: com.oligei.ticketgathering.util.msgutils.Msg<java.lang.Integer>
-     * @author: Cui Shaojie
-     * @date: 2020/8/20
+     * @param userid
+     * @param increment
+     * @return com.oligei.ticketgathering.util.msgutils.Msg<java.lang.Integer>
+     * @author Cui Shaojie
+     * @date 2020/8/20
      */
     public Msg<Integer> rechargeOrDeduct(@RequestParam(name = "userId") Integer userId, @RequestParam(name = "increment") Integer increment) {
         int result;
